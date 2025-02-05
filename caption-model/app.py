@@ -1,19 +1,22 @@
 from dotenv import load_dotenv
+
 load_dotenv(".env")
+
 
 import os
 import numpy as np
 import pickle
 import tensorflow as tf
 from flask import Flask, request, jsonify
+from werkzeug.utils import secure_filename
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import requests
 from io import BytesIO
-from werkzeug.utils import secure_filename
 from tensorflow.keras.saving import register_keras_serializable
+
 
 app = Flask(__name__)
 
@@ -33,11 +36,13 @@ mobilenet_model = Model(
     inputs=mobilenet_model.inputs, outputs=mobilenet_model.layers[-2].output
 )
 
+
 try:
     model = tf.keras.models.load_model("mymodel.h5")
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
+
 
 try:
     with open("tokenizer.pkl", "rb") as tokenizer_file:
@@ -69,20 +74,71 @@ def predict_caption(model, image_features, tokenizer, max_caption_length):
 
 @app.route("/generate_caption", methods=["POST"])
 def generate_caption():
-    if "image" not in request.files:
-        return jsonify({"error": "No image file part"}), 400
-    image = request.files["image"]
 
-    if image.filename == "":
-        return jsonify({"error": "No selected file"}), 400
+    if (
+        "image" not in request.files
+        and not request.json
+        or "image_url" not in request.json
+    ):
+        return jsonify({"error": "No image or URL provided"}), 400
 
-    if image and allowed_file(image.filename):
+    if "image" in request.files:
+        image = request.files["image"]
+        if image.filename == "":
+            return jsonify({"error": "No selected file"}), 400
 
-        image_content = image.read()
+        if image and allowed_file(image.filename):
+
+            filename = secure_filename(image.filename)
+            image_path = os.path.join("static/uploads", filename)
+
+            try:
+                image.save(image_path)
+            except Exception as e:
+                return jsonify({"error": f"Error saving image: {e}"}), 500
+
+            try:
+
+                uploaded_image = load_img(image_path, target_size=(224, 224))
+                image_array = img_to_array(uploaded_image)
+                image_array = image_array.reshape(
+                    (
+                        1,
+                        image_array.shape[0],
+                        image_array.shape[1],
+                        image_array.shape[2],
+                    )
+                )
+                image_array = preprocess_input(image_array)
+
+                image_features = mobilenet_model.predict(image_array, verbose=0)
+
+                max_caption_length = 34
+                generated_caption = predict_caption(
+                    model, image_features, tokenizer, max_caption_length
+                )
+                generated_caption = generated_caption.replace("startseq", "").replace(
+                    "endseq", ""
+                )
+
+            except Exception as e:
+                return jsonify({"error": f"Error processing image: {e}"}), 500
+
+            os.remove(image_path)
+
+            return jsonify({"description": generated_caption}), 200
+
+    if "image_url" in request.json:
+        image_url = request.json["image_url"]
 
         try:
 
-            uploaded_image = load_img(BytesIO(image_content), target_size=(224, 224))
+            image_response = requests.get(image_url)
+            image_response.raise_for_status()
+
+            uploaded_image = load_img(
+                BytesIO(image_response.content), target_size=(224, 224)
+            )
             image_array = img_to_array(uploaded_image)
             image_array = image_array.reshape(
                 (1, image_array.shape[0], image_array.shape[1], image_array.shape[2])
@@ -104,7 +160,14 @@ def generate_caption():
 
         return jsonify({"description": generated_caption}), 200
 
-    return jsonify({"error": "Invalid file type. Please upload a valid image."}), 400
+    return (
+        jsonify(
+            {
+                "error": "Invalid input. Please upload an image file or provide a valid image URL."
+            }
+        ),
+        400,
+    )
 
 
 if __name__ == "__main__":
