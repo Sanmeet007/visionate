@@ -4,9 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        color-scheme: dark;
+      }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        flex-direction: column;
+      }
+    </style>
   </head>
   <body>
-    <!-- With no alt  -->
-    <img src="./image.png" width="512" height="512" />
+    <div class="center">
+      <h1>This is something</h1>
+      <div class="container">
+        <h3>Image without alt tag</h3>
+        <div>
+          <img src="./image.png" width="512" height="512" />
+        </div>
+
+        <br />
+
+        <h3>Image with alt tag</h3>
+        <div>
+          <img
+            src="./image.png"
+            width="512"
+            height="512"
+            alt="Image of 2 puppies sitting in garden"
+          />
+        </div>
+      </div>
+    </div>
   </body>
 </html>
