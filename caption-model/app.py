@@ -39,7 +39,7 @@ mobilenet_model = Model(
 
 
 try:
-    model = tf.keras.models.load_model("mymodel.h5")
+    model = tf.keras.models.load_model("model.h5")
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
