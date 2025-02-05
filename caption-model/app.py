@@ -16,6 +16,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import requests
 from io import BytesIO
 from tensorflow.keras.saving import register_keras_serializable
+from PIL import Image
 
 
 app = Flask(__name__)
@@ -75,60 +76,36 @@ def predict_caption(model, image_features, tokenizer, max_caption_length):
 @app.route("/generate_caption", methods=["POST"])
 def generate_caption():
 
-    if (
-        "image" not in request.files
-        and not request.json
-        or "image_url" not in request.json
-    ):
-        return jsonify({"error": "No image or URL provided"}), 400
-
     if "image" in request.files:
         image = request.files["image"]
         if image.filename == "":
             return jsonify({"error": "No selected file"}), 400
 
         if image and allowed_file(image.filename):
-
-            filename = secure_filename(image.filename)
-            image_path = os.path.join("static/uploads", filename)
-
             try:
-                image.save(image_path)
-            except Exception as e:
-                return jsonify({"error": f"Error saving image: {e}"}), 500
-
-            try:
-
-                uploaded_image = load_img(image_path, target_size=(224, 224))
+                # Read the image directly from the file-like object
+                uploaded_image = Image.open(image.stream)  # Image is in memory, no need to save to disk
+                uploaded_image = uploaded_image.resize((224, 224))  # Resize image
                 image_array = img_to_array(uploaded_image)
                 image_array = image_array.reshape(
-                    (
-                        1,
-                        image_array.shape[0],
-                        image_array.shape[1],
-                        image_array.shape[2],
-                    )
+                    (1, image_array.shape[0], image_array.shape[1], image_array.shape[2])
                 )
                 image_array = preprocess_input(image_array)
 
+                # Extract features from the image using MobileNetV2
                 image_features = mobilenet_model.predict(image_array, verbose=0)
 
+                # Generate caption
                 max_caption_length = 34
-                generated_caption = predict_caption(
-                    model, image_features, tokenizer, max_caption_length
-                )
-                generated_caption = generated_caption.replace("startseq", "").replace(
-                    "endseq", ""
-                )
+                generated_caption = predict_caption(model, image_features, tokenizer, max_caption_length)
+                generated_caption = generated_caption.replace("startseq", "").replace("endseq", "")
 
             except Exception as e:
                 return jsonify({"error": f"Error processing image: {e}"}), 500
 
-            os.remove(image_path)
-
             return jsonify({"description": generated_caption}), 200
 
-    if "image_url" in request.json:
+    elif "image_url" in request.json:
         image_url = request.json["image_url"]
 
         try:
