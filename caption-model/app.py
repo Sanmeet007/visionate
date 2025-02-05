@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv(".env")
+
 import os
 import numpy as np
 import pickle
@@ -11,9 +14,6 @@ import requests
 from io import BytesIO
 from werkzeug.utils import secure_filename
 from tensorflow.keras.saving import register_keras_serializable
-from dotenv import load_dotenv
-
-load_dotenv(".env")
 
 app = Flask(__name__)
 
