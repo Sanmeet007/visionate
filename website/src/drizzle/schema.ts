@@ -22,7 +22,16 @@ export const usersTable = mysqlTable("users", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
-  role: mysqlEnum("role", ["admin", "customer"]).notNull().default("customer"),
+  role: mysqlEnum("role", ["admin", "moderator", "customer"])
+    .notNull()
+    .default("customer"),
+  subscriptionType: mysqlEnum("subscription_type", [
+    "free",
+    "premium",
+    "enterprise",
+  ])
+    .notNull()
+    .default("free"),
   phoneNumber: int("phone_number", {
     unsigned: true,
   }).unique(),
@@ -72,7 +81,6 @@ export const apiKeysTable = mysqlTable("api_keys", {
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   apiKey: varchar("api_key", { length: 64 }).unique().notNull(),
-  maxLimit: int("max_limit").default(100), // Monthly limit
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
@@ -104,7 +112,6 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
         "total_hits"
       ),
-      maxLimit: apiKeysTable.maxLimit,
       isActive: apiKeysTable.isActive,
       createdAt: apiKeysTable.createdAt,
       updatedAt: apiKeysTable.updatedAt,
