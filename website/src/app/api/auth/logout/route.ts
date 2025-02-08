@@ -1,7 +1,7 @@
 /**
  *
  * ROUTE: /api/auth/logout
- * ALLOWED METHODS: POST
+ * ALLOWED METHODS: GET
  *
  * --------------------
  * GET : ( None )
