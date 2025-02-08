@@ -20,7 +20,7 @@ interface MiddlewareCallbackWithNullUser {
 }
 
 interface MiddlewareParams {
-  allowedRoles: "admin" | "any";
+  allowedRoles: "admin" | "moderator" | "customer" | "any";
 }
 
 /**
