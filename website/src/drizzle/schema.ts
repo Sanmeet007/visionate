@@ -5,7 +5,6 @@
 
 import { sql } from "drizzle-orm";
 import {
-  serial,
   int,
   timestamp,
   mysqlTable,
@@ -14,6 +13,8 @@ import {
   mysqlEnum,
   boolean,
   mysqlView,
+  bigint,
+  serial,
 } from "drizzle-orm/mysql-core";
 
 export const usersTable = mysqlTable("users", {
@@ -51,7 +52,7 @@ export const sessionTable = mysqlTable("sessions", {
 });
 
 export const loginAttemptsTable = mysqlTable("login_attempts", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   userId: varchar("user_id", {
     length: 255,
   })
@@ -65,7 +66,9 @@ export const loginAttemptsTable = mysqlTable("login_attempts", {
 
 export const apiKeysTable = mysqlTable("api_keys", {
   id: serial("id").primaryKey(),
-  userId: int("user_id")
+  userId: varchar("user_id", {
+    length: 255,
+  })
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   apiKey: varchar("api_key", { length: 64 }).unique().notNull(),
@@ -77,10 +80,12 @@ export const apiKeysTable = mysqlTable("api_keys", {
 
 export const apiRequestsTable = mysqlTable("api_requests", {
   id: serial("id").primaryKey(),
-  apiKeyId: int("api_key_id")
+  apiKeyId: bigint("api_key_id", { mode: "number", unsigned: true })
     .notNull()
     .references(() => apiKeysTable.id, { onDelete: "cascade" }),
-  userId: int("user_id")
+  userId: varchar("user_id", {
+    length: 255,
+  })
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   endpoint: varchar("endpoint", { length: 255 }).notNull(),
@@ -96,7 +101,9 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       apiKeyId: apiKeysTable.id,
       userId: apiKeysTable.userId,
       apiKey: apiKeysTable.apiKey,
-      totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`,
+      totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
+        "total_hits"
+      ),
       maxLimit: apiKeysTable.maxLimit,
       isActive: apiKeysTable.isActive,
       createdAt: apiKeysTable.createdAt,
