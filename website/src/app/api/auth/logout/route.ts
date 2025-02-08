@@ -41,7 +41,7 @@ export const GET = usingLoginMiddleware(async (_, loggedInUser) => {
     });
   } catch (e) {
     if (Number(process.env.LOGGING_LEVEL) > 0) {
-      console.log(e);
+      console.error(e);
     }
     return NextResponse.json(
       {

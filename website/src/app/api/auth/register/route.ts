@@ -87,7 +87,7 @@ export const POST = usingLoginMiddleware(
         }
 
         if (Number(process.env.LOGGING_LEVEL) > 0) {
-          console.log(e);
+          console.error(e);
         }
 
         return NextResponse.json(

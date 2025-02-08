@@ -21,7 +21,7 @@ try {
   });
 } catch (e) {
   // Logging errors
-  console.log(e);
+  console.error(e);
 } finally {
   // Closing connection
   await connection.end();

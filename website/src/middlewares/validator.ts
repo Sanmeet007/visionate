@@ -80,11 +80,10 @@ export function usingJoiValidatorMiddleware<T>(
         try {
           data = await request.json();
         } catch (e: unknown) {
-          
-          if (process.env.LOGGING_LEVEL === "1") {
-            console.log(e);
+          if (Number(process.env.LOGGING_LEVEL) > 0) {
+            console.error(e);
           }
-          
+
           return NextResponse.json(
             {
               error: true,

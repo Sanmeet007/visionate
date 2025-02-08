@@ -3,7 +3,7 @@
  * using Drizzle ORM
  */
 
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import {
   int,
   timestamp,
@@ -107,8 +107,9 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
   qb
     .select({
       apiKeyId: apiKeysTable.id,
-      userId: apiKeysTable.userId,
+      userId: usersTable.id,
       apiKey: apiKeysTable.apiKey,
+      userSubscriptionType: usersTable.subscriptionType,
       totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
         "total_hits"
       ),
@@ -117,6 +118,7 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       updatedAt: apiKeysTable.updatedAt,
     })
     .from(apiKeysTable)
+    .leftJoin(usersTable, eq(apiKeysTable.userId, usersTable.id))
     .leftJoin(
       apiRequestsTable,
       sql`
@@ -125,5 +127,5 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
     `
     )
-    .groupBy(apiKeysTable.id)
+    .groupBy(apiKeysTable.id, usersTable.subscriptionType, usersTable.id)
 );
