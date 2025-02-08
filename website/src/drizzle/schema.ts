@@ -3,13 +3,17 @@
  * using Drizzle ORM
  */
 
+import { sql } from "drizzle-orm";
 import {
+  serial,
   int,
   timestamp,
   mysqlTable,
   varchar,
   datetime,
   mysqlEnum,
+  boolean,
+  mysqlView,
 } from "drizzle-orm/mysql-core";
 
 export const usersTable = mysqlTable("users", {
@@ -58,3 +62,54 @@ export const loginAttemptsTable = mysqlTable("login_attempts", {
   deviceName: varchar("device_name", { length: 255 }),
   time: timestamp("time").notNull().defaultNow(),
 });
+
+export const apiKeysTable = mysqlTable("api_keys", {
+  id: serial("id").primaryKey(),
+  userId: int("user_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  apiKey: varchar("api_key", { length: 64 }).unique().notNull(),
+  maxLimit: int("max_limit").default(100), // Monthly limit
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export const apiRequestsTable = mysqlTable("api_requests", {
+  id: serial("id").primaryKey(),
+  apiKeyId: int("api_key_id")
+    .notNull()
+    .references(() => apiKeysTable.id, { onDelete: "cascade" }),
+  userId: int("user_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  endpoint: varchar("endpoint", { length: 255 }).notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }).notNull(),
+  deviceName: varchar("device_name", { length: 255 }),
+  userAgent: varchar("user_agent", { length: 1024 }),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
+  qb
+    .select({
+      apiKeyId: apiKeysTable.id,
+      userId: apiKeysTable.userId,
+      apiKey: apiKeysTable.apiKey,
+      totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`,
+      maxLimit: apiKeysTable.maxLimit,
+      isActive: apiKeysTable.isActive,
+      createdAt: apiKeysTable.createdAt,
+      updatedAt: apiKeysTable.updatedAt,
+    })
+    .from(apiKeysTable)
+    .leftJoin(
+      apiRequestsTable,
+      sql`
+      ${apiKeysTable.id} = ${apiRequestsTable.apiKeyId} 
+      AND MONTH(${apiRequestsTable.timestamp}) = MONTH(CURRENT_DATE()) 
+      AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
+    `
+    )
+    .groupBy(apiKeysTable.id)
+);
