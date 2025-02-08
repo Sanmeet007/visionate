@@ -10,7 +10,6 @@
  * --------------------
  */
 
-
 import { NextResponse } from "next/server";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import Joi from "joi";
@@ -21,6 +20,7 @@ import { usersTable } from "@/drizzle/schema";
 import { cookies as requestCookies } from "next/headers";
 import { generatePasswordHash } from "@/utils/auth-utilities";
 import { usingLoginMiddleware } from "@/middlewares/authenticator";
+import { eq } from "drizzle-orm";
 
 interface BodyRouteParams {
   email: string;
@@ -42,13 +42,16 @@ export const POST = usingLoginMiddleware(
         const hashedPassword = await generatePasswordHash(password);
         const userId = generateId(15);
 
-        // DEBUG : For logging new user use : 
-        //  const newUser = await db.insert(usersTable).values({
         await db.insert(usersTable).values({
           id: userId,
           email,
           hashedPassword,
         });
+
+        const [newUser] = await db
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.id, userId));
 
         const session = await lucia.createSession(userId, {
           expiresIn: 3600 * 24 * 30, // 30 days a session
@@ -61,9 +64,13 @@ export const POST = usingLoginMiddleware(
           sessionCookie.attributes
         );
 
+        const returningUser = { ...newUser };
+        returningUser.hashedPassword = null;
+
         return NextResponse.json({
           error: false,
           message: "Login success",
+          user: returningUser,
         });
       } catch (e: unknown) {
         const error = e as { code: string };
