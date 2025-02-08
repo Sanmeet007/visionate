@@ -1,8 +1,12 @@
-// isvalidapikey_and_is_active_key
-
-// Unlimited for enterprise
-// 200 requests per month for premium
-// 50 requests per month for free user
+/**
+ * API Rate Limits Based on Subscription Type:
+ * 
+ * - **Enterprise**: Unlimited requests per month.
+ * - **Premium**: Up to **200 requests** per month.
+ * - **Free**: Up to **50 requests** per month.
+ * 
+ * If the monthly limit is exceeded, users must **upgrade their plan** to continue accessing the API.
+ */
 
 import { db } from "@/drizzle";
 import { apiKeyUsageTable } from "@/drizzle/schema";
