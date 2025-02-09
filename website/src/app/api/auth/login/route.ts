@@ -14,7 +14,7 @@ import { NextResponse } from "next/server";
 import { lucia } from "@/auth";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import Joi from "joi";
-import { verifyPassword } from "@/utils/auth-utilities";
+import { verifyPassword } from "@/utils/auth-helpers";
 import { db } from "@/drizzle";
 import { eq } from "drizzle-orm";
 import { cookies as requestCookies } from "next/headers";

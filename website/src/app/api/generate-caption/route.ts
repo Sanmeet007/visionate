@@ -8,13 +8,32 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
     const imageFile = formData.get("image") as File;
     const imageUrl = formData.get("imageUrl");
 
-    return NextResponse.json({
-      imageFile: {
-        name: imageFile.name,
-        size: imageFile.size,
+    if (imageFile) {
+      return NextResponse.json({
+        imageFile: {
+          name: imageFile.name,
+          size: imageFile.size,
+        },
+      });
+    }
+
+    if (imageUrl) {
+      // check the image from url first ( expensive process !)
+      
+      return NextResponse.json({
+        imageUrl,
+      });
+    }
+
+    return NextResponse.json(
+      {
+        error: true,
+        message: "Please provide either image url or image file",
       },
-      imageUrl,
-    });
+      {
+        status: 400,
+      }
+    );
   } catch (e: unknown) {
     if (Number(process.env.LOGGING_LEVEL) > 0) {
       console.error(e);

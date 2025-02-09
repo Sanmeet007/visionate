@@ -18,7 +18,7 @@ import { generateId } from "lucia";
 import { db } from "@/drizzle";
 import { usersTable } from "@/drizzle/schema";
 import { cookies as requestCookies } from "next/headers";
-import { generatePasswordHash } from "@/utils/auth-utilities";
+import { generatePasswordHash } from "@/utils/auth-helpers";
 import { usingLoginMiddleware } from "@/middlewares/authenticator";
 import { eq } from "drizzle-orm";
 
