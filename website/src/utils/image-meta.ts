@@ -20,7 +20,7 @@ const getRandomUserAgent = (): string => {
   return userAgents[Math.floor(Math.random() * userAgents.length)];
 };
 
-const getImageMetadata = async (
+const getImageMetadataFromUrl = async (
   imageUrl: string
 ): Promise<ImageMetadata | { error: string }> => {
   try {
@@ -50,4 +50,27 @@ const getImageMetadata = async (
   }
 };
 
-export { getImageMetadata };
+const getImageMetadataFromFile = async (
+  file: File
+): Promise<ImageMetadata | { error: string }> => {
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const type = await imageType(buffer);
+
+    if (!type) {
+      return { error: "Invalid or unknown image format" };
+    }
+
+    return {
+      url: "",
+      mimeType: type.mime,
+      extension: type.ext,
+      sizeInBytes: file.size,
+    };
+  } catch (error) {
+    return { error: (error as Error).message };
+  }
+};
+
+export { getImageMetadataFromUrl, getImageMetadataFromFile };

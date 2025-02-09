@@ -1,5 +1,8 @@
 import { usingHasValidApiKeyMiddleware } from "@/middlewares/apikey-validator";
-import { getImageMetadata } from "@/utils/image-meta";
+import {
+  getImageMetadataFromFile,
+  getImageMetadataFromUrl,
+} from "@/utils/image-meta";
 import { NextResponse } from "next/server";
 
 export const POST = usingHasValidApiKeyMiddleware(async (request) => {
@@ -10,19 +13,18 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
     const imageUrl = formData.get("imageUrl");
 
     if (imageFile) {
+      const imageMeta = await getImageMetadataFromFile(imageFile);
+
       return NextResponse.json({
-        imageFile: {
-          name: imageFile.name,
-          size: imageFile.size,
-        },
+        imageMeta,
       });
     }
 
     if (imageUrl) {
-      console.log(await getImageMetadata(imageUrl as string));
+      const imageMeta = await getImageMetadataFromUrl(imageUrl as string);
 
       return NextResponse.json({
-        imageUrl,
+        imageMeta,
       });
     }
 
