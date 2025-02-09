@@ -111,7 +111,7 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
   qb
     .select({
       apiKeyId: apiKeysTable.id,
-      userId: usersTable.id,
+      userId: apiKeysTable.userId,
       apiKey: apiKeysTable.apiKey,
       apiKeyName: apiKeysTable.keyName,
       userSubscriptionType: usersTable.subscriptionType,
@@ -132,5 +132,5 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
     `
     )
-    .groupBy(apiKeysTable.id, usersTable.subscriptionType, usersTable.id)
+    .groupBy(apiKeysTable.id, usersTable.subscriptionType, apiKeysTable.userId)
 );
