@@ -10,18 +10,14 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 const getMaxAllowedImageSize = (userRole: string): number => {
-  switch (userRole) {
-    case "free":
-      break;
-    case "starter":
-      break;
-    case "pro":
-      break;
-    case "enterprise":
-      break;
-  }
+  const sizeLimits: Record<string, number> = {
+    free: 5 * 1024 * 1024, // 5MB
+    starter: 10 * 1024 * 1024, // 10MB
+    pro: 15 * 1024 * 1024, // 15MB
+    enterprise: 20 * 1024 * 1024, // 20MB
+  };
 
-  return 0;
+  return sizeLimits[userRole] ?? 0;
 };
 
 export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
