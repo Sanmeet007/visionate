@@ -27,7 +27,8 @@ export const usersTable = mysqlTable("users", {
     .default("customer"),
   subscriptionType: mysqlEnum("subscription_type", [
     "free",
-    "premium",
+    "starter",
+    "pro",
     "enterprise",
   ])
     .notNull()

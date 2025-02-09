@@ -46,8 +46,11 @@ export const usingHasValidApiKeyMiddleware = (callback: MiddlewareCallback) => {
               case "free":
                 hasReachedMaxLimit = record.totalHits > 50;
                 break;
-              case "premium":
+              case "starter":
                 hasReachedMaxLimit = record.totalHits > 200;
+                break;
+              case "pro":
+                hasReachedMaxLimit = record.totalHits > 500;
                 break;
               case "enterprise":
                 hasReachedMaxLimit = false;
