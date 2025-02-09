@@ -113,6 +113,7 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       apiKeyId: apiKeysTable.id,
       userId: usersTable.id,
       apiKey: apiKeysTable.apiKey,
+      apiKeyName: apiKeysTable.keyName,
       userSubscriptionType: usersTable.subscriptionType,
       totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
         "total_hits"
