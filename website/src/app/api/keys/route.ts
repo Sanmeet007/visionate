@@ -269,7 +269,7 @@ export const DELETE = usingAuthMiddleware(
         getDataFrom: "BODY",
         validationSchema: {
           body: Joi.object({
-            apiKey: Joi.string().required().length(255),
+            apiKey: Joi.string().required().length(64),
           }),
         },
       }
