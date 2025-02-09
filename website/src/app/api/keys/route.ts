@@ -51,55 +51,73 @@ export const GET = usingAuthMiddleware(async (_, user) => {
   }
 });
 
+interface PostRequestData {
+  keyName: string;
+}
+
 export const POST = usingAuthMiddleware(
   usingContentTypeMiddleware(
-    usingEmailVerificationMiddleware(async (_, user) => {
-      try {
-        const [{ keyCount }] = await db
-          .select({ keyCount: count() })
-          .from(apiKeysTable)
-          .where(eq(apiKeysTable.userId, user!.id));
+    usingEmailVerificationMiddleware(
+      usingJoiValidatorMiddleware<PostRequestData>(
+        async (_, values, user) => {
+          try {
+            const { keyName } = values.bodyData!;
+            const [{ keyCount }] = await db
+              .select({ keyCount: count() })
+              .from(apiKeysTable)
+              .where(eq(apiKeysTable.userId, user!.id));
 
-        const maxKeysAllowed = API_KEY_LIMITS[user!.subscriptionType];
+            const maxKeysAllowed = API_KEY_LIMITS[user!.subscriptionType];
 
-        if (keyCount >= maxKeysAllowed) {
-          return NextResponse.json(
-            {
-              error: true,
+            if (keyCount >= maxKeysAllowed) {
+              return NextResponse.json(
+                {
+                  error: true,
+                  message:
+                    "API key limit reached. Upgrade your plan to generate more keys.",
+                },
+                { status: 403 }
+              );
+            }
+
+            const key = generateApiKey();
+            await db.insert(apiKeysTable).values({
+              userId: user!.id,
+              isActive: true,
+              apiKey: key,
+              keyName: keyName,
+            });
+
+            return NextResponse.json({
+              error: false,
+              apiKey: key,
               message:
-                "API key limit reached. Upgrade your plan to generate more keys.",
-            },
-            { status: 403 }
-          );
-        }
+                "Your API key has been successfully created and is ready for use!",
+            });
+          } catch (e: unknown) {
+            if (Number(process.env.LOGGING_LEVEL) > 0) {
+              console.error(e);
+            }
 
-        const key = generateApiKey();
-        await db.insert(apiKeysTable).values({
-          userId: user!.id,
-          isActive: true,
-          apiKey: key,
-        });
-
-        return NextResponse.json({
-          error: false,
-          apiKey: key,
-          message:
-            "Your API key has been successfully created and is ready for use!",
-        });
-      } catch (e: unknown) {
-        if (Number(process.env.LOGGING_LEVEL) > 0) {
-          console.error(e);
-        }
-
-        return NextResponse.json(
-          {
-            error: true,
-            message: "Something went wrong",
+            return NextResponse.json(
+              {
+                error: true,
+                message: "Something went wrong",
+              },
+              { status: 500 }
+            );
+          }
+        },
+        {
+          getDataFrom: "BODY",
+          validationSchema: {
+            body: Joi.object({
+              keyName: Joi.string().required(),
+            }),
           },
-          { status: 500 }
-        );
-      }
-    }),
+        }
+      )
+    ),
     "application/json"
   )
 );
