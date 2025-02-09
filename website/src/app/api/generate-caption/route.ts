@@ -71,19 +71,17 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
 
     const res = await fetch(`${process.env.CAPTION_API_ENDPOINT}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       body: pipedFormData,
     });
 
     if (!res.ok) {
+      const resBody = await res.json();
       return NextResponse.json(
         {
           error: true,
-          message: "Something went wrong",
+          message: resBody?.error ?? "Something went wrong",
         },
-        { status: 500 }
+        { status: 400 }
       );
     }
 
@@ -102,7 +100,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
     return NextResponse.json(
       {
         error: true,
-        message: "Something went wrong",
+        message: "",
       },
       { status: 500 }
     );
