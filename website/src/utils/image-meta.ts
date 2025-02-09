@@ -22,55 +22,45 @@ const getRandomUserAgent = (): string => {
 
 const getImageMetadataFromUrl = async (
   imageUrl: string
-): Promise<ImageMetadata | { error: string }> => {
-  try {
-    const response = await fetch(imageUrl, {
-      headers: { "User-Agent": getRandomUserAgent() },
-    });
+): Promise<ImageMetadata> => {
+  const response = await fetch(imageUrl, {
+    headers: { "User-Agent": getRandomUserAgent() },
+  });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${response.statusText}`);
-    }
-
-    const buffer = await response.arrayBuffer();
-    const type = await imageType(Buffer.from(buffer));
-
-    if (!type) {
-      return { error: "Invalid or unknown image format" };
-    }
-
-    return {
-      url: imageUrl,
-      mimeType: type.mime,
-      extension: type.ext,
-      sizeInBytes: buffer.byteLength,
-    };
-  } catch (error) {
-    return { error: (error as Error).message };
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.statusText}`);
   }
+
+  const buffer = await response.arrayBuffer();
+  const type = await imageType(Buffer.from(buffer));
+
+  if (!type) {
+    throw Error("Invalid or unknown image format");
+  }
+
+  return {
+    url: imageUrl,
+    mimeType: type.mime,
+    extension: type.ext,
+    sizeInBytes: buffer.byteLength,
+  };
 };
 
-const getImageMetadataFromFile = async (
-  file: File
-): Promise<ImageMetadata | { error: string }> => {
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const type = await imageType(buffer);
+const getImageMetadataFromFile = async (file: File): Promise<ImageMetadata> => {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const type = await imageType(buffer);
 
-    if (!type) {
-      return { error: "Invalid or unknown image format" };
-    }
-
-    return {
-      url: "",
-      mimeType: type.mime,
-      extension: type.ext,
-      sizeInBytes: file.size,
-    };
-  } catch (error) {
-    return { error: (error as Error).message };
+  if (!type) {
+    throw Error("Invalid or unknown image format");
   }
+
+  return {
+    url: "",
+    mimeType: type.mime,
+    extension: type.ext,
+    sizeInBytes: file.size,
+  };
 };
 
 export { getImageMetadataFromUrl, getImageMetadataFromFile };
