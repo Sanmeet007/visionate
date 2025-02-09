@@ -73,7 +73,7 @@ def predict_caption(model, image_features, tokenizer, max_caption_length):
     return caption
 
 
-@app.route("/generate_caption", methods=["POST"])
+@app.route("/generate-caption", methods=["POST"])
 def generate_caption():
 
     if "image" in request.files:
