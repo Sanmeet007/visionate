@@ -80,6 +80,26 @@ export const POST = usingAuthMiddleware(
               );
             }
 
+            const [{ recordsCount }] = await db
+              .select({ recordsCount: count() })
+              .from(apiKeysTable)
+              .where(
+                and(
+                  eq(apiKeysTable.userId, user!.id),
+                  eq(apiKeysTable.keyName, keyName)
+                )
+              );
+
+            if (recordsCount > 0) {
+              return NextResponse.json(
+                {
+                  error: true,
+                  message:
+                    "Key name already exists. Please choose a different name.",
+                },
+                { status: 403 }
+              );
+            }
             const key = generateApiKey();
             await db.insert(apiKeysTable).values({
               userId: user!.id,
