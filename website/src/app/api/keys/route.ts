@@ -217,7 +217,7 @@ export const PUT = usingAuthMiddleware(
         getDataFrom: "BODY",
         validationSchema: {
           body: Joi.object({
-            apiKey: Joi.string().length(255).required(),
+            apiKey: Joi.string().length(64).required(),
             isActive: Joi.boolean().optional(),
             keyName: Joi.string().min(3).max(100).optional(),
           }),
