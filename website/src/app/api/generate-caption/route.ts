@@ -1,4 +1,5 @@
 import { usingHasValidApiKeyMiddleware } from "@/middlewares/apikey-validator";
+import { getImageMetadata } from "@/utils/image-meta";
 import { NextResponse } from "next/server";
 
 export const POST = usingHasValidApiKeyMiddleware(async (request) => {
@@ -18,8 +19,8 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
     }
 
     if (imageUrl) {
-      // check the image from url first ( expensive process !)
-      
+      console.log(await getImageMetadata(imageUrl as string));
+
       return NextResponse.json({
         imageUrl,
       });
