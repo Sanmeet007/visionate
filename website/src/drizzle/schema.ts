@@ -15,6 +15,7 @@ import {
   mysqlView,
   bigint,
   serial,
+  unique,
 } from "drizzle-orm/mysql-core";
 
 export const usersTable = mysqlTable("users", {
@@ -74,21 +75,25 @@ export const loginAttemptsTable = mysqlTable("login_attempts", {
   time: timestamp("time").notNull().defaultNow(),
 });
 
-export const apiKeysTable = mysqlTable("api_keys", {
-  id: serial("id").primaryKey(),
-  keyName: varchar("key_name", {
-    length: 100,
-  }),
-  userId: varchar("user_id", {
-    length: 255,
-  })
-    .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
-  apiKey: varchar("api_key", { length: 64 }).unique().notNull(),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-});
+export const apiKeysTable = mysqlTable(
+  "api_keys",
+  {
+    id: serial("id").primaryKey(),
+    keyName: varchar("key_name", {
+      length: 100,
+    }),
+    userId: varchar("user_id", {
+      length: 255,
+    })
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    apiKey: varchar("api_key", { length: 64 }).unique().notNull(),
+    isActive: boolean("is_active").default(true),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+  },
+  (table) => [unique("unique_user_keyname").on(table.userId, table.keyName)]
+);
 
 export const apiRequestsTable = mysqlTable("api_requests", {
   id: serial("id").primaryKey(),
