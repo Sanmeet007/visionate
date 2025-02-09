@@ -21,7 +21,7 @@ import { usingContentTypeMiddleware } from "@/middlewares/content-type";
 import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import { generateApiKey } from "@/utils/key-utilities";
-import { count, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
@@ -87,14 +87,37 @@ interface PutRequestBodyData {
 export const PUT = usingAuthMiddleware(
   usingContentTypeMiddleware(
     usingJoiValidatorMiddleware<PutRequestBodyData>(
-      async (_, values) => {
+      async (_, values, user) => {
         try {
           const { apiKey, isActive, keyName } = values.bodyData!;
-
           const updateData: Record<string, boolean | string | null> = {};
 
           if (isActive !== undefined) updateData.isActive = isActive;
-          if (keyName !== undefined) updateData.keyName = keyName;
+
+          if (keyName !== undefined) {
+            updateData.keyName = keyName;
+
+            const [{ count }] = await db
+              .select({ count: sql<number>`COUNT(*)` })
+              .from(apiKeysTable)
+              .where(
+                and(
+                  eq(apiKeysTable.keyName, keyName as string),
+                  eq(apiKeysTable.userId, user!.id)
+                )
+              );
+
+            if (count > 0) {
+              return NextResponse.json(
+                {
+                  error: true,
+                  message:
+                    "An API key with this name already exists. Please choose a different name.",
+                },
+                { status: 403 }
+              );
+            }
+          }
 
           if (Object.keys(updateData).length > 0) {
             await db
