@@ -123,6 +123,7 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
         "total_hits"
       ),
+      endpoint: sql<string>`${apiRequestsTable.endpoint}`.as("endpoint"),
       isActive: apiKeysTable.isActive,
       createdAt: apiKeysTable.createdAt,
       updatedAt: apiKeysTable.updatedAt,
@@ -137,5 +138,10 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
       AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
     `
     )
-    .groupBy(apiKeysTable.id, usersTable.subscriptionType, apiKeysTable.userId)
+    .groupBy(
+      apiKeysTable.id,
+      usersTable.subscriptionType,
+      apiKeysTable.userId,
+      apiRequestsTable.endpoint
+    )
 );
