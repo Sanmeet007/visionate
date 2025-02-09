@@ -815,6 +815,13 @@
   resolved "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
+"@supercharge/strings@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@supercharge/strings/-/strings-2.0.0.tgz#638289dd8318e9031a4d08fea7c2cdfa70dad08d"
+  integrity sha512-x4l2Xfm9Hcag12FBoRtTYQYdgHanL9LMNo9AV2ZDJ6JQyJ7ftgS17DWGEEtsohVhEpAJ0YQk2DeZz0JsdIQuDA==
+  dependencies:
+    uuid "~9.0.0"
+
 "@swc/counter@0.1.3":
   version "0.1.3"
   resolved "https://registry.npmjs.org/@swc/counter/-/counter-0.1.3.tgz"
@@ -3239,6 +3246,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+uuid@~9.0.0:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
+
 "website@file:.":
   version "0.1.0"
   dependencies:
@@ -3256,7 +3268,7 @@ uri-js@^4.2.2:
     oslo "^1.2.1"
     react "^19.0.0"
     react-dom "^19.0.0"
-    website "file:C:/Users/HP/AppData/Local/Yarn/Cache/v6/npm-website-0.1.0-442c182a-de84-419a-83ea-e9dfc2215397-1739045082297/node_modules/website"
+    website "file:C:/Users/HP/AppData/Local/Yarn/Cache/v6/npm-website-0.1.0-13bafb6f-fb71-4ecc-a57c-ce26bd3886b5-1739079273981/node_modules/website"
 
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"
