@@ -1,12 +1,13 @@
-/**
- * API Rate Limits Based on Subscription Type:
- * 
- * - **Enterprise**: Unlimited requests per month.
- * - **Premium**: Up to **200 requests** per month.
- * - **Free**: Up to **50 requests** per month.
- * 
- * If the monthly limit is exceeded, users must **upgrade their plan** to continue accessing the API.
- */
+/**  
+ * API Rate Limits Based on Subscription Type:  
+ *  
+ * - **Enterprise**: Unlimited requests per month, fastest response time.  
+ * - **Pro**: Up to **3 × 1,000 requests** per month, supports multiple API keys.  
+ * - **Starter**: Up to **200 requests** per month, standard response time.  
+ * - **Free**: Up to **50 requests** per month, slower response time.  
+ *  
+ * If the monthly limit is exceeded, users must **upgrade their plan** to continue accessing the API.  
+ */  
 
 import { db } from "@/drizzle";
 import { apiKeyUsageTable } from "@/drizzle/schema";
