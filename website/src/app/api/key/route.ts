@@ -25,6 +25,32 @@ import { and, count, eq } from "drizzle-orm";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
+export const GET = usingAuthMiddleware(async (_, user) => {
+  try {
+    const apiKeys = await db
+      .select()
+      .from(apiKeysTable)
+      .where(eq(apiKeysTable.userId, user.id));
+
+    return NextResponse.json({
+      error: false,
+      keys: apiKeys,
+    });
+  } catch (e: unknown) {
+    if (Number(process.env.LOGGING_LEVEL) > 0) {
+      console.error(e);
+    }
+
+    return NextResponse.json(
+      {
+        error: true,
+        message: "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+});
+
 export const POST = usingAuthMiddleware(
   usingContentTypeMiddleware(
     usingEmailVerificationMiddleware(async (_, user) => {
@@ -123,7 +149,12 @@ export const PUT = usingAuthMiddleware(
             await db
               .update(apiKeysTable)
               .set(updateData)
-              .where(eq(apiKeysTable.apiKey, apiKey));
+              .where(
+                and(
+                  eq(apiKeysTable.apiKey, apiKey),
+                  eq(apiKeysTable.userId, user!.id)
+                )
+              );
           }
 
           return NextResponse.json({
@@ -148,7 +179,7 @@ export const PUT = usingAuthMiddleware(
         getDataFrom: "BODY",
         validationSchema: {
           body: Joi.object({
-            apiKey: Joi.string().required(),
+            apiKey: Joi.string().length(255).required(),
             isActive: Joi.boolean().optional(),
             keyName: Joi.string().min(3).max(100).optional(),
           }),
@@ -159,7 +190,52 @@ export const PUT = usingAuthMiddleware(
   )
 );
 
-export const DELETE = usingAuthMiddleware(async (_, user) => {
-  console.log(user.emailVerified);
-  return new NextResponse();
-});
+interface DeleteRequestBodyData {
+  apiKey: string;
+}
+
+export const DELETE = usingAuthMiddleware(
+  usingContentTypeMiddleware(
+    usingJoiValidatorMiddleware<DeleteRequestBodyData>(
+      async (_, values, user) => {
+        try {
+          const { apiKey } = values.bodyData!;
+
+          await db
+            .delete(apiKeysTable)
+            .where(
+              and(
+                eq(apiKeysTable.userId, user!.id),
+                eq(apiKeysTable.apiKey, apiKey)
+              )
+            );
+          return NextResponse.json({
+            error: false,
+            message: "API key has been successfully removed.",
+          });
+        } catch (e: unknown) {
+          if (Number(process.env.LOGGING_LEVEL) > 0) {
+            console.error(e);
+          }
+
+          return NextResponse.json(
+            {
+              error: true,
+              message: "Something went wrong",
+            },
+            { status: 500 }
+          );
+        }
+      },
+      {
+        getDataFrom: "BODY",
+        validationSchema: {
+          body: Joi.object({
+            apiKey: Joi.string().required().length(255),
+          }),
+        },
+      }
+    ),
+    "application/json"
+  )
+);
