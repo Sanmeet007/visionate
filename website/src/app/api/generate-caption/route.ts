@@ -31,7 +31,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
     return NextResponse.json(
       {
         error: true,
-        message: "Please provide either image url or image file",
+        message: "Missing Input: Provide an Image URL or File",
       },
       {
         status: 400,
