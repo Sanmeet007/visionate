@@ -21,7 +21,7 @@ import { usingContentTypeMiddleware } from "@/middlewares/content-type";
 import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import { generateApiKey } from "@/utils/key-utilities";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
@@ -97,8 +97,8 @@ export const PUT = usingAuthMiddleware(
           if (keyName !== undefined) {
             updateData.keyName = keyName;
 
-            const [{ count }] = await db
-              .select({ count: sql<number>`COUNT(*)` })
+            const [{ keysCount }] = await db
+              .select({ keysCount: count() })
               .from(apiKeysTable)
               .where(
                 and(
@@ -107,7 +107,7 @@ export const PUT = usingAuthMiddleware(
                 )
               );
 
-            if (count > 0) {
+            if (keysCount > 0) {
               return NextResponse.json(
                 {
                   error: true,
