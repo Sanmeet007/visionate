@@ -132,7 +132,7 @@ export const POST = usingAuthMiddleware(
           getDataFrom: "BODY",
           validationSchema: {
             body: Joi.object({
-              keyName: Joi.string().required(),
+              keyName: Joi.string().min(3).max(255).required(),
             }),
           },
         }
