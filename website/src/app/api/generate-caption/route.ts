@@ -3,9 +3,10 @@ import {
   getImageMetadataFromFile,
   getImageMetadataFromUrl,
 } from "@/utils/image-meta";
+
 import { NextResponse } from "next/server";
 
-export const POST = usingHasValidApiKeyMiddleware(async (request) => {
+export const POST = usingHasValidApiKeyMiddleware(async (request , apikey) => {
   try {
     const formData = await request.formData();
 
@@ -15,6 +16,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
     if (imageFile) {
       const imageMeta = await getImageMetadataFromFile(imageFile);
 
+      
       return NextResponse.json({
         imageMeta,
       });
@@ -22,7 +24,6 @@ export const POST = usingHasValidApiKeyMiddleware(async (request) => {
 
     if (imageUrl) {
       const imageMeta = await getImageMetadataFromUrl(imageUrl as string);
-
       return NextResponse.json({
         imageMeta,
       });

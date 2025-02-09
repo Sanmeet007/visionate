@@ -17,7 +17,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cache } from "react";
 
 interface MiddlewareCallback {
-  (request: NextRequest): Promise<NextResponse> | NextResponse;
+  (request: NextRequest, apiKey: string): Promise<NextResponse> | NextResponse;
 }
 
 /**
@@ -95,7 +95,7 @@ export const usingHasValidApiKeyMiddleware = (callback: MiddlewareCallback) => {
           );
         }
 
-        return await callback(request);
+        return await callback(request, apiKey);
       } else {
         return NextResponse.json(
           {
