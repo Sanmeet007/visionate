@@ -76,6 +76,9 @@ export const loginAttemptsTable = mysqlTable("login_attempts", {
 
 export const apiKeysTable = mysqlTable("api_keys", {
   id: serial("id").primaryKey(),
+  keyName: varchar("key_name", {
+    length: 100,
+  }),
   userId: varchar("user_id", {
     length: 255,
   })
