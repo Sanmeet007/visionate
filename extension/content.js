@@ -4,7 +4,7 @@ const getImagesWithoutAlt = () => {
   let imagesWithoutAlt = [];
 
   try {
-    imagesWithoutAlt = document.querySelectorAll("img:not([alt])");
+    imagesWithoutAlt = Array.from(document.querySelectorAll("img:not([alt])"));
   } catch (e) {
     const images = document.querySelectorAll("img");
     imagesWithoutAlt = Array.from(images).filter(
