@@ -12,6 +12,10 @@
     "action": {
         "default_popup": "popup.html"
     },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "options_page": "options.html",
     "content_scripts": [
         {
             "matches": [
@@ -24,5 +28,8 @@
                 "content.js"
             ]
         }
+    ],
+    "permissions": [
+        "storage"
     ]
 }

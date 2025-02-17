@@ -16,6 +16,7 @@ const getImagesWithoutAlt = () => {
 };
 
 const getAltTextFromImageSrc = async (imgSrc) => {
+  console.log(chrome.storage)
   await new Promise((res, rej) => {
     setTimeout(() => {
       res();

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configure Visionate</title>
+
+    <style>
+      body {
+        font-size: 1rem;
+      }
+
+      #loading-modal div {
+        display: none;
+      }
+
+      #loading-modal.active div {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading-modal">
+      <div>saving...</div>
+    </div>
+
+    <form id="__visionate_api_form" autocomplete="off">
+      <p>Enter your api key</p>
+      <input type="text" name="apikey" placeholder="Api key" />
+
+      <button class="waves-effect waves-light btn" type="submit">Save</button>
+    </form>
+
+    <script type="module" src="./options.js"></script>
+  </body>
+</html>
