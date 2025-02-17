@@ -38,8 +38,9 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
 };
 
 (async () => {
+  console.log("captioning images...");
   const images = getImagesWithoutAlt();
-  
+
   if (!kReleaseMode) {
     console.debug("--- EXTENSION LOG START ---");
 
@@ -61,6 +62,8 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
     });
 
     console.debug("--- EXTENSION LOG END  ---");
+
+    console.log("images captioning complete...");
   } else {
     // handle production logic here
   }
