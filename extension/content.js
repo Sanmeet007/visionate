@@ -37,9 +37,9 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
   return "<CAPTION-DATA>";
 };
 
-const images = getImagesWithoutAlt();
-
 (async () => {
+  const images = getImagesWithoutAlt();
+  
   if (!kReleaseMode) {
     console.debug("--- EXTENSION LOG START ---");
 
