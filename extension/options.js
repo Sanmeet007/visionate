@@ -44,9 +44,10 @@ async function wait(time = 1000) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
-    if (form.apikey.value != "") {
+    const key = form.apikey.value;
+    if (key != "") {
       showLoading();
-      await saveApiKey();
+      await saveApiKey(key);
       await wait(2000);
       hideLoading();
       form.reset();

@@ -1,5 +1,17 @@
 const kReleaseMode = false;
 
+async function getApiKey() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get("apiKey", (data) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(data.apiKey || null);
+      }
+    });
+  });
+}
+
 const getImagesWithoutAlt = () => {
   let imagesWithoutAlt = [];
 
@@ -15,8 +27,7 @@ const getImagesWithoutAlt = () => {
   return imagesWithoutAlt;
 };
 
-const getAltTextFromImageSrc = async (imgSrc) => {
-  console.log(chrome.storage)
+const getAltTextFromImageSrc = async (apiKey, imgEl) => {
   await new Promise((res, rej) => {
     setTimeout(() => {
       res();
@@ -28,21 +39,29 @@ const getAltTextFromImageSrc = async (imgSrc) => {
 
 const images = getImagesWithoutAlt();
 
-if (!kReleaseMode) {
-  console.debug("--- EXTENSION LOG START ---");
+(async () => {
+  if (!kReleaseMode) {
+    console.debug("--- EXTENSION LOG START ---");
 
-  images.forEach(async (img) => {
-    try {
-      console.debug("[EXTENSION] : Getting caption for", img);
-      const captionData = await getAltTextFromImageSrc(img.src);
-      img.alt = captionData;
-    } catch (e) {
-      console.log(e);
-      console.error("Unable to get caption for : ", img);
+    const apiKey = await getApiKey();
+    if (!apiKey) {
+      console.log("NO API KEY FOUND PLEASE CONFIGURE YOUR API KEY");
+      return;
     }
-  });
 
-  console.debug("--- EXTENSION LOG END  ---");
-} else {
-  // handle production logic here
-}
+    images.forEach(async (imgEl) => {
+      try {
+        console.debug("[EXTENSION] : Getting caption for", imgEl);
+        const captionData = await getAltTextFromImageSrc(apiKey, imgEl);
+        imgEl.alt = captionData;
+      } catch (e) {
+        console.log(e);
+        console.error("Unable to get caption for : ", imgEl);
+      }
+    });
+
+    console.debug("--- EXTENSION LOG END  ---");
+  } else {
+    // handle production logic here
+  }
+})();
