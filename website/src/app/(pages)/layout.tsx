@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import AppProgressProvider from "./nprogress";
 import { MuiLocalizationProvider } from "../providers/mui-localization-provider";
 import { MuiThemeProvider } from "../providers/theme-provider";
+import QueryProvider from "../providers/query-provider";
+import { UserProvider } from "../providers/user-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,11 +18,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <MuiLocalizationProvider>
-          <MuiThemeProvider>
-            <AppProgressProvider>{children}</AppProgressProvider>
-          </MuiThemeProvider>
-        </MuiLocalizationProvider>
+        <UserProvider>
+          <QueryProvider>
+            <MuiLocalizationProvider>
+              <MuiThemeProvider>
+                <AppProgressProvider>{children}</AppProgressProvider>
+              </MuiThemeProvider>
+            </MuiLocalizationProvider>
+          </QueryProvider>
+        </UserProvider>
       </body>
     </html>
   );
