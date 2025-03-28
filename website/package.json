@@ -13,7 +13,12 @@
     "db:studio": "drizzle-kit studio --config=./drizzle.config.ts"
   },
   "dependencies": {
+    "@bprogress/next": "^3.2.10",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
     "@supercharge/strings": "^2.0.0",
     "drizzle-kit": "^0.30.4",
     "drizzle-orm": "^0.39.2",
