@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import AppProgressProvider from "../providers/progress-provider";
 import { MuiLocalizationProvider } from "../providers/mui-localization-provider";
-import { AppThemeProvider } from "../providers/theme-provider";
+import { AppThemeProvider } from "../providers/app-theme-provider";
 import QueryProvider from "../providers/query-provider";
 import { UserProvider } from "../providers/user-provider";
 import { getUser } from "@/auth";
