@@ -1,12 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import AppProgressProvider from "../providers/progress-provider";
 import { MuiLocalizationProvider } from "../providers/mui-localization-provider";
 import { AppThemeProvider } from "../providers/app-theme-provider";
 import QueryProvider from "../providers/query-provider";
 import { UserProvider } from "../providers/user-provider";
 import { getUser } from "@/auth";
+import SnackbarProvider from "../providers/snackbar-provider";
+import GloablLoader from "../providers/global-loader-provider";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,16 +27,20 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
-        <UserProvider initialUserData={user}>
-          <QueryProvider>
-            <MuiLocalizationProvider>
-              <AppThemeProvider>
-                <AppProgressProvider>{children}</AppProgressProvider>
-              </AppThemeProvider>
-            </MuiLocalizationProvider>
-          </QueryProvider>
-        </UserProvider>
+      <body className={inter.className}>
+        <MuiLocalizationProvider>
+          <AppThemeProvider>
+            <SnackbarProvider>
+              <GloablLoader>
+                <UserProvider initialUserData={user}>
+                  <QueryProvider>
+                    <AppProgressProvider>{children}</AppProgressProvider>
+                  </QueryProvider>
+                </UserProvider>
+              </GloablLoader>
+            </SnackbarProvider>
+          </AppThemeProvider>
+        </MuiLocalizationProvider>
       </body>
     </html>
   );
