@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import AppProgressProvider from "./nprogress";
 import { MuiLocalizationProvider } from "../providers/mui-localization-provider";
