@@ -1,3 +1,5 @@
+"use client";
+
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
