@@ -1,37 +1,58 @@
 "use client";
-import { createContext, useContext, useState } from "react";
 import { usersTable } from "@/drizzle/schema";
 import { InferSelectModel } from "drizzle-orm";
+import React, { createContext, useContext, useState } from "react";
 
 type UserSchema = Omit<InferSelectModel<typeof usersTable>, "hashedPassword">;
 
-export const UserContext = createContext<UserSchema | null>(null);
-export const UpdateUserContext = createContext<React.Dispatch<
-  React.SetStateAction<UserSchema | null>
-> | null>(null);
+interface UserProviderValue {
+  user: UserSchema|null;
+  setUser: React.Dispatch<
+    React.SetStateAction<typeof usersTable.$inferSelect | null>
+  >;
+}
 
-export const useUserContext = () => {
+const UserContext = createContext<UserProviderValue>({
+  user: null,
+  setUser: () => {},
+});
+
+/**
+ * Hook to manage user state
+ * - Returns user and setUser functions
+ *   - user: Current logged-in user object
+ *   - setUser: State updater function
+ *
+ * @example
+ *  export default Component(...) {
+ *    const { user, setUser } = useUser();
+ *
+ *    return (<> {JSON.stringify(user, null, 4)} ...</>)
+ *  }
+ */
+export const useUser = () => {
   return useContext(UserContext);
 };
 
-export const useUserUpdaterContext = () => {
-  return useContext(UpdateUserContext);
-};
-
+/**
+ * User provider
+ */
 export const UserProvider = ({
   children,
-  user = null,
+  initialUserData = null,
 }: {
   children: React.ReactNode;
-  user: UserSchema | null;
+  initialUserData: typeof usersTable.$inferSelect | null;
 }) => {
-  const [currentUser, setUser] = useState(user);
+  const [user, setUser] = useState<typeof usersTable.$inferSelect | null>(
+    initialUserData
+  );
 
   return (
-    <UserContext.Provider value={currentUser}>
-      <UpdateUserContext.Provider value={setUser}>
+    <>
+      <UserContext.Provider value={{ user, setUser }}>
         {children}
-      </UpdateUserContext.Provider>
-    </UserContext.Provider>
+      </UserContext.Provider>
+    </>
   );
 };

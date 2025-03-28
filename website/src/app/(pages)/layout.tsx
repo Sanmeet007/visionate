@@ -1,9 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
-import AppProgressProvider from "./nprogress";
+import AppProgressProvider from "../providers/progress-provider";
 import { MuiLocalizationProvider } from "../providers/mui-localization-provider";
-import { MuiThemeProvider } from "../providers/theme-provider";
+import { AppThemeProvider } from "../providers/theme-provider";
 import QueryProvider from "../providers/query-provider";
 import { UserProvider } from "../providers/user-provider";
 import { getUser } from "@/auth";
@@ -26,9 +26,9 @@ export default async function RootLayout({
         <UserProvider user={user}>
           <QueryProvider>
             <MuiLocalizationProvider>
-              <MuiThemeProvider>
+              <AppThemeProvider>
                 <AppProgressProvider>{children}</AppProgressProvider>
-              </MuiThemeProvider>
+              </AppThemeProvider>
             </MuiLocalizationProvider>
           </QueryProvider>
         </UserProvider>
