@@ -23,7 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider user={user}>
+        <UserProvider initialUserData={user}>
           <QueryProvider>
             <MuiLocalizationProvider>
               <AppThemeProvider>
