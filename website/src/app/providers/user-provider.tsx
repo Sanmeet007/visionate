@@ -18,7 +18,7 @@ export const useUserUpdaterContext = () => {
   return useContext(UpdateUserContext);
 };
 
-const UserProvider = ({
+export const UserProvider = ({
   children,
   user = null,
 }: {
@@ -35,5 +35,3 @@ const UserProvider = ({
     </UserContext.Provider>
   );
 };
-
-export default UserProvider;
