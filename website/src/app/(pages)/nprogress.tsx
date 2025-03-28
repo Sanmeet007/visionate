@@ -3,11 +3,7 @@
 import { ProgressProvider } from "@bprogress/next/app";
 import React from "react";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const AppProgressProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ProgressProvider
@@ -20,4 +16,6 @@ export default function RootLayout({
       </ProgressProvider>
     </>
   );
-}
+};
+
+export default AppProgressProvider;
