@@ -30,15 +30,17 @@ export default async function RootLayout({
       <body className={inter.className}>
         <MuiLocalizationProvider>
           <AppThemeProvider>
-            <SnackbarProvider>
-              <GloablLoader>
-                <UserProvider initialUserData={user}>
-                  <QueryProvider>
-                    <AppProgressProvider>{children}</AppProgressProvider>
-                  </QueryProvider>
-                </UserProvider>
-              </GloablLoader>
-            </SnackbarProvider>
+            <AppProgressProvider>
+              <SnackbarProvider>
+                <GloablLoader>
+                  <UserProvider initialUserData={user}>
+                    <QueryProvider>
+                      <>{children}</>
+                    </QueryProvider>
+                  </UserProvider>
+                </GloablLoader>
+              </SnackbarProvider>
+            </AppProgressProvider>
           </AppThemeProvider>
         </MuiLocalizationProvider>
       </body>
