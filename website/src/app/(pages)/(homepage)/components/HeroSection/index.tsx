@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 
 const HeroSection = () => {
@@ -59,10 +60,23 @@ const HeroSection = () => {
               justifyContent: "center",
             }}
           >
-            <Button color="secondary" variant="contained">
+            <Button
+              color="secondary"
+              variant="contained"
+              sx={{
+                px: "2rem",
+              }}
+            >
               Download Extension
             </Button>
-            <Button color="secondary" variant="outlined">
+            <Button
+              sx={{
+                px: "2rem",
+              }}
+              color="secondary"
+              variant="outlined"
+              endIcon={<ArrowRight />}
+            >
               Developer API
             </Button>
           </Box>
