@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const HeroSection = () => {
   return (
@@ -18,12 +18,13 @@ const HeroSection = () => {
 
         <Box
           sx={{
-            minHeight: "50vh",
+            minHeight: "400px",
+            height: "calc(90vh - 1rem - 70px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "column",
-            gap: "1rem",
+            gap: "2rem",
           }}
         >
           <Box
@@ -51,6 +52,20 @@ const HeroSection = () => {
             enhancing web accessibility and enriching the digital experience for
             all.
           </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "center",
+            }}
+          >
+            <Button color="secondary" variant="contained">
+              Download Extension
+            </Button>
+            <Button color="secondary" variant="outlined">
+              Developer API
+            </Button>
+          </Box>
         </Box>
       </Box>
     </>

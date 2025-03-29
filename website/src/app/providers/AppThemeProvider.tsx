@@ -18,6 +18,10 @@ export const appTheme: Theme = createTheme({
       default: "#070025",
       paper: "#110b27",
     },
+    secondary: {
+      main: "#FF3A61",
+      contrastText: "rgba(255,255,255,0.9)",
+    },
   },
   components: {
     MuiFormLabel: {
@@ -33,7 +37,7 @@ export const appTheme: Theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage:"none",
+          backgroundImage: "none",
           backgroundColor: "#110b27",
         },
       },
