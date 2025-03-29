@@ -48,14 +48,8 @@ export const usersTable = mysqlTable("users", {
     fsp: 3,
   }),
   profileImage: varchar("profile_image", { length: 255 }),
-  createdAt: timestamp("created_at", {
-    mode: "date",
-  }).defaultNow(),
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-  })
-    .defaultNow()
-    .onUpdateNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });
 
 export const sessionTable = mysqlTable("sessions", {

@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { OAuth2Client } from "google-auth-library";
 import { db } from "@/drizzle";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { lucia } from "@/auth";
 import { generateId } from "lucia";
 import { cookies } from "next/headers";
@@ -45,7 +45,6 @@ export async function GET(request: NextRequest) {
     );
     const data = await res.json();
     const { email, name, email_verified, picture } = data;
-
     let redirectURL = "/dashboard";
 
     let user = await db.query.usersTable.findFirst({
@@ -65,14 +64,14 @@ export async function GET(request: NextRequest) {
         id: userId,
         name,
         email,
-        emailVerified: email_verified,
+        emailVerified: email_verified ? sql`CURRENT_TIMESTAMP` : null,
         profileImage: picture,
+        createdAt: new Date(),
       });
 
-      const [newUser] = await db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.id, userId));
+      const newUser = await db.query.usersTable.findFirst({
+        where: (table) => eq(table.id, userId),
+      });
 
       user = newUser;
     }
@@ -127,11 +126,14 @@ export async function GET(request: NextRequest) {
       </html>
     `,
       {
+        headers: {
+          "Content-Type": "text/html",
+        },
         status: 301,
       }
     );
 
-    const session = await lucia.createSession(user.id, {
+    const session = await lucia.createSession(user!.id, {
       expiresIn: 3600 * 24 * 30, // 30 days a session
     });
     const sessionCookie = lucia.createSessionCookie(session.id);
@@ -143,7 +145,7 @@ export async function GET(request: NextRequest) {
     );
 
     await db.insert(loginAttemptsTable).values({
-      userId: user.id,
+      userId: user!.id,
       ipAddress:
         request.headers.get("X-Real-IP") ||
         request.headers.get("X-Forwarded-For"),
