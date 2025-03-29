@@ -32,8 +32,9 @@ interface MiddlewareCallback {
 export const usingHasValidApiKeyMiddleware = (callback: MiddlewareCallback) => {
   return cache(async (request: NextRequest) => {
     try {
-      const headers = await requestHeaders();
+      const headers = requestHeaders();
       const apiKey = headers.get("X-API-KEY");
+      
       if (apiKey != null) {
         const [record] = await db
           .select()
