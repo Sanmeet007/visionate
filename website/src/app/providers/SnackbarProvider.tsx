@@ -3,7 +3,7 @@
 import { useContext, useState, createContext } from "react";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
 
-interface SnackbarProps {
+export interface SnackbarProps {
   opened?: boolean;
   message: string;
   severity: AlertColor;

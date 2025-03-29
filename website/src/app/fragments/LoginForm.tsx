@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertColor,
   Box,
   Button,
   IconButton,
@@ -16,12 +17,9 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { LoadingButton } from "@mui/lab";
 import { useUser } from "../providers/UserProvider";
 
-type ShowSignUpFn = {
-  (event: React.MouseEvent<HTMLElement>): void;
-};
+type ShowSnackbarFn = (severity: AlertColor, message: string) => void;
 
-const LoginForm = ({ showSignUpFn }: { showSignUpFn: ShowSignUpFn }) => {
-  const showSnackbar = useSnackbar();
+const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
   const { setUser } = useUser();
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -82,15 +80,6 @@ const LoginForm = ({ showSignUpFn }: { showSignUpFn: ShowSignUpFn }) => {
 
   return (
     <>
-      <Typography
-        variant="h4"
-        component={"h1"}
-        sx={{
-          mb: "2rem",
-        }}
-      >
-        Login to your account
-      </Typography>
       <Box
         component={"form"}
         onSubmit={handleFormSubmission}
@@ -150,13 +139,6 @@ const LoginForm = ({ showSignUpFn }: { showSignUpFn: ShowSignUpFn }) => {
         >
           Submit
         </LoadingButton>
-        <Button
-          disabled={isProcessing || isDisabled}
-          variant="outlined"
-          onClick={showSignUpFn}
-        >
-          Sign up instead
-        </Button>
       </Box>
     </>
   );

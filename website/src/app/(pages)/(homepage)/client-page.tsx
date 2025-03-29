@@ -1,9 +1,12 @@
 import { Box } from "@mui/material";
+import Header from "./components/Header";
 
 const ClientHomePage = () => {
   return (
     <>
-      <Box>Hello world</Box>
+      <Box>
+        <Header />
+      </Box>
     </>
   );
 };
