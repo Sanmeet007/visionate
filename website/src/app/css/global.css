@@ -2,3 +2,26 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 100px #121212 inset !important;
   -webkit-text-fill-color: white !important;
 }
+
+html{
+  color-scheme: dark;
+}
+
+@keyframes floatFade {
+  0% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+}
+
+.animated-element {
+  animation: floatFade 5s ease-in-out infinite;
+}

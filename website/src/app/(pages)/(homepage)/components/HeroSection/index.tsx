@@ -1,12 +1,20 @@
 "use client";
 
-import { ArrowRight } from "@mui/icons-material";
+import { ArrowDownward, ArrowRight } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
+import BlurCircleGraphic from "./BlurCircleGraphic";
+import LinesGraphic from "./LinesGraphic";
+import DecorationImage from "./DecorationImage";
 
 const HeroSection = () => {
   return (
     <>
+      <DecorationImage />
+      <BlurCircleGraphic />
+      <LinesGraphic />
+
       <Box
+        component={"section"}
         sx={{
           position: "relative",
         }}
@@ -20,7 +28,7 @@ const HeroSection = () => {
         <Box
           sx={{
             minHeight: "400px",
-            height: "calc(90vh - 1rem - 70px)",
+            height: "calc(85vh - 1rem - 70px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -80,6 +88,16 @@ const HeroSection = () => {
               Developer API
             </Button>
           </Box>
+        </Box>
+        <Box
+          sx={{
+            height: "15vh",
+            minHeight: "100px",
+            textAlign: "center",
+          }}
+          className="animated-element"
+        >
+          <ArrowDownward />
         </Box>
       </Box>
     </>

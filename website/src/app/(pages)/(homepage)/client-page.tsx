@@ -1,9 +1,7 @@
 import { Box } from "@mui/material";
 import Header from "./components/Header";
-import DecorationImage from "./components/DecorationImage";
 import HeroSection from "./components/HeroSection";
-import BlurCircleGraphic from "./components/BlurCircleGraphic";
-import LinesGraphic from "./components/LinesGraphic";
+import FeaturesSection from "./components/FeaturesSection";
 
 const ClientHomePage = () => {
   return (
@@ -15,16 +13,8 @@ const ClientHomePage = () => {
         }}
       >
         <Header />
-        <DecorationImage />
-        <BlurCircleGraphic />
-        <LinesGraphic />
         <HeroSection />
-
-        <Box sx={{
-          backgroundImage:"url(/images/pattern.png)",
-          height:"100px"
-        }}>
-        </Box>
+        <FeaturesSection />
       </Box>
     </>
   );
