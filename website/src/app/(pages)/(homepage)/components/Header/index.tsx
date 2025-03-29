@@ -162,14 +162,11 @@ const Header = () => {
                   <Link href="/search">Support</Link>
                 </li>
               </Box>
-              {/* {user && (
+              {user && (
                 <>
-                  <UserMenu
-                    showSnackbar={showSnackbar}
-                    setIsProcessing={setIsProcessing}
-                  />
+                  <UserMenu />
                 </>
-              )} */}
+              )}
 
               {!user && (
                 <>

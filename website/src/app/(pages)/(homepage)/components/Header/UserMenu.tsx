@@ -8,50 +8,53 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
-import { Logout } from "@mui/icons-material";
+import { AccountCircle, Dashboard, Logout } from "@mui/icons-material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { useState } from "react";
 import { useRouter } from "next-nprogress-bar";
 import Box from "@mui/material/Box";
-import useLocalStorage from "@/app/hooks/localstorage";
+import { useLoader } from "@/app/providers/GlobalLoader";
+import { useSnackbar } from "@/app/providers/SnackbarProvider";
 // import EditOutlinedIcon from "@/app/icons/edit-outlined";
 // import { useMobileMenu } from "@/app/providers/MobileMenuProvider";
 
-const UserMenu = ({ showSnackbar, setIsProcessing }) => {
-  const [_, setRefreshToken] = useLocalStorage("__ink_refresh_token", null);
-  const router = useRouter();
-  const user = useUserContext();
-  const newModalStateUpdater = useNewArticleModalStateUpdater();
+interface UserMenuState {
+  anchorEl: Element | null;
+}
 
-  const [userMenuState, setUserMenuState] = useState({
+const UserMenu = () => {
+  const router = useRouter();
+  const { user } = useUser();
+  const showSnackbar = useSnackbar();
+  const { showLoader, hideLoader } = useLoader();
+
+  const [userMenuState, setUserMenuState] = useState<UserMenuState>({
     anchorEl: null,
   });
 
   const handleLogout = async () => {
     try {
-      setIsProcessing(true);
+      showLoader();
+
       const res = await fetch(
-        process.env.NEXT_PUBLIC_REQUEST_HOST + "/api/auth/logout",
+        process.env.NEXT_PUBLIC_ORIGIN + "/api/auth/logout",
         {
           credentials: "include",
         }
       );
       if (res.ok) {
-        setRefreshToken(null);
         showSnackbar("success", "Logout successfull");
-        setIsProcessing(false);
         if (typeof window !== "undefined") {
           window.location.reload();
         }
       } else {
-        const data = await res.json();
-        setIsProcessing(false);
-        showSnackbar("error", data.message);
+        await res.json();
       }
     } catch (e) {
       console.log(e);
-      showSnackbar("error", "Something went wrong");
-      setIsProcessing(false);
+      showSnackbar("error", "Something went wrong!");
+    } finally {
+      hideLoader();
     }
   };
 
@@ -60,12 +63,12 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
     await handleLogout();
   };
 
-  const openDashboard = (e) => {
+  const openDashboard = (e: React.MouseEvent) => {
     e.preventDefault();
     setUserMenuState({ anchorEl: null });
     router.push("/dashboard");
   };
-  const openMyAccount = (e) => {
+  const openMyAccount = (e: React.MouseEvent) => {
     e.preventDefault();
     setUserMenuState({ anchorEl: null });
     router.push("/dashboard/my-account");
@@ -73,23 +76,17 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
   const closeUserMenu = () => {
     setUserMenuState({ anchorEl: null });
   };
-  const openUserMenu = (e) => {
+  const openUserMenu = (e: React.MouseEvent) => {
     setUserMenuState({ anchorEl: e.currentTarget });
-  };
-
-  const openSettingsPanel = () => {
-    setUserMenuState({ anchorEl: null });
-    setSettingsContext((x) => ({ ...x, drawerState: true }));
   };
 
   const openNewArticleModal = () => {
     setUserMenuState({ anchorEl: null });
-    newModalStateUpdater(true);
   };
 
   return (
     <>
-      {user.role !== "subscriber" && (
+      {/* {user.role !== "subscriber" && (
         <>
           <PlainButton
             disableElevation
@@ -117,7 +114,7 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
             </Box>
           </PlainButton>
         </>
-      )}
+      )} */}
 
       <Box
         sx={{
@@ -137,7 +134,7 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
       >
         <Tooltip
           className="hide-600"
-          title={"Hi, " + user.name}
+          title={"Hi, " + user!.name}
           arrow
           TransitionComponent={Zoom}
           slotProps={{
@@ -153,9 +150,9 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
             },
           }}
         >
-          <IconButton size="small" onClick={openUserMenu}>
-            <Avatar src={user.profile_image} alt={user.name}>
-              {user.name?.slice(0, 1).toUpperCase()}
+          <IconButton size="small" onClick={(e) => openUserMenu(e)}>
+            <Avatar src={user?.profileImage ?? ""} alt={user?.name ?? ""}>
+              {user!.name?.slice(0, 1).toUpperCase()}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -178,16 +175,20 @@ const UserMenu = ({ showSnackbar, setIsProcessing }) => {
         <MenuItem
           href="/dashboard/my-account"
           component={"a"}
-          onClick={openMyAccount}
+          onClick={(e) => openMyAccount(e)}
         >
           <ListItemIcon>
-            <MyAccountIcon color="currentColor" fontSize="small" />
+            <AccountCircle />
           </ListItemIcon>
           My account
         </MenuItem>
-        <MenuItem component={"a"} href="/dashboard" onClick={openDashboard}>
+        <MenuItem
+          component={"a"}
+          href="/dashboard"
+          onClick={(e) => openDashboard(e)}
+        >
           <ListItemIcon>
-            <DashboardIcon color="currentColor" fontSize="small" />
+            <Dashboard />
           </ListItemIcon>
           Dashboard
         </MenuItem>
