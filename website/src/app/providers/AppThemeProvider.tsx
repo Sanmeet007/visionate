@@ -16,7 +16,7 @@ export const appTheme: Theme = createTheme({
     mode: "dark",
     background: {
       default: "#070025",
-      paper: "#070025",
+      paper: "#110b27",
     },
   },
   components: {
@@ -30,10 +30,18 @@ export const appTheme: Theme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage:"none",
+          backgroundColor: "#110b27",
+        },
+      },
+    },
     MuiButton: {
-      defaultProps: {
+      styleOverrides: {
         disableElevation: true,
-        sx: {
+        root: {
           borderRadius: "100px",
           textTransform: "none",
         },

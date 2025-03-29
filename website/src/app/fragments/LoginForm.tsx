@@ -8,14 +8,17 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Link as MuiLink,
 } from "@mui/material";
 import React, { useState } from "react";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useSnackbar } from "../providers/SnackbarProvider";
 import ReCAPTCHA from "react-google-recaptcha";
+import GoogleIcon from "@/app/icons/google-icon";
 import { LoadingButton } from "@mui/lab";
-import { useUser } from "../providers/UserProvider";
+import { useUser } from "@/app/providers/UserProvider";
+import Link from "next/link";
+import TextDivider from "../components/TextDivider";
 
 type ShowSnackbarFn = (severity: AlertColor, message: string) => void;
 
@@ -72,6 +75,35 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
     }
   };
 
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+
+  const loginUsingGoogle = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    try {
+      e.preventDefault();
+      setIsGeneratingLink(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/oauth/geturl`,
+        {
+          credentials: "include",
+        }
+      );
+      if (typeof window !== "undefined") {
+        if (res.ok) {
+          const data = await res.json();
+          window.location.href = data.url;
+          setIsGeneratingLink(false);
+        } else {
+          throw Error("Unable to generate link");
+        }
+      }
+    } catch (e) {
+      setIsGeneratingLink(false);
+      showSnackbar("error", "Something went wrong");
+    }
+  };
+
   // function onChange(value) {
   //   console.log("Captcha value:", value);
   // }
@@ -91,15 +123,25 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
           gap: "1rem",
         }}
       >
-        {/* <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={process.env.RECAPTCHA_KEY || ""}
-          onChange={onChange}
-        /> */}
+        {" "}
+        <LoadingButton
+          startIcon={isGeneratingLink ? null : <GoogleIcon />}
+          onClick={(e) => loginUsingGoogle(e)}
+          disabled={isGeneratingLink || isProcessing}
+          loading={isGeneratingLink}
+          variant="outlined"
+          sx={{
+            textTransform: "none",
+            borderRadius: "100px",
+            fontSize: "1rem",
+          }}
+        >
+          Sign in with Google
+        </LoadingButton>
+        <TextDivider my="0" text={"or sign in with email"} />
         <TextField
           disabled={isProcessing || isDisabled}
           required
-          size="small"
           name="email_id"
           id="email-id"
           type="email"
@@ -110,9 +152,8 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
           fullWidth
         />
         <TextField
-          disabled={isProcessing || isDisabled}
+          disabled={isProcessing || isDisabled || isGeneratingLink}
           required
-          size="small"
           name="password"
           id="passsword"
           type={showPassword ? "text" : "password"}
@@ -131,7 +172,30 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
           placeholder="Enter a secure password here"
           fullWidth
         />
+        {/* <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={process.env.RECAPTCHA_KEY || ""}
+          onChange={onChange}
+        /> */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box></Box>
+          <MuiLink
+            fontSize={"small"}
+            component={Link}
+            href="/forgot-password"
+            // onClick={closeModal}
+          >
+            Forgot password ?
+          </MuiLink>
+        </Box>
         <LoadingButton
+          disabled={isGeneratingLink || isProcessing || isGeneratingLink}
           disableElevation
           loading={isProcessing}
           type="submit"

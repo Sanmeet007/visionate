@@ -16,7 +16,7 @@ import { useSnackbar } from "../providers/SnackbarProvider";
 type ShowLoginFn = {
   (event: React.MouseEvent<HTMLElement>): void;
 };
-const SignupForm = ({ showLoginFn }: { showLoginFn: ShowLoginFn }) => {
+const SignupForm = () => {
   const showSnackbar = useSnackbar();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -98,9 +98,10 @@ const SignupForm = ({ showLoginFn }: { showLoginFn: ShowLoginFn }) => {
         <Button type="submit" variant="contained">
           Submit
         </Button>
-        <Button variant="outlined" onClick={showLoginFn}>
+        {/* Already a user ? */}
+        {/* <Button variant="outlined" onClick={showLoginFn}>
           Login instead
-        </Button>
+        </Button> */}
       </Box>
     </>
   );
