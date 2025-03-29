@@ -1,11 +1,16 @@
 "use client";
 
-import { createTheme } from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import {
+  ThemeProvider as MuiThemeProvider,
+  CssBaseline,
+  createTheme,
+  Theme,
+} from "@mui/material";
 import React from "react";
-import { Theme } from "@emotion/react";
 
+/**
+ * App theme configuration object created
+ */
 export const appTheme: Theme = createTheme({
   palette: {
     mode: "dark",
@@ -33,17 +38,18 @@ export const appTheme: Theme = createTheme({
   },
 });
 
-export const AppThemeProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+/**
+ * Custom app theme provider that extends MUI theme
+ */
+const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <ThemeProvider theme={appTheme}>
+      <MuiThemeProvider theme={appTheme}>
         <CssBaseline />
         {children}
-      </ThemeProvider>
+      </MuiThemeProvider>
     </>
   );
 };
+
+export default AppThemeProvider;

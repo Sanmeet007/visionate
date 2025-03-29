@@ -49,7 +49,7 @@ const SnackbarProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const showSnackbar = (severity: AlertColor = "success", message = "") => {
-    setSnackbarState({ opened: true, severity, message });
+    setSnackbarState((x) => ({ opened: true, severity, message }));
   };
 
   return (

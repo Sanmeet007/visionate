@@ -3,12 +3,12 @@
  */
 
 import { Lucia } from "lucia";
-import { drizzleAdapterInstance } from "@/drizzle/adapter";
+import { drizzleAdapterInstance } from "./drizzle/adapter";
 import { cache } from "react";
-import { cookies as requestCookies } from "next/headers";
-import { db } from "@/drizzle";
+import { cookies } from "next/headers";
+import { db } from "./drizzle";
 import { sql } from "drizzle-orm";
-import { usersTable } from "@/drizzle/schema";
+import { usersTable } from "./drizzle/schema";
 
 export const lucia = new Lucia(drizzleAdapterInstance, {
   sessionCookie: {
@@ -24,15 +24,13 @@ export const lucia = new Lucia(drizzleAdapterInstance, {
 
 export const getUser = cache(
   async (): Promise<typeof usersTable.$inferSelect | null> => {
-    const cookies = await requestCookies();
-    const sessionId = cookies.get(lucia.sessionCookieName)?.value ?? null;
-
+    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
     if (!sessionId) return null;
     const { user, session } = await lucia.validateSession(sessionId);
     try {
       if (session && session.fresh) {
         const sessionCookie = lucia.createSessionCookie(session.id);
-        cookies.set(
+        cookies().set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes
@@ -40,7 +38,7 @@ export const getUser = cache(
       }
       if (!session) {
         const sessionCookie = lucia.createBlankSessionCookie();
-        cookies.set(
+        cookies().set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes

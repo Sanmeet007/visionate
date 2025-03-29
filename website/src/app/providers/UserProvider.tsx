@@ -1,12 +1,9 @@
 "use client";
 import { usersTable } from "@/drizzle/schema";
-import { InferSelectModel } from "drizzle-orm";
-import React, { createContext, useContext, useState } from "react";
-
-type UserSchema = Omit<InferSelectModel<typeof usersTable>, "hashedPassword">;
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface UserProviderValue {
-  user: UserSchema|null;
+  user: typeof usersTable.$inferSelect | null;
   setUser: React.Dispatch<
     React.SetStateAction<typeof usersTable.$inferSelect | null>
   >;
@@ -37,7 +34,7 @@ export const useUser = () => {
 /**
  * User provider
  */
-export const UserProvider = ({
+const UserProvider = ({
   children,
   initialUserData = null,
 }: {
@@ -56,3 +53,5 @@ export const UserProvider = ({
     </>
   );
 };
+
+export default UserProvider;
