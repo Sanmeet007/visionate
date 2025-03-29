@@ -46,6 +46,7 @@ export const POST = usingLoginMiddleware(
         const user = await db.query.usersTable.findFirst({
           where: (table) => eq(table.email, email),
         });
+
         if (!user) {
           return NextResponse.json(
             {
@@ -101,7 +102,6 @@ export const POST = usingLoginMiddleware(
             user: returningUser,
           });
         } else {
-
           await db.insert(loginAttemptsTable).values({
             userId: user.id,
             ipAddress:
