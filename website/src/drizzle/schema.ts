@@ -48,6 +48,14 @@ export const usersTable = mysqlTable("users", {
     fsp: 3,
   }),
   profileImage: varchar("profile_image", { length: 255 }),
+  createdAt: timestamp("created_at", {
+    mode: "date",
+  }).defaultNow(),
+  updatedAt: timestamp("updated_at", {
+    mode: "date",
+  })
+    .defaultNow()
+    .onUpdateNow(),
 });
 
 export const sessionTable = mysqlTable("sessions", {
@@ -92,7 +100,9 @@ export const apiKeysTable = mysqlTable(
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
   },
-  (table) => [unique("unique_user_keyname").on(table.userId, table.keyName)]
+  (table) => ({
+    unique: [unique("unique_user_keyname").on(table.userId, table.keyName)],
+  })
 );
 
 export const apiRequestsTable = mysqlTable("api_requests", {
@@ -112,14 +122,16 @@ export const apiRequestsTable = mysqlTable("api_requests", {
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
-export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
-  qb
+export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) => {
+  return qb
     .select({
       apiKeyId: apiKeysTable.id,
       userId: apiKeysTable.userId,
       apiKey: apiKeysTable.apiKey,
       apiKeyName: apiKeysTable.keyName,
-      userSubscriptionType: usersTable.subscriptionType,
+      userSubscriptionType: sql<string>`${usersTable.subscriptionType}`.as(
+        "subscription_type"
+      ),
       totalHits: sql<number>`COALESCE(COUNT(${apiRequestsTable.id}), 0)`.as(
         "total_hits"
       ),
@@ -132,10 +144,10 @@ export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) =>
     .leftJoin(
       apiRequestsTable,
       sql`
-      ${apiKeysTable.id} = ${apiRequestsTable.apiKeyId} 
-      AND MONTH(${apiRequestsTable.timestamp}) = MONTH(CURRENT_DATE()) 
-      AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
-    `
+    ${apiKeysTable.id} = ${apiRequestsTable.apiKeyId}
+    AND MONTH(${apiRequestsTable.timestamp}) = MONTH(CURRENT_DATE())
+    AND YEAR(${apiRequestsTable.timestamp}) = YEAR(CURRENT_DATE())
+  `
     )
-    .groupBy(apiKeysTable.id, usersTable.subscriptionType, apiKeysTable.userId)
-);
+    .groupBy(apiKeysTable.id, usersTable.subscriptionType, apiKeysTable.userId);
+});
