@@ -83,7 +83,9 @@ const Header = () => {
             "@media screen and (max-width: 700px)": {
               px: "1rem",
             },
-            bgcolor: colorTrigger ? (theme) => "red" : "transparent",
+            bgcolor: colorTrigger
+              ? (theme) => "rgba(149, 127 , 255 , 0.1)"
+              : "transparent",
             position: "fixed",
             top: 0,
             left: 0,

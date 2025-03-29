@@ -19,6 +19,12 @@ const ClientHomePage = () => {
         <BlurCircleGraphic />
         <LinesGraphic />
         <HeroSection />
+
+        <Box sx={{
+          backgroundImage:"url(/images/pattern.png)",
+          height:"100px"
+        }}>
+        </Box>
       </Box>
     </>
   );
