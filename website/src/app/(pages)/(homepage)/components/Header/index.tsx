@@ -150,16 +150,16 @@ const Header = () => {
                 }}
               >
                 <li>
-                  <Link href="/our-story">Features</Link>
+                  <Link href="#features">Features</Link>
                 </li>
                 <li>
-                  <Link href="/articles">Pricing</Link>
+                  <Link href="#pricing">Pricing</Link>
                 </li>
                 <li>
-                  <Link href="/search">API Docs</Link>
+                  <Link href="/api-docs">API Docs</Link>
                 </li>
                 <li>
-                  <Link href="/search">Support</Link>
+                  <Link href="/support">Support</Link>
                 </li>
               </Box>
               {user && (
