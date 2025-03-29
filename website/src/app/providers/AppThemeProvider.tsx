@@ -14,6 +14,10 @@ import React from "react";
 export const appTheme: Theme = createTheme({
   palette: {
     mode: "dark",
+    background: {
+      default: "#070025",
+      paper: "#070025",
+    },
   },
   components: {
     MuiFormLabel: {
