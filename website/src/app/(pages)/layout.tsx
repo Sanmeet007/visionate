@@ -1,13 +1,13 @@
-import { Inter } from "next/font/google";
-import AppThemeProvider from "../providers/AppThemeProvider";
-import SnackbarProvider from "../providers/SnackbarProvider";
+import "@/app/css/global.css";
 
-import "../css/global.css";
-import UserProvider from "../providers/UserProvider";
 import { getUser } from "@/auth";
-import LogoutFunctionProvider from "../providers/LogoutFnProvider";
-import GloablLoader from "../providers/GlobalLoader";
-import ProgressProvider from "../providers/ProgressProvider";
+import { Inter } from "next/font/google";
+import AppThemeProvider from "@/app/providers/AppThemeProvider";
+import SnackbarProvider from "@/app/providers/SnackbarProvider";
+import UserProvider from "@/app/providers/UserProvider";
+import LogoutFunctionProvider from "@/app/providers/LogoutFnProvider";
+import GloablLoader from "@/app/providers/GlobalLoader";
+import ProgressProvider from "@/app/providers/ProgressProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
