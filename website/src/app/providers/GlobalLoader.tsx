@@ -51,7 +51,7 @@ const GloablLoader = ({ children }: { children: React.ReactNode }) => {
         <Backdrop
           open={state.open}
           sx={{
-            zIndex: 1,
+            zIndex: 100000,
           }}
         >
           {state.open && <CircularProgress />}
