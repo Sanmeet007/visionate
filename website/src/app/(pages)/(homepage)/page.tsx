@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import ClientHomePage from "./client-page";
 
 export const metadata: Metadata = {
-  title: "Visionate",
+  title: "Visionate - See the unseen",
   icons: {
     icon: [
       {
