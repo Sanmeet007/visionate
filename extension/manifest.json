@@ -24,6 +24,10 @@
                 "http://localhost:*/",
                 "http://localhost:*/*"
             ],
+            "exclude_matches": [
+                "https://*.google.com/*",
+                "https://*.google.*/*"
+            ],
             "js": [
                 "content.js"
             ]
