@@ -4,7 +4,6 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-
 export const GET = async () => {
   try {
     const apiKey = headers().get("X-API-KEY");
@@ -25,16 +24,26 @@ export const GET = async () => {
     });
 
     if (!apiKeys) {
-      return NextResponse.json({
-        error: true,
-        message: "Invalid api Key",
-      });
+      return NextResponse.json(
+        {
+          error: true,
+          message: "Invalid api Key",
+        },
+        {
+          status: 400,
+        }
+      );
     }
     if (apiKeys?.isActive) {
-      return NextResponse.json({
-        error: true,
-        message: "Api key not active",
-      });
+      return NextResponse.json(
+        {
+          error: true,
+          message: "Api key not active",
+        },
+        {
+          status: 400,
+        }
+      );
     } else {
       return NextResponse.json({
         error: false,
