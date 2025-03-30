@@ -47,7 +47,7 @@ export const usingAuthMiddleware = (
       if (cookie?.value) {
         const { user, session } = await lucia.validateSession(cookie.value);
         const userData = await db.query.usersTable.findFirst({
-          where: sql`id = ${user?.id}`,
+          where: sql`id = ${user?.id ?? -1}`,
         });
 
         if (session && session.fresh) {
