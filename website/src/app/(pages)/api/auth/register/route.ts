@@ -25,6 +25,7 @@ import { eq } from "drizzle-orm";
 interface BodyRouteParams {
   email: string;
   password: string;
+  name: string;
 }
 
 export const POST = usingLoginMiddleware(
@@ -38,7 +39,7 @@ export const POST = usingLoginMiddleware(
             { status: 400 }
           );
         }
-        const { email, password } = validationResults.bodyData!;
+        const { email, password, name } = validationResults.bodyData!;
         const hashedPassword = await generatePasswordHash(password);
         const userId = generateId(15);
 
@@ -46,6 +47,7 @@ export const POST = usingLoginMiddleware(
           id: userId,
           email,
           hashedPassword,
+          name: name,
         });
 
         const [newUser] = await db
@@ -106,7 +108,8 @@ export const POST = usingLoginMiddleware(
       validationSchema: {
         body: Joi.object({
           email: Joi.string().required(),
-          password: Joi.string().required(),
+          password: Joi.string().required().min(8),
+          name: Joi.string().required(),
         }),
       },
     }
