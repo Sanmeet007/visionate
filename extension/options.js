@@ -1,12 +1,37 @@
 const form = document.querySelector("form");
-const loadingModal = document.querySelector("#loading-modal");
+const loader = document.getElementById("loader");
+const snackbar = document.getElementById("snackbar");
 
-function showLoading() {
-  loadingModal.classList.add("active");
+function showLoader() {
+  loader.style.display = "flex";
 }
 
-function hideLoading() {
-  loadingModal.classList.remove("active");
+function hideLoader() {
+  loader.style.display = "none";
+}
+
+function showSnackbar(severity, message) {
+  snackbar.classList.remove(
+    "snackbar-success",
+    "snackbar-error",
+    "snackbar-hide"
+  );
+
+  snackbar.classList.add(
+    severity === "success" ? "snackbar-success" : "snackbar-error"
+  );
+
+  snackbar.textContent = message;
+  snackbar.classList.add("snackbar-show");
+
+  setTimeout(() => {
+    snackbar.classList.add("snackbar-hide");
+    snackbar.classList.remove("snackbar-show");
+
+    setTimeout(() => {
+      snackbar.style.display = "none";
+    }, 300);
+  }, 3000);
 }
 
 async function saveApiKey(apiKey) {
@@ -44,15 +69,23 @@ async function wait(time = 1000) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
+    showLoader();
+
     const key = form.apikey.value;
-    if (key != "") {
-      showLoading();
+    const res = await fetch("http://localhost:3000/api/validate-key");
+
+    if (res.ok) {
       await saveApiKey(key);
       await wait(2000);
-      hideLoading();
       form.reset();
+      showSnackbar("success", "API key configured successfully!");
+    } else {
+      showSnackbar("error", "Invalid API key");
     }
   } catch (E) {
     console.log(E);
+    showSnackbar("error", "Something went wrong");
+  } finally {
+    hideLoader();
   }
 });
