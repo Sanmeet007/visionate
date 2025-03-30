@@ -1,6 +1,6 @@
 {
     "name": "Visionate",
-    "description": "Just another extension",
+    "description": "Automatically generates AI-powered captions for images as you browse, enhancing accessibility and understanding.",
     "version": "0.1.0",
     "manifest_version": 3,
     "icons": {
