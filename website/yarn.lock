@@ -960,6 +960,13 @@
   resolved "https://registry.npmjs.org/@sideway/pinpoint/-/pinpoint-2.0.0.tgz"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
+"@supercharge/strings@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@supercharge/strings/-/strings-2.0.0.tgz#638289dd8318e9031a4d08fea7c2cdfa70dad08d"
+  integrity sha512-x4l2Xfm9Hcag12FBoRtTYQYdgHanL9LMNo9AV2ZDJ6JQyJ7ftgS17DWGEEtsohVhEpAJ0YQk2DeZz0JsdIQuDA==
+  dependencies:
+    uuid "~9.0.0"
+
 "@swc/counter@^0.1.3":
   version "0.1.3"
   resolved "https://registry.npmjs.org/@swc/counter/-/counter-0.1.3.tgz"
@@ -1412,7 +1419,7 @@ braces@^3.0.2:
     "@types/nodemailer" "^6.4.15"
     "@types/otp-generator" "^4.0.2"
     "@types/react-google-recaptcha" "^2.1.9"
-    brevent "file:C:/Users/HP/AppData/Local/Yarn/Cache/v6/npm-brevent-0.1.0-a0c75a7c-648a-49fe-8b87-d26ef001a2e3-1743251607826/node_modules/brevent"
+    brevent "file:C:/Users/HP/AppData/Local/Yarn/Cache/v6/npm-brevent-0.1.0-7a67f368-8fc6-4361-8d5c-b65ab0acc7a2-1743325698008/node_modules/brevent"
     dotenv "^16.4.5"
     drizzle-orm "^0.30.10"
     ejs "^3.1.10"
@@ -4261,7 +4268,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-uuid@^9.0.1:
+uuid@^9.0.1, uuid@~9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
