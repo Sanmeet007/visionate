@@ -28,17 +28,30 @@ const getImagesWithoutAlt = () => {
 };
 
 const getAltTextFromImageSrc = async (apiKey, imgEl) => {
-  await new Promise((res, rej) => {
-    setTimeout(() => {
-      res();
-    }, 2000);
-  });
+  try {
+    const res = await fetch("http://localhost:3000/api/generate-caption", {
+      method: "POST",
+      headers: {
+        "X-API-KEY": apiKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        imageUrl: imgEl.src,
+      }),
+    });
 
-  return "<CAPTION-DATA>";
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    } else {
+      return "<CAPTIONS-NOT-AVAILABLE>";
+    }
+  } catch (E) {
+    return "<CAPTIONS-NOT-AVAILABLE>";
+  }
 };
 
 (async () => {
-  console.log("captioning images...");
   const images = getImagesWithoutAlt();
 
   if (!kReleaseMode) {
@@ -62,9 +75,17 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
     });
 
     console.debug("--- EXTENSION LOG END  ---");
-
-    console.log("images captioning complete...");
   } else {
-    // handle production logic here
+    const apiKey = await getApiKey();
+    if (!apiKey) return;
+
+    images.forEach(async (imgEl) => {
+      try {
+        const captionData = await getAltTextFromImageSrc(apiKey, imgEl);
+        imgEl.alt = captionData;
+      } catch (e) {
+        return;
+      }
+    });
   }
 })();
