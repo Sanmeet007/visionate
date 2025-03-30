@@ -18,12 +18,15 @@
         color-scheme: dark;
       }
       body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         height: 100vh;
         background-color: #f5f5f5;
         background-image: url(./images/endless-constellation-1.svg);
+        padding: 0;
+        margin: 0;
+        display: grid;
+        place-content: center;
+        padding: 1rem;
+        min-height: 350px;
       }
       .card {
         padding: 20px;
@@ -32,6 +35,8 @@
         backdrop-filter: blur(2px);
         color: white;
         box-shadow: 0 0 100px 1px rgb(18 12 43);
+        margin: 0;
+        max-width: 600px;
       }
       .btn {
         width: 100%;
@@ -94,7 +99,7 @@
         opacity: 1 !important;
         transform: translateX(-50%) scale(1) !important;
       }
-      
+
       .snackbar-hide {
         visibility: hidden;
         opacity: 0 !important;
@@ -112,34 +117,30 @@
   </head>
   <body>
     <div class="container">
-      <div class="row">
-        <div class="col s12 m8 offset-m2 l6 offset-l3">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title center-align">SET UP VISIONATE</span>
-              <form id="__visionate_api_form" autocomplete="off">
-                <div class="input-field">
-                  <label for="apikey"
-                    >API Key <span style="color: red">*</span></label
-                  >
-                  <input type="text" id="apikey" name="apikey" required />
-                </div>
-                <button class="btn waves-effect waves-light" type="submit">
-                  Save
-                </button>
-              </form>
-
-              <div class="register-link">
-                <p>
-                  Visionate requires an API key to function. If you haven't
-                  registered yet, please
-                  <a href="http://localhost:3000/sign-up" target="_blank"
-                    >sign up here</a
-                  >
-                  to get your key and unlock all features.
-                </p>
-              </div>
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title center-align">SET UP VISIONATE</span>
+          <form id="__visionate_api_form" autocomplete="off">
+            <div class="input-field">
+              <label for="apikey"
+                >API Key <span style="color: red">*</span></label
+              >
+              <input type="text" id="apikey" name="apikey" required />
             </div>
+            <button class="btn waves-effect waves-light" type="submit">
+              Save
+            </button>
+          </form>
+
+          <div class="register-link">
+            <p>
+              Visionate requires an API key to function. If you haven't
+              registered yet, please
+              <a href="http://localhost:3000/sign-up" target="_blank"
+                >sign up here</a
+              >
+              to get your key and unlock all features.
+            </p>
           </div>
         </div>
       </div>
