@@ -27,7 +27,7 @@
     "@types/react-google-recaptcha": "^2.1.9",
     "brevent": "file:",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.30.10",
+    "drizzle-orm": "^0.41.0",
     "ejs": "^3.1.10",
     "google-auth-library": "^9.15.1",
     "image-type": "^5.2.0",
@@ -54,7 +54,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "drizzle-kit": "^0.21.2",
+    "drizzle-kit": "^0.30.6",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "typescript": "^5"
