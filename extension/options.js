@@ -79,6 +79,10 @@ form.addEventListener("submit", async (e) => {
       await wait(2000);
       form.reset();
       showSnackbar("success", "API key configured successfully!");
+
+      setTimeout(() => {
+        window.close();
+      }, 1000);
     } else {
       showSnackbar("error", "Invalid API key");
     }
