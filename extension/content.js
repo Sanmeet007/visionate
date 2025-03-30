@@ -51,7 +51,7 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
   }
 };
 
-(async () => {
+const main = async () => {
   const images = getImagesWithoutAlt();
 
   if (!kReleaseMode) {
@@ -88,4 +88,6 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
       }
     });
   }
-})();
+};
+
+main();
