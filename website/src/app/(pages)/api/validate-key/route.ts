@@ -19,11 +19,11 @@ export const GET = async () => {
         }
       );
 
-    const apiKeys = await db.query.apiKeysTable.findFirst({
+    const apiKeyDetails = await db.query.apiKeysTable.findFirst({
       where: eq(apiKeysTable.apiKey, apiKey),
     });
 
-    if (!apiKeys) {
+    if (!apiKeyDetails) {
       return NextResponse.json(
         {
           error: true,
@@ -34,7 +34,7 @@ export const GET = async () => {
         }
       );
     }
-    if (apiKeys?.isActive) {
+    if (!apiKeyDetails?.isActive) {
       return NextResponse.json(
         {
           error: true,
