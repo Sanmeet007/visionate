@@ -42,7 +42,7 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
 
     if (res.ok) {
       const data = await res.json();
-      return data.caption;
+      return data.caption.trim();
     } else {
       return "<CAPTIONS-NOT-AVAILABLE>";
     }
