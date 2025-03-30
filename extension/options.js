@@ -72,7 +72,15 @@ form.addEventListener("submit", async (e) => {
     showLoader();
 
     const key = form.apikey.value;
-    const res = await fetch("http://localhost:3000/api/validate-key");
+    const res = await fetch(
+      `http://localhost:3000/api/validate-key`,
+
+      {
+        headers: {
+          "X-API-KEY": key,
+        },
+      }
+    );
 
     if (res.ok) {
       await saveApiKey(key);
