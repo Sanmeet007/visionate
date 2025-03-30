@@ -29,15 +29,15 @@ const getImagesWithoutAlt = () => {
 
 const getAltTextFromImageSrc = async (apiKey, imgEl) => {
   try {
+    const formData = new FormData();
+    formData.append("imageUrl", imgEl.src);
+
     const res = await fetch("http://localhost:3000/api/generate-caption", {
       method: "POST",
       headers: {
         "X-API-KEY": apiKey,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        imageUrl: imgEl.src,
-      }),
+      body: formData,
     });
 
     if (res.ok) {
@@ -47,6 +47,9 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
       return "<CAPTIONS-NOT-AVAILABLE>";
     }
   } catch (E) {
+    if(!kReleaseMode){
+      console.log(E);
+    }
     return "<CAPTIONS-NOT-AVAILABLE>";
   }
 };
