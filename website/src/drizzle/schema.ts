@@ -117,6 +117,7 @@ export const apiRequestsTable = mysqlTable("api_requests", {
   imageWidth: int("image_width").notNull(),
   imageHeight: int("image_height").notNull(),
   imageSize: bigint("image_size", { mode: "number", unsigned: true }).notNull(),
+  processStatus: mysqlEnum(["success", "failed"]).notNull(),
 });
 
 export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) => {
