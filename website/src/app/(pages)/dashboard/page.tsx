@@ -1,5 +1,17 @@
-const DashboardHomePage = () => {
-  return <>Hello world</>;
+// import EmailVerificationModal from "./components/EmailVerification";
+// import DashboardClientPage from "./client-page";
+
+export const metadata = {
+  title: "Dashboard",
 };
 
-export default DashboardHomePage;
+const DashboardPage = () => {
+  return (
+    <>
+      {/* <EmailVerificationModal /> */}
+      {/* <DashboardClientPage /> */}
+    </>
+  );
+};
+
+export default DashboardPage;

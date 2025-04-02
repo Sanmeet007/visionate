@@ -1,10 +1,13 @@
+import sharp from "sharp";
 import imageType from "image-type";
 
-interface ImageMetadata {
+export interface ImageMetadata {
   url: string;
   mimeType: string;
   extension: string;
   sizeInBytes: number;
+  width: number;
+  height: number;
 }
 
 const userAgents: string[] = [
@@ -20,9 +23,7 @@ const getRandomUserAgent = (): string => {
   return userAgents[Math.floor(Math.random() * userAgents.length)];
 };
 
-const getImageMetadataFromUrl = async (
-  imageUrl: string
-): Promise<ImageMetadata> => {
+const getImageMetadataFromUrl = async (imageUrl: string) => {
   const response = await fetch(imageUrl, {
     headers: { "User-Agent": getRandomUserAgent() },
   });
@@ -35,32 +36,40 @@ const getImageMetadataFromUrl = async (
   const type = await imageType(Buffer.from(buffer));
 
   if (!type) {
-    throw Error("Invalid or unknown image format");
+    throw new Error("Invalid or unknown image format");
   }
+
+  const { width, height } = await sharp(Buffer.from(buffer)).metadata();
 
   return {
     url: imageUrl,
     mimeType: type.mime,
     extension: type.ext,
     sizeInBytes: buffer.byteLength,
-  };
+    width,
+    height,
+  } as ImageMetadata;
 };
 
-const getImageMetadataFromFile = async (file: File): Promise<ImageMetadata> => {
+const getImageMetadataFromFile = async (file: File) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const type = await imageType(buffer);
 
   if (!type) {
-    throw Error("Invalid or unknown image format");
+    throw new Error("Invalid or unknown image format");
   }
+
+  const { width, height } = await sharp(buffer).metadata();
 
   return {
     url: "",
     mimeType: type.mime,
     extension: type.ext,
     sizeInBytes: file.size,
-  };
+    width,
+    height,
+  } as ImageMetadata;
 };
 
 export { getImageMetadataFromUrl, getImageMetadataFromFile };

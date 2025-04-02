@@ -1,7 +1,15 @@
-import React from "react";
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
+import SnackbarProvider from "@/app/providers/SnackbarProvider";
+import DashboardLayout from "./base-layout";
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <>
+      <SnackbarProvider>
+        <DashboardLayout>{children}</DashboardLayout>
+      </SnackbarProvider>
+    </>
+  );
 };
 
-export default DashboardLayout;
+export default Layout;

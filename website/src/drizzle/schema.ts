@@ -117,6 +117,7 @@ export const apiRequestsTable = mysqlTable("api_requests", {
   imageWidth: int("image_width").notNull(),
   imageHeight: int("image_height").notNull(),
   imageSize: bigint("image_size", { mode: "number", unsigned: true }).notNull(),
+  imageMime: varchar("image_mime", { length: 60 }).notNull(),
   processStatus: mysqlEnum(["success", "failed"]).notNull(),
 });
 
