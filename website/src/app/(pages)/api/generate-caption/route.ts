@@ -1,12 +1,12 @@
 import { db } from "@/drizzle";
-import { apiKeysTable, usersTable } from "@/drizzle/schema";
+import { apiKeysTable, apiRequestsTable, usersTable } from "@/drizzle/schema";
 import { usingHasValidApiKeyMiddleware } from "@/middlewares/apikey-validator";
 import {
   getImageMetadataFromFile,
   getImageMetadataFromUrl,
+  ImageMetadata,
 } from "@/utils/image-meta";
 import { eq } from "drizzle-orm";
-
 import { NextResponse } from "next/server";
 
 const getMaxAllowedImageSize = (userRole: string): number => {
@@ -21,6 +21,10 @@ const getMaxAllowedImageSize = (userRole: string): number => {
 };
 
 export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
+  let generatedImageMeta: ImageMetadata | null = null,
+    processedUserId: string | null = null,
+    processedApiKeyId: number | null = null;
+
   try {
     const [record] = await db
       .select()
@@ -31,6 +35,9 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
       .select()
       .from(usersTable)
       .where(eq(usersTable.id, record.userId));
+
+    processedUserId = user.id;
+    processedApiKeyId = record.id;
 
     const formData = await request.formData();
     const imageFile = formData.get("image") as File;
@@ -57,7 +64,26 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
       ? await getImageMetadataFromFile(imageFile)
       : await getImageMetadataFromUrl(imageUrl as string);
 
+    generatedImageMeta = imageMeta;
+
     if (imageMeta.sizeInBytes > maxAllowedImageSize) {
+      await db.insert(apiRequestsTable).values({
+        apiKeyId: record.id,
+        userId: user.id,
+        ipAddress:
+          (request.headers.get("X-Real-IP") ||
+            request.headers.get("X-Forwarded-For")) ??
+          "na",
+        deviceName: request.headers.get("User-Agent"),
+        endpoint: "generate-caption",
+        imageHeight: imageMeta.height,
+        imageWidth: imageMeta.width,
+        imageSize: imageMeta.sizeInBytes,
+        userAgent: request.headers.get("user-agent") || "Mozilla/5.0",
+        processStatus: "failed",
+        imageMime: imageMeta.mimeType,
+      });
+
       return NextResponse.json(
         {
           error: true,
@@ -87,12 +113,52 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
 
     const resBody = await res.json();
 
+    await db.insert(apiRequestsTable).values({
+      apiKeyId: record.id,
+      userId: user.id,
+      ipAddress:
+        (request.headers.get("X-Real-IP") ||
+          request.headers.get("X-Forwarded-For")) ??
+        "na",
+      deviceName: request.headers.get("User-Agent"),
+      endpoint: "generate-caption",
+      imageHeight: imageMeta.height,
+      imageWidth: imageMeta.width,
+      imageSize: imageMeta.sizeInBytes,
+      userAgent: request.headers.get("user-agent") || "Mozilla/5.0",
+      processStatus: "success",
+      imageMime: imageMeta.mimeType,
+    });
+
     return NextResponse.json({
       error: false,
       message: "Captions generated successfully!",
       caption: resBody.description,
     });
   } catch (e: unknown) {
+    if (
+      generatedImageMeta != null &&
+      processedUserId != null &&
+      processedApiKeyId != null
+    ) {
+      await db.insert(apiRequestsTable).values({
+        apiKeyId: processedApiKeyId,
+        userId: processedUserId,
+        ipAddress:
+          (request.headers.get("X-Real-IP") ||
+            request.headers.get("X-Forwarded-For")) ??
+          "na",
+        deviceName: request.headers.get("User-Agent"),
+        endpoint: "generate-caption",
+        imageHeight: generatedImageMeta.height,
+        imageWidth: generatedImageMeta.width,
+        imageSize: generatedImageMeta.sizeInBytes,
+        userAgent: request.headers.get("user-agent") || "Mozilla/5.0",
+        processStatus: "failed",
+        imageMime: generatedImageMeta.mimeType,
+      });
+    }
+
     if (Number(process.env.LOGGING_LEVEL) > 0) {
       console.error(e);
     }
