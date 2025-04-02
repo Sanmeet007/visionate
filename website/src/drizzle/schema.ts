@@ -114,6 +114,9 @@ export const apiRequestsTable = mysqlTable("api_requests", {
   deviceName: varchar("device_name", { length: 255 }),
   userAgent: varchar("user_agent", { length: 1024 }),
   timestamp: timestamp("timestamp").defaultNow(),
+  imageWidth: int("image_width").notNull(),
+  imageHeight: int("image_height").notNull(),
+  imageSize: bigint("image_size", { mode: "number", unsigned: true }).notNull(),
 });
 
 export const apiKeyUsageTable = mysqlView("api_key_usage_monthly").as((qb) => {
