@@ -1,157 +1,64 @@
 from dotenv import load_dotenv
-
 load_dotenv(".env")
 
-
 import os
-import numpy as np
-import pickle
-import tensorflow as tf
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
-from tensorflow.keras.models import Model
-from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+import torch
 import requests
 from io import BytesIO
-from tensorflow.keras.saving import register_keras_serializable
 from PIL import Image
+from flask import Flask, request, jsonify
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
+# Initialize BLIP processor and model
+processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
 
+# Flask setup
 app = Flask(__name__)
-
-
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
-
-
-register_keras_serializable()
-
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-mobilenet_model = MobileNetV2(weights="imagenet")
-mobilenet_model = Model(
-    inputs=mobilenet_model.inputs, outputs=mobilenet_model.layers[-2].output
-)
-
-
-try:
-    model = tf.keras.models.load_model("model.h5")
-except Exception as e:
-    print(f"Error loading model: {e}")
-    model = None
-
-
-try:
-    with open("tokenizer.pkl", "rb") as tokenizer_file:
-        tokenizer = pickle.load(tokenizer_file)
-except Exception as e:
-    print(f"Error loading tokenizer: {e}")
-    tokenizer = None
-
-
-def get_word_from_index(index, tokenizer):
-    return next(
-        (word for word, idx in tokenizer.word_index.items() if idx == index), None
-    )
-
-
-def predict_caption(model, image_features, tokenizer, max_caption_length):
-    caption = "startseq"
-    for _ in range(max_caption_length):
-        sequence = tokenizer.texts_to_sequences([caption])[0]
-        sequence = pad_sequences([sequence], maxlen=max_caption_length)
-        yhat = model.predict([image_features, sequence], verbose=0)
-        predicted_index = np.argmax(yhat)
-        predicted_word = get_word_from_index(predicted_index, tokenizer)
-        caption += " " + predicted_word
-        if predicted_word is None or predicted_word == "endseq":
-            break
-    return caption
-
+def generate_caption(image: Image.Image) -> str:
+    image = image.convert("RGB")
+    inputs = processor(images=image, return_tensors="pt").to(device)
+    with torch.no_grad():
+        outputs = model.generate(**inputs, max_new_tokens=30)
+    return processor.decode(outputs[0], skip_special_tokens=True)
 
 @app.route("/generate-caption", methods=["POST"])
-def generate_caption():
-
+def generate_caption_route_handler():
     if "image" in request.files:
         image = request.files["image"]
         if image.filename == "":
             return jsonify({"error": "No selected file"}), 400
-
         if image and allowed_file(image.filename):
             try:
-                # Read the image directly from the file-like object
-                uploaded_image = Image.open(image.stream)  # Image is in memory, no need to save to disk
-                uploaded_image = uploaded_image.resize((224, 224))  # Resize image
-                image_array = img_to_array(uploaded_image)
-                image_array = image_array.reshape(
-                    (1, image_array.shape[0], image_array.shape[1], image_array.shape[2])
-                )
-                image_array = preprocess_input(image_array)
-
-                # Extract features from the image using MobileNetV2
-                image_features = mobilenet_model.predict(image_array, verbose=0)
-
-                # Generate caption
-                max_caption_length = 34
-                generated_caption = predict_caption(model, image_features, tokenizer, max_caption_length)
-                generated_caption = generated_caption.replace("startseq", "").replace("endseq", "")
-
+                uploaded_image = Image.open(image.stream)
+                caption = generate_caption(uploaded_image)
+                return jsonify({"description": caption}), 200
             except Exception as e:
-                return jsonify({"error": f"Error processing image: {e}"}), 500
-
-            return jsonify({"description": generated_caption}), 200
+                return jsonify({"error": f"Error processing image: {str(e)}"}), 500
 
     elif "image_url" in request.form:
         image_url = request.form["image_url"]
-        
         try:
             headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                "Accept": "image/webp,*/*;q=0.8",  # Accept image/webp and other types
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
+                "User-Agent": "Mozilla/5.0",
+                "Accept": "image/webp,*/*",
             }
-
-            image_response = requests.get(image_url, headers=headers)
-            image_response.raise_for_status()
-
-            uploaded_image = load_img(
-                BytesIO(image_response.content), target_size=(224, 224)
-            )
-            image_array = img_to_array(uploaded_image)
-            image_array = image_array.reshape(
-                (1, image_array.shape[0], image_array.shape[1], image_array.shape[2])
-            )
-            image_array = preprocess_input(image_array)
-
-            image_features = mobilenet_model.predict(image_array, verbose=0)
-
-            max_caption_length = 34
-            generated_caption = predict_caption(
-                model, image_features, tokenizer, max_caption_length
-            )
-            generated_caption = generated_caption.replace("startseq", "").replace(
-                "endseq", ""
-            )
-
+            response = requests.get(image_url, headers=headers, timeout=10)
+            response.raise_for_status()
+            image = Image.open(BytesIO(response.content))
+            caption = generate_caption(image)
+            return jsonify({"description": caption}), 200
         except Exception as e:
-            return jsonify({"error": f"Error processing image: {e}"}), 500
+            return jsonify({"error": f"Error loading image from URL: {str(e)}"}), 500
 
-        return jsonify({"description": generated_caption}), 200
-
-    return (
-        jsonify(
-            {
-                "error": "Invalid input. Please upload an image file or provide a valid image URL."
-            }
-        ),
-        400,
-    )
-
+    return jsonify({"error": "No image provided."}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True, port=os.environ.get("PORT", 5000))
+    app.run(debug=True, port=int(os.environ.get("PORT", 5000)))
