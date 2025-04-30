@@ -273,7 +273,12 @@ const ApiKeyManagement = () => {
             overflow: "hidden",
           }}
         >
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              bgcolor: "rgb(17 11 39 / 70%)",
+            }}
+          >
             <Table aria-label="api key table">
               <TableHead>
                 <TableRow>
