@@ -140,6 +140,7 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
         </LoadingButton>
         <TextDivider my="0" text={"or sign in with email"} />
         <TextField
+          size="small"
           disabled={isProcessing || isDisabled}
           required
           name="email_id"
@@ -152,6 +153,7 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
           fullWidth
         />
         <TextField
+          size="small"
           disabled={isProcessing || isDisabled || isGeneratingLink}
           required
           name="password"
