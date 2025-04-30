@@ -15,11 +15,11 @@ const NavListItem = ({
   href = "#",
   activeAnimationType = null,
   icon,
-  onClick = null,
+  onClick = undefined,
 }: {
   text: string;
   index: number;
-  onClick?: Function | null;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined;
   animationType: string | null;
   activeAnimationType: "active" | "bottom" | "top" | null;
   active: boolean;
@@ -28,7 +28,7 @@ const NavListItem = ({
 }) => {
   return (
     <ListItemButton
-      // onClick={onClick}
+      onClick={onClick}
       sx={{ borderRadius: "4px" }}
       LinkComponent={Link}
       href={href}

@@ -1,4 +1,3 @@
-// import EmailVerificationModal from "./components/EmailVerification";
 // import DashboardClientPage from "./client-page";
 
 export const metadata = {
@@ -8,7 +7,6 @@ export const metadata = {
 const DashboardPage = () => {
   return (
     <>
-      {/* <EmailVerificationModal /> */}
       {/* <DashboardClientPage /> */}
     </>
   );

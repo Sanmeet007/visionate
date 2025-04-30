@@ -18,6 +18,7 @@ import { LoadingButton } from "@mui/lab";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/app/providers/UserProvider";
 import LogoImage from "@/app/icons/logo-full";
+import { useRouter } from "next-nprogress-bar";
 
 interface ApiResponse {
   severity: AlertColor;
@@ -43,6 +44,7 @@ const NavDrawer = ({
   setNavBarState: Function | null;
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const { user } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
   const [apiResponse, setApiResponse] = useState<ApiResponse>(emptyResponse);
@@ -87,6 +89,7 @@ const NavDrawer = ({
   const closeNavBar = () => {
     if (setNavBarState != null) setNavBarState(false);
   };
+
   return (
     <>
       <Snackbar
@@ -110,7 +113,7 @@ const NavDrawer = ({
       <Box
         component={"aside"}
         sx={{
-          bgcolor:"#0a0035",
+          bgcolor: "#0a0035",
           gridArea: "Aside",
           display: "flex",
           flexDirection: "column",
@@ -249,7 +252,11 @@ const NavDrawer = ({
             marginBottom: "1rem",
           }}
         >
-          <NavList activeIndex={activeIndex} items={navItems} />
+          <NavList
+            activeIndex={activeIndex}
+            items={navItems}
+            clickCb={closeNavBar}
+          />
         </Box>
 
         <Box

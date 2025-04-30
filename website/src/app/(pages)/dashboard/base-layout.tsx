@@ -42,7 +42,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         },
         {
           text: "API Keys",
-          href: "/dashboard/discover",
+          href: "/dashboard/manage-api-keys",
           icon: <KeyIcon />,
         },
       ];
@@ -54,12 +54,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       switch (pathname) {
         case "/dashboard":
           return 0;
-        case "/dashboard/discover":
-          return 1;
         case "/dashboard/my-account":
+          return 1;
+        case "/dashboard/manage-api-keys":
           return 2;
-        case "/dashboard/manage-network":
-          return 3;
         default:
           return -1;
       }
