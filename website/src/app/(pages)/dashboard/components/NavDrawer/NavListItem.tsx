@@ -67,8 +67,10 @@ const NavListItem = ({
         {icon}
       </ListItemIcon>
       <Typography
-        // color={color}
         className="ink-list-item-text"
+        sx={{
+          ml:"0.5rem"
+        }}
       >
         {text}
       </Typography>

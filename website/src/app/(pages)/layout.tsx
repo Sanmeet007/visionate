@@ -10,6 +10,24 @@ import GloablLoader from "@/app/providers/GlobalLoader";
 import ProgressProvider from "@/app/providers/ProgressProvider";
 import AuthModalProvider from "@/app/providers/AuthModalProvider";
 import QueryProvider from "@/app/providers/QueryProvider";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/favicon-light.png",
+        href: "/favicon-light.png",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/favicon-dark.png",
+        href: "/favicon-dark.png",
+      },
+    ],
+  },
+};
 
 const inter = Inter({ subsets: ["latin"] });
 
