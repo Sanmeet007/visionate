@@ -36,14 +36,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           icon: <DashboardIcon />,
         },
         {
-          text: "My Account",
-          href: "/dashboard/my-account",
-          icon: <MyAccountIcon />,
-        },
-        {
           text: "API Keys",
           href: "/dashboard/manage-api-keys",
           icon: <KeyIcon />,
+        },
+        {
+          text: "My Account",
+          href: "/dashboard/my-account",
+          icon: <MyAccountIcon />,
         },
       ];
     } else return [];
@@ -54,9 +54,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       switch (pathname) {
         case "/dashboard":
           return 0;
-        case "/dashboard/my-account":
-          return 1;
         case "/dashboard/manage-api-keys":
+          return 1;
+        case "/dashboard/my-account":
           return 2;
         default:
           return -1;
