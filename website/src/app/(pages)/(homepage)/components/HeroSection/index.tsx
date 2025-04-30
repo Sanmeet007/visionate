@@ -69,6 +69,7 @@ const HeroSection = () => {
             }}
           >
             <Button
+              size={"large"}
               color="secondary"
               variant="contained"
               sx={{
@@ -77,7 +78,9 @@ const HeroSection = () => {
             >
               Download Extension
             </Button>
+
             <Button
+              size={"large"}
               sx={{
                 px: "2rem",
               }}
