@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import React, { useEffect, useRef, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { useUser } from "@/app/providers/UserProvider";
 import PricingTiers from "./components/PricingCard";

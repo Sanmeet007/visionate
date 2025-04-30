@@ -18,7 +18,7 @@ import { LoadingButton } from "@mui/lab";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/app/providers/UserProvider";
 import LogoImage from "@/app/icons/logo-full";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 interface ApiResponse {
   severity: AlertColor;

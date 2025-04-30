@@ -11,7 +11,7 @@ import Divider from "@mui/material/Divider";
 import { AccountCircle, Dashboard, Logout } from "@mui/icons-material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { useState } from "react";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import Box from "@mui/material/Box";
 import { useLoader } from "@/app/providers/GlobalLoader";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";

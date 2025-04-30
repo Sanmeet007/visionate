@@ -13,7 +13,7 @@ import Slide from "@mui/material/Slide";
 import lodash from "lodash";
 
 // import { useAuthModalOpener } from "@/app/providers/AuthModal";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 // import { useMobileMenu } from "@/app/providers/MobileMenuProvider";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/app/providers/UserProvider";

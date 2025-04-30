@@ -12,7 +12,7 @@ import { useState } from "react";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useSnackbar } from "../providers/SnackbarProvider";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { useUser } from "../providers/UserProvider";
 import { LoadingButton } from "@mui/lab";
 

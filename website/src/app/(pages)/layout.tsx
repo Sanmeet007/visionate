@@ -43,18 +43,19 @@ export default async function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           <AppThemeProvider>
-            <ProgressProvider />
-            <SnackbarProvider>
-              <GloablLoader>
-                <LogoutFunctionProvider>
-                  <AuthModalProvider>
-                    <UserProvider initialUserData={user}>
-                      <>{children}</>
-                    </UserProvider>
-                  </AuthModalProvider>
-                </LogoutFunctionProvider>
-              </GloablLoader>
-            </SnackbarProvider>
+            <ProgressProvider>
+              <SnackbarProvider>
+                <GloablLoader>
+                  <LogoutFunctionProvider>
+                    <AuthModalProvider>
+                      <UserProvider initialUserData={user}>
+                        <>{children}</>
+                      </UserProvider>
+                    </AuthModalProvider>
+                  </LogoutFunctionProvider>
+                </GloablLoader>
+              </SnackbarProvider>
+            </ProgressProvider>
           </AppThemeProvider>
         </QueryProvider>
       </body>

@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useUser } from "@/app/providers/UserProvider";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 const VerifyEmailClientPage = () => {
   const router = useRouter();

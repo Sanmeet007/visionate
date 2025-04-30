@@ -1,23 +1,25 @@
 "use client";
 
 import React from "react";
-import { AppProgressBar } from "next-nprogress-bar";
+import { ProgressProvider as AppProgressProvider } from "@bprogress/next/app";
 import { useTheme } from "@mui/material";
 
 /**
  * Navigation Progress Bar Provider
  * - Handles displaying loading progress bar animation on route changes
  */
-const ProgressProvider = () => {
+const ProgressProvider = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
 
   return (
     <>
-      <AppProgressBar
+      <AppProgressProvider
         height="3px"
         color={theme.palette.primary.main}
         options={{ showSpinner: false }}
-      />
+      >
+        {children}
+      </AppProgressProvider>
     </>
   );
 };
