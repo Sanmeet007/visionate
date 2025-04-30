@@ -27,6 +27,7 @@ const ProfileImage = ({
           src={src ?? undefined}
           alt={altText}
           sx={{
+            fontSize: "2rem",
             width: "7rem",
             height: "7rem",
             aspectRatio: 1,

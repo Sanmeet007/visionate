@@ -32,7 +32,6 @@ export const appTheme: Theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#ECE5FF",
-          fontSize: "2rem",
         },
       },
     },
