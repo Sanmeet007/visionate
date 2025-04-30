@@ -1,4 +1,4 @@
-// import DashboardClientPage from "./client-page";
+import DashboardClientPage from "./client-page";
 
 export const metadata = {
   title: "Dashboard",
@@ -7,7 +7,7 @@ export const metadata = {
 const DashboardPage = () => {
   return (
     <>
-      {/* <DashboardClientPage /> */}
+      <DashboardClientPage />
     </>
   );
 };

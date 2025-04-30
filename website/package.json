@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.15.17",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.17",
+    "@mui/x-charts": "^8.0.0-beta.3",
     "@supercharge/strings": "^2.0.0",
     "@tanstack/react-query": "^5.74.11",
     "@tanstack/react-query-devtools": "^5.74.11",
