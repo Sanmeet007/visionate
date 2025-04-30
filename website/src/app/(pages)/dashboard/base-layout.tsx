@@ -111,7 +111,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               {children}
             </NavDrawerOpener.Provider>
           </Box>
-          {children}
         </Box>
       </Box>
     </>
