@@ -1311,6 +1311,30 @@
     "@swc/counter" "^0.1.3"
     tslib "^2.4.0"
 
+"@tanstack/query-core@5.74.9":
+  version "5.74.9"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.74.9.tgz#35d5b1075663072bea22aa3ce21508b195306ecd"
+  integrity sha512-qmjXpWyigDw4SfqdSBy24FzRvpBPXlaSbl92N77lcrL+yvVQLQkf0T6bQNbTxl9IEB/SvVFhhVZoIlQvFnNuuw==
+
+"@tanstack/query-devtools@5.74.7":
+  version "5.74.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-devtools/-/query-devtools-5.74.7.tgz#c9b022b386ac86e6395228b5d6912e6444b3b971"
+  integrity sha512-nSNlfuGdnHf4yB0S+BoNYOE1o3oAH093weAYZolIHfS2stulyA/gWfSk/9H4ZFk5mAAHb5vNqAeJOmbdcGPEQw==
+
+"@tanstack/react-query-devtools@^5.74.11":
+  version "5.74.11"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-5.74.11.tgz#81c078d4f202c51065de1735415360b80f2e1e12"
+  integrity sha512-vx8MzH4WUUk4ZW8uHq7T45XNDgePF5ecRoa7haWJZxDMQyAHM80GGMhEW/yRz6TeyS9UlfTUz2OLPvgGRvvVOA==
+  dependencies:
+    "@tanstack/query-devtools" "5.74.7"
+
+"@tanstack/react-query@^5.74.11":
+  version "5.74.11"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.74.11.tgz#636f321ba3ee86060d15a961517a292ad57cb754"
+  integrity sha512-FFhn9ZiYRUOsxLAWZYxVfQTpVE7UWRaAeHJIWVDHKlmZZGc16rMHW9KrFZ8peC4hA71QUf/shJD8dPSMqDnRmA==
+  dependencies:
+    "@tanstack/query-core" "5.74.9"
+
 "@tokenizer/token@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@tokenizer/token/-/token-0.3.0.tgz#fe98a93fe789247e998c75e74e9c7c63217aa276"
@@ -1844,7 +1868,7 @@ braces@^3.0.3:
     "@types/nodemailer" "^6.4.15"
     "@types/otp-generator" "^4.0.2"
     "@types/react-google-recaptcha" "^2.1.9"
-    brevent "file:../../.yarn-cache/v6/npm-brevent-0.1.0-8ed6bf38-25f7-4643-9780-a09978516e4e-1746002197377/node_modules/brevent"
+    brevent "file:../../.yarn-cache/v6/npm-brevent-0.1.0-32545a5f-b2c8-49b0-9779-f37cdb9bca7c-1746011805319/node_modules/brevent"
     dotenv "^16.4.5"
     drizzle-orm "^0.41.0"
     ejs "^3.1.10"
@@ -1855,6 +1879,7 @@ braces@^3.0.3:
     lodash "^4.17.21"
     lucia "^3.2.0"
     moment "^2.30.1"
+    mui-one-time-password-input "^5.0.0"
     mysql2 "^3.9.7"
     next "14.2.3"
     next-nprogress-bar "^2.3.12"

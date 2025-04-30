@@ -1,5 +1,11 @@
+import ManageApiKeysClientPage from "./client-page";
+
 const ManageApiKeysPage = () => {
-  return <>Hello world yoi</>;
+  return (
+    <>
+      <ManageApiKeysClientPage />
+    </>
+  );
 };
 
 export default ManageApiKeysPage;

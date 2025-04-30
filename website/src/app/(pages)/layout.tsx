@@ -8,7 +8,8 @@ import UserProvider from "@/app/providers/UserProvider";
 import LogoutFunctionProvider from "@/app/providers/LogoutFnProvider";
 import GloablLoader from "@/app/providers/GlobalLoader";
 import ProgressProvider from "@/app/providers/ProgressProvider";
-import AuthModalProvider from "../providers/AuthModalProvider";
+import AuthModalProvider from "@/app/providers/AuthModalProvider";
+import QueryProvider from "@/app/providers/QueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,20 +23,22 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppThemeProvider>
-          <ProgressProvider />
-          <SnackbarProvider>
-            <GloablLoader>
-              <LogoutFunctionProvider>
-                <AuthModalProvider>
-                  <UserProvider initialUserData={user}>
-                    <>{children}</>
-                  </UserProvider>
-                </AuthModalProvider>
-              </LogoutFunctionProvider>
-            </GloablLoader>
-          </SnackbarProvider>
-        </AppThemeProvider>
+        <QueryProvider>
+          <AppThemeProvider>
+            <ProgressProvider />
+            <SnackbarProvider>
+              <GloablLoader>
+                <LogoutFunctionProvider>
+                  <AuthModalProvider>
+                    <UserProvider initialUserData={user}>
+                      <>{children}</>
+                    </UserProvider>
+                  </AuthModalProvider>
+                </LogoutFunctionProvider>
+              </GloablLoader>
+            </SnackbarProvider>
+          </AppThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
