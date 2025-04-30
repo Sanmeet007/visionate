@@ -18,6 +18,10 @@ export const appTheme: Theme = createTheme({
       default: "#070025",
       paper: "#110b27",
     },
+    primary: {
+      main: "#ded3ff",
+      contrastText: "rgba(0,0,0,0.9)",
+    },
     secondary: {
       main: "#FF3A61",
       contrastText: "rgba(255,255,255,0.9)",
