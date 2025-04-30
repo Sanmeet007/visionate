@@ -1,6 +1,10 @@
+"use client";
+
+import { useUser } from "@/app/providers/UserProvider";
 import { Box, Button, TextField, Typography } from "@mui/material";
 
 const MyAccountClientPage = () => {
+  const { user } = useUser();
   return (
     <>
       <Box sx={{ p: "1rem" }}>
@@ -44,11 +48,40 @@ const MyAccountClientPage = () => {
                 label="Email address"
                 size="small"
                 disabled
-                value={"ssanmeet123@gmail.com"}
+                value={user?.email ?? ""}
                 sx={{ maxWidth: "400px" }}
               />
             </Box>
             <Button variant="outlined">Save</Button>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            my: "1rem",
+            bgcolor: "rgb(17 11 39 / 70%)",
+            p: "1rem",
+            borderRadius: "20px",
+          }}
+        >
+          <Typography variant="body1" gutterBottom>
+            Subscription
+          </Typography>
+          <Typography variant="subtitle2" color="InactiveCaptionText">
+            Review available plans and select your preferred option.
+          </Typography>
+          <Box
+            sx={{
+              mt: "1rem",
+              display: "flex",
+              gap: "1rem",
+            }}
+          >
+            <Button variant="outlined" color="primary">
+              View Plans
+            </Button>
+            <Button variant="contained" color="primary">
+              Upgrade
+            </Button>
           </Box>
         </Box>
         <Box
@@ -75,6 +108,7 @@ const MyAccountClientPage = () => {
             </Button>
           </Box>
         </Box>
+
         <Box
           sx={{
             my: "1rem",
@@ -87,7 +121,7 @@ const MyAccountClientPage = () => {
             Delete your account
           </Typography>
           <Typography variant="subtitle2" color="InactiveCaptionText">
-            Set a password that is unique
+            Permanently remove your profile and associated information.
           </Typography>
           <Box
             sx={{
