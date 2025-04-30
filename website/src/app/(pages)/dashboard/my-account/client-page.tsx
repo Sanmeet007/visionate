@@ -2,9 +2,19 @@
 
 import { useUser } from "@/app/providers/UserProvider";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 
 const MyAccountClientPage = () => {
   const { user } = useUser();
+  const [formData, setFormData] = useState({
+    name: user?.name ?? "",
+  });
+
+  const handleFieldChange =
+    (fieldname: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((x) => ({ ...x, [fieldname]: e.target.value }));
+    };
+
   return (
     <>
       <Box sx={{ p: "1rem" }}>
@@ -42,6 +52,8 @@ const MyAccountClientPage = () => {
                 size="small"
                 placeholder={"Enter your name"}
                 sx={{ maxWidth: "400px" }}
+                value={formData.name}
+                onChange={handleFieldChange("name")}
               />
               <TextField
                 required
@@ -78,9 +90,6 @@ const MyAccountClientPage = () => {
           >
             <Button variant="outlined" color="primary">
               View Plans
-            </Button>
-            <Button variant="contained" color="primary">
-              Upgrade
             </Button>
           </Box>
         </Box>
