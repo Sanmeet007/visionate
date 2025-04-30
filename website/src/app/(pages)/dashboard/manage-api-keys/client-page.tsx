@@ -15,13 +15,20 @@ import {
   Typography,
   Paper,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material/styles";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { useUser } from "@/app/providers/UserProvider";
+import { LoadingButton } from "@mui/lab";
 
 interface ApiKey {
   id: string;
@@ -73,7 +80,15 @@ const revokeApiKey = async (key: string): Promise<void> => {
   }
 };
 
+interface ModalState {
+  opened: boolean;
+}
+
 const ApiKeyManagement = () => {
+  const [modalState, setModalState] = useState<ModalState>({
+    opened: false,
+  });
+
   const { user } = useUser();
   const showSnackbar = useSnackbar();
   const [newKeyName, setNewKeyName] = useState("");
@@ -108,9 +123,7 @@ const ApiKeyManagement = () => {
     onError: (err: any) => {
       showSnackbar(
         "error",
-        `Failed to generate API key: ${
-          err?.message || "An unexpected error occurred"
-        }`
+        `${err?.message || "An unexpected error occurred"}`
       );
     },
   });
@@ -134,6 +147,7 @@ const ApiKeyManagement = () => {
   });
 
   const handleGenerateApiKey = () => {
+    closeModal();
     if (!newKeyName.trim()) {
       showSnackbar("error", "Please enter a name for your new API key.");
       return;
@@ -158,106 +172,186 @@ const ApiKeyManagement = () => {
 
   if (isFetchingKeys) {
     return (
-      <StyledPaper>
+      <>
         <CircularProgress />
-      </StyledPaper>
+      </>
     );
   }
 
   if (isError) {
     return (
-      <StyledPaper>
+      <>
         <Typography color="error">
           Error fetching API keys: {error?.message}
         </Typography>
-      </StyledPaper>
+      </>
     );
   }
 
+  const closeModal = () => {
+    setModalState({
+      opened: false,
+    });
+    setTimeout(() => {
+      setNewKeyName("");
+    }, 50);
+  };
+  const openModal = () => {
+    setModalState({ opened: true });
+  };
+
   return (
-    <StyledPaper>
-      <Typography variant="h6" gutterBottom>
-        API Key Management
-      </Typography>
-
-      <Box mb={3} display="flex" gap={2} alignItems="center">
-        <TextField
-          label="New API Key Name"
-          variant="outlined"
-          size="small"
-          fullWidth
-          value={newKeyName}
-          onChange={(e) => setNewKeyName(e.target.value)}
-          placeholder="Enter a name for your key"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleGenerateApiKey}
-          disabled={isGenerating}
+    <>
+      <Dialog open={modalState.opened} onClose={closeModal}>
+        <DialogTitle>Generate new key</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please provide a unique and descriptive name for your new API key.
+            This will help you easily identify and manage it in the future.
+          </DialogContentText>
+          <Box sx={{ mt: "1rem" }}>
+            <TextField
+              required
+              fullWidth
+              label="Key Name"
+              variant="outlined"
+              size="small"
+              value={newKeyName}
+              onChange={(e) => setNewKeyName(e.target.value)}
+              placeholder="Enter a name for your key"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={closeModal} color="primary">
+            Cancel
+          </Button>
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={handleGenerateApiKey}
+            disabled={newKeyName.length < 3 || isGenerating}
+            loading={isGenerating}
+          >
+            Generate
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+      <Box
+        sx={{
+          p: "1rem",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: "1rem",
+          }}
         >
-          {isGenerating ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Generate Key"
-          )}
-        </Button>
+          <Typography variant="h6" component={"h1"}>
+            Manange api keys
+          </Typography>
+          <Box>
+            <Button
+              variant="contained"
+              onClick={openModal}
+              sx={{
+                minWidth: "auto",
+                width: "3rem",
+                height: "3rem",
+              }}
+            >
+              <AddIcon fontSize="medium" />
+            </Button>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            borderRadius: "20px",
+            overflow: "hidden",
+          }}
+        >
+          <TableContainer component={Paper}>
+            <Table aria-label="api key table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>API Key</TableCell>
+                  <TableCell>Created At</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  "&:last-child td": {
+                    borderBottom: 0,
+                  },
+                }}
+              >
+                {apiKeysData?.keys?.map((key, i) => (
+                  <TableRow key={key.id}>
+                    <TableCell>{i + 1}</TableCell>
+                    <TableCell>{key.keyName}</TableCell>
+                    <TableCell>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography
+                          variant="body2"
+                          component="span"
+                          sx={{ wordBreak: "break-all", flexGrow: 1 }}
+                        >
+                          {key.apiKey}
+                        </Typography>
+                        <IconButton
+                          onClick={() => handleCopyApiKey(key.apiKey)}
+                          aria-label="copy"
+                        >
+                          <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(key.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => handleRevokeApiKey(key.apiKey)}
+                        aria-label="delete"
+                        color="error"
+                        disabled={isRevoking}
+                      >
+                        {isRevoking ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <DeleteIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {apiKeysData?.keys.length === 0 && (
+              <>
+                <Box
+                  sx={{
+                    p: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "100px",
+                  }}
+                >
+                  Nothing to display
+                </Box>
+              </>
+            )}
+          </TableContainer>
+        </Box>
       </Box>
-
-      <TableContainer component={Paper}>
-        <Table aria-label="api key table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Key Value</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {apiKeysData?.keys?.map((key) => (
-              <TableRow key={key.id}>
-                <TableCell>{key.keyName}</TableCell>
-                <TableCell>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography
-                      variant="body2"
-                      component="span"
-                      sx={{ wordBreak: "break-all", flexGrow: 1 }}
-                    >
-                      {key.apiKey}
-                    </Typography>
-                    <IconButton
-                      onClick={() => handleCopyApiKey(key.apiKey)}
-                      aria-label="copy"
-                    >
-                      <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  {new Date(key.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => handleRevokeApiKey(key.apiKey)}
-                    aria-label="delete"
-                    color="error"
-                    disabled={isRevoking}
-                  >
-                    {isRevoking ? (
-                      <CircularProgress size={20} color="inherit" />
-                    ) : (
-                      <DeleteIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </StyledPaper>
+    </>
   );
 };
 

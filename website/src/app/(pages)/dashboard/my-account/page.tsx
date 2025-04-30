@@ -1,5 +1,11 @@
+import MyAccountClientPage from "./client-page";
+
 const MyAccountPage = () => {
-    return ( <></> );
-}
- 
+  return (
+    <>
+      <MyAccountClientPage />
+    </>
+  );
+};
+
 export default MyAccountPage;
