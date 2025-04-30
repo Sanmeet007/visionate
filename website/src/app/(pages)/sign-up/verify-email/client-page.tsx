@@ -221,6 +221,7 @@ const VerifyEmailClientPage = () => {
                   </Typography>
                   <MuiOtpInput
                     TextFieldsProps={{
+                      type: "number",
                       disabled: isProcessing || isDisabled || isResending,
                       size: "small",
                     }}

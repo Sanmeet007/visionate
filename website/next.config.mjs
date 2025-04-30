@@ -1,6 +1,7 @@
 // next. config.ts
 
 const nextConfig = {
+  transpilePackages: ['mui-one-time-password-input'],
   webpack: (config) => {
     config.externals.push("@node-rs/argon2", "@node-rs/bcrypt");
     return config;
