@@ -20,6 +20,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Skeleton,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddIcon from "@mui/icons-material/Add";
@@ -169,14 +170,6 @@ const ApiKeyManagement = () => {
     navigator.clipboard.writeText(keyValue);
     showSnackbar("success", "API key copied to clipboard!");
   };
-
-  if (isFetchingKeys) {
-    return (
-      <>
-        <CircularProgress />
-      </>
-    );
-  }
 
   if (isError) {
     return (
@@ -338,7 +331,30 @@ const ApiKeyManagement = () => {
                 ))}
               </TableBody>
             </Table>
-            {apiKeysData?.keys.length === 0 && (
+            {isFetchingKeys && (
+              <>
+                <Box
+                  sx={{
+                    m: "1rem",
+                    display: "grid",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {Array(4)
+                    .fill(0)
+                    .map((_, i) => (
+                      <Skeleton
+                        key={`skeleton-row-${i}`}
+                        width="100%"
+                        variant="rounded"
+                        animation="wave"
+                        height={"50px"}
+                      />
+                    ))}
+                </Box>
+              </>
+            )}
+            {!isFetchingKeys && apiKeysData?.keys.length === 0 && (
               <>
                 <Box
                   sx={{
