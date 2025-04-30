@@ -28,6 +28,14 @@ export const appTheme: Theme = createTheme({
     },
   },
   components: {
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#ECE5FF",
+          fontSize: "2rem",
+        },
+      },
+    },
     MuiFormLabel: {
       styleOverrides: {
         asterisk: {
