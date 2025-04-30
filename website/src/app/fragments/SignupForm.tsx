@@ -7,6 +7,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Link as MuiLink,
 } from "@mui/material";
 import { useState } from "react";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -15,6 +16,9 @@ import { useSnackbar } from "../providers/SnackbarProvider";
 import { useRouter } from "@bprogress/next/app";
 import { useUser } from "../providers/UserProvider";
 import { LoadingButton } from "@mui/lab";
+import GoogleIcon from "../icons/google-icon";
+import TextDivider from "../components/TextDivider";
+import Link from "next/link";
 
 type ShowLoginFn = {
   (event: React.MouseEvent<HTMLElement>): void;
@@ -80,6 +84,35 @@ const SignupForm = () => {
     }
   };
 
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+
+  const loginUsingGoogle = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    try {
+      e.preventDefault();
+      setIsGeneratingLink(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/oauth/geturl`,
+        {
+          credentials: "include",
+        }
+      );
+      if (typeof window !== "undefined") {
+        if (res.ok) {
+          const data = await res.json();
+          window.location.href = data.url;
+          setIsGeneratingLink(false);
+        } else {
+          throw Error("Unable to generate link");
+        }
+      }
+    } catch (e) {
+      setIsGeneratingLink(false);
+      showSnackbar("error", "Something went wrong");
+    }
+  };
+
   return (
     <>
       <Box
@@ -91,7 +124,7 @@ const SignupForm = () => {
         }}
       >
         <Typography
-          variant="h4"
+          variant="h5"
           component={"h1"}
           sx={{
             mb: "2rem",
@@ -99,6 +132,25 @@ const SignupForm = () => {
         >
           Create account
         </Typography>
+
+        <LoadingButton
+          startIcon={isGeneratingLink ? null : <GoogleIcon />}
+          onClick={(e) => loginUsingGoogle(e)}
+          disabled={isGeneratingLink || isProcessing}
+          loading={isGeneratingLink}
+          variant="outlined"
+          fullWidth
+          sx={{
+            textTransform: "none",
+            borderRadius: "100px",
+            fontSize: "1rem",
+          }}
+        >
+          Sign up with Google
+        </LoadingButton>
+
+        <TextDivider my="1rem" text={"or sign up with email"} />
+
         <Box
           component={"form"}
           onSubmit={handleFormSubmission}
@@ -165,14 +217,12 @@ const SignupForm = () => {
           >
             Submit
           </LoadingButton>
-          Already a user ?
-          <Button
-            variant="outlined"
-            onClick={() => {}}
-            disabled={isProcessing || isDisabled}
-          >
-            Login instead
-          </Button>
+          <Typography variant="body1">
+            Already a user ?{" "}
+            <MuiLink component={Link} href="/?action=login">
+              Login instead
+            </MuiLink>
+          </Typography>
         </Box>
       </Box>
     </>

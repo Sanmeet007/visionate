@@ -23,17 +23,8 @@ const Header = () => {
   const pathname = usePathname();
   // const [openMobileMenu] = useMobileMenu();
   const { user } = useUser();
-
-  // const setSettingsContext = useSettingsPanelContextUpdater();
   const openAuthModal = useAuthModalOpener();
   const router = useRouter();
-
-  const openSettingsPanel = () => {
-    // setSettingsContext((x) => ({
-    //   ...x,
-    //   drawerState: true,
-    // }));
-  };
 
   const handleLoginMenuOption = (x: string) => () => {
     if (x === "sign-up") {
@@ -69,7 +60,7 @@ const Header = () => {
   useEffect(() => {
     if (typeof window !== undefined) {
       setCurrentTarget(document.querySelector("#scrollable-element"));
-      console.log(document.querySelector("#scrollable-element"))
+      console.log(document.querySelector("#scrollable-element"));
     }
   }, []);
 

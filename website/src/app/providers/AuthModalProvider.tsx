@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,6 +16,8 @@ import Grow from "@mui/material/Grow";
 import { SnackbarProps } from "./SnackbarProvider";
 import { TransitionProps } from "@mui/material/transitions";
 import LoginForm from "../fragments/LoginForm";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Transition = React.forwardRef<HTMLDivElement, TransitionProps>(
   function Transition(props, ref) {
@@ -55,6 +57,7 @@ export const useAuthModalStateUpdater = () => {
 };
 
 const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
   const [canClose, setCanClose] = useState(true);
 
   const [snackbarState, setSnackbarState] = useState<SnackbarProps>({
@@ -84,11 +87,26 @@ const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
     if (canClose) {
       setState((x) => ({ ...x, opened: false }));
     }
+
+    const action = searchParams.get("action");
+    if (action === "login") {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.delete("action");
+      router.push(`/?${newSearchParams.toString()}`);
+    }
   };
 
   const openModal = (message: string = "") => {
     setState((x) => ({ ...x, message, opened: true }));
   };
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const action = searchParams.get("action");
+    setState((x) => ({ ...x, opened: pathname === "/" && action === "login" }));
+  }, [pathname, searchParams]);
 
   return (
     <>
@@ -150,7 +168,7 @@ const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
               )}
 
               <LoginForm showSnackbar={showSnackbar} />
-              
+
               <Typography
                 component={"div"}
                 sx={{
