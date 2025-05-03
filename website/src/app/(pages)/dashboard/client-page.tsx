@@ -11,6 +11,7 @@ import QuotaTile from "./components/Stats/QuotaTile";
 import RequestsAnalysis from "./components/Stats/RequestsAnalysis";
 import WeeklyAverage from "./components/Stats/WeeklyAverage";
 import UsageMetrics from "./components/Stats/UsageMetrics";
+import { getSubDetails } from "@/utils/user-sub-details";
 
 type Period =
   | "today"
@@ -42,11 +43,19 @@ const DashboardClientPage = () => {
     error,
   } = useQuery({
     queryFn: async () => {
-      await wait(1000);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/data/base-stats`
+      );
+      const data = await res.json();
       return {
-        keysLeft: 0,
-        averageImageSIze: 1024,
-        requestsRemaining: 56,
+        keysLeft: data.keysLeft,
+        maxAllowedKeys: data.maxAllowedKeys,
+        averageImageSIze: data.avgImageSize,
+        requestsRemaining: data.requestsRemaining,
+        requestsProcessed: {
+          success: data.requestsProcessed.success,
+          fail: data.requestsProcessed.fail,
+        },
       };
     },
     queryKey: [`basic-stats-data-${user?.id}`],
@@ -63,8 +72,30 @@ const DashboardClientPage = () => {
     error: weeklyAverageError,
   } = useQuery({
     queryFn: async () => {
-      await wait(2000);
-      return [10, 20, 20, 20, 20, 20, 20];
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/data/weekly-metrics`
+      );
+      const data = await res.json();
+      return {
+        keys: [
+          "Sunday:",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ],
+        values: [
+          data.data["Sunday"],
+          data.data["Monday"],
+          data.data["Tuesday"],
+          data.data["Wednesday"],
+          data.data["Thursday"],
+          data.data["Friday"],
+          data.data["Saturday"],
+        ],
+      };
     },
     queryKey: [`weekly-average-data-${user?.id}`],
     refetchOnWindowFocus: false,
@@ -80,11 +111,13 @@ const DashboardClientPage = () => {
     error: metricsError,
   } = useQuery({
     queryFn: async () => {
-      await wait(2500);
-      // today , yesterday , this week , past week , this month , past month , past 3 months , past 6 months , this year , past year
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/data/usage-metrics?=${usageMetricsParams.period}`
+      );
+      const data = await res.json();
       return {
-        tenure: usageMetricsParams.period,
-        // ?
+        period: usageMetricsParams.period,
+        ...data
       };
     },
     queryKey: [`usage-metrics-data-${user?.id}`, usageMetricsParams],
