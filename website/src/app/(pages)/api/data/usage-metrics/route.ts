@@ -4,7 +4,6 @@ import { usingAuthMiddleware } from "@/middlewares/authenticator";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import { and, count, sql } from "drizzle-orm";
 import Joi from "joi";
-import { eq } from "lodash";
 import { NextResponse } from "next/server";
 
 function getWeeksInMonth(year: number, month: number) {
