@@ -1,7 +1,17 @@
 "use client";
 
 import { Image as ImageIcon, Key as KeyIcon } from "@mui/icons-material";
-import { Box, Divider, Skeleton, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import wait from "@/utils/wait";
 import { useState } from "react";
@@ -25,6 +35,18 @@ type Period =
   | "this-year"
   | "past-year";
 
+const periodValues = [
+  "today",
+  "yesterday",
+  "this-week",
+  "past-week",
+  "this-month",
+  "past-month",
+  "past-three-months",
+  "past-six-months",
+  "this-year",
+  "past-year",
+];
 interface UsageQueryParams {
   period: Period;
 }
@@ -129,6 +151,10 @@ const DashboardClientPage = () => {
     refetchOnReconnect: false,
   });
 
+  const periodChangeHandler = (e: SelectChangeEvent<Period>) => {
+    setUsageMetricsParams({ period: e.target.value as Period });
+  };
+
   return (
     <>
       <Box
@@ -232,6 +258,43 @@ const DashboardClientPage = () => {
                 p: "1rem",
               }}
             >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                }}
+              >
+                <Box>Displaying {metricsData.dataFormatType} based data</Box>
+                <Box sx={{ maxWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="usage-metric-label">Period</InputLabel>
+                    <Select
+                      labelId={"usage-metric-label"}
+                      id={"usage-metric-selector"}
+                      value={usageMetricsParams.period}
+                      label={"Period"}
+                      onChange={periodChangeHandler}
+                      sx={{
+                        "& .MuiSelect-outlined": {
+                          py: "0.5rem",
+                        },
+                        borderRadius: "100px",
+                      }}
+                    >
+                      {periodValues?.map((v, index) => {
+                        return (
+                          <MenuItem key={"select-item-" + index} value={v}>
+                            {v}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Box>
+            
               <UsageMetrics metricsData={metricsData} />
             </Box>
           )}
