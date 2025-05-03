@@ -12,7 +12,7 @@ import RequestsAnalysis from "./components/Stats/RequestsAnalysis";
 import WeeklyAverage from "./components/Stats/WeeklyAverage";
 import UsageMetrics from "./components/Stats/UsageMetrics";
 
-type Tenure =
+type Period =
   | "today"
   | "yesterday"
   | "this-week"
@@ -25,14 +25,14 @@ type Tenure =
   | "past-year";
 
 interface UsageQueryParams {
-  tenure: Tenure;
+  period: Period;
 }
 
 const DashboardClientPage = () => {
   const { user } = useUser();
   const [usageMetricsParams, setUsageMetricsParams] =
     useState<UsageQueryParams>({
-      tenure: "today",
+      period: "today",
     });
 
   const {
@@ -83,7 +83,7 @@ const DashboardClientPage = () => {
       await wait(2500);
       // today , yesterday , this week , past week , this month , past month , past 3 months , past 6 months , this year , past year
       return {
-        tenure: usageMetricsParams.tenure,
+        tenure: usageMetricsParams.period,
         // ?
       };
     },
@@ -229,7 +229,7 @@ const DashboardClientPage = () => {
             </Box>
           )}
 
-          <Typography>Weekly Average</Typography>
+          <Typography>Weekly Average This Month</Typography>
           {isFetchingWeeklyAverage && (
             <>
               <Skeleton

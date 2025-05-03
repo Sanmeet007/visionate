@@ -13,7 +13,7 @@ export const GET = usingAuthMiddleware(
   usingJoiValidatorMiddleware<GetRequestParams>(
     async (_, validationResults, user) => {
       try {
-        const [d1Result, d2Result, d3Result] = await Promise.all([
+        const [d1Result, d2Result, d3Result, d4Result] = await Promise.all([
           db
             .select({
               avgImageSize: sql`ceil(avg(image_size))`.as("avgImageSize"),
@@ -44,7 +44,36 @@ export const GET = usingAuthMiddleware(
               )
             )
             .limit(1),
+
+          db
+            .select({
+              processStatus: apiRequestsTable.processStatus,
+              count: count(apiRequestsTable.id),
+            })
+            .from(apiRequestsTable)
+            .groupBy(apiRequestsTable.processStatus)
+            .where(
+              and(
+                eq(apiRequestsTable.userId, user!.id),
+                sql`month(\`timestamp\`) = month(current_timestamp)`
+              )
+            ),
         ]);
+
+        const formattedResult = {
+          success: 0,
+          fail: 0,
+        };
+
+        d4Result.forEach((item) => {
+          const status = item.processStatus as string;
+          const c = item.count;
+          if (status === "success") {
+            formattedResult.success += c;
+          } else if (status === "fail") {
+            formattedResult.fail += c;
+          }
+        });
 
         const { maxRequestsPerMonth } = getSubDetails(user!);
 
@@ -53,6 +82,7 @@ export const GET = usingAuthMiddleware(
           keyCount: d2Result[0]?.keyCount ?? 0,
           requestsRemaining:
             maxRequestsPerMonth - (d3Result[0]?.requestThisMonth ?? 0),
+          requestsProcessed: formattedResult,
         });
       } catch (error) {
         console.error("Error fetching data:", error);
