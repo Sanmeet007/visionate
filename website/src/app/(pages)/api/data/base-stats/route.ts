@@ -75,11 +75,13 @@ export const GET = usingAuthMiddleware(
           }
         });
 
-        const { maxRequestsPerMonth } = getSubDetails(user!);
+        const { maxRequestsPerMonth, maxAllowedKeys } = getSubDetails(user!);
 
         return NextResponse.json({
           avgImageSize: Number(d1Result[0]?.avgImageSize ?? 0),
           keyCount: d2Result[0]?.keyCount ?? 0,
+          keysLeft: maxAllowedKeys - (d2Result[0]?.keyCount ?? 0),
+          maxAllowedKeys,
           requestsRemaining:
             maxRequestsPerMonth - (d3Result[0]?.requestThisMonth ?? 0),
           requestsProcessed: formattedResult,
