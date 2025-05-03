@@ -1,8 +1,15 @@
 import { PieChart } from "@mui/x-charts/PieChart";
 import { PieCenterLabel } from "../PieCenterLabel";
 import { Box } from "@mui/material";
+import { getSentiment } from "@/utils/get-sentiment";
 
-const RequestsAnalysisGraph = () => {
+const RequestsAnalysisGraph = ({
+  success,
+  fail,
+}: {
+  success: number;
+  fail: number;
+}) => {
   return (
     <>
       <PieChart
@@ -10,8 +17,8 @@ const RequestsAnalysisGraph = () => {
           {
             faded: { innerRadius: 30, additionalRadius: -30 },
             data: [
-              { id: 0, value: 100, label: "Success" },
-              { id: 1, value: 15, label: "Fail" },
+              { id: 0, value: success, label: "Success" },
+              { id: 1, value: fail, label: "Fail" },
             ],
             innerRadius: 70,
             outerRadius: 50,
@@ -24,7 +31,7 @@ const RequestsAnalysisGraph = () => {
         width={200}
         height={200}
       >
-        <PieCenterLabel>GOOD</PieCenterLabel>
+        <PieCenterLabel>{getSentiment(success, fail)}</PieCenterLabel>
       </PieChart>
     </>
   );

@@ -1,14 +1,32 @@
 import { LineChart } from "@mui/x-charts/LineChart";
-import { Box } from "@mui/material";
+import { capitalize } from "lodash";
 
-const UsageMetricsGraph = () => {
+const UsageMetricsGraph = ({ metricsData }) => {
+  console.log(
+    Object.values(metricsData.requests),
+
+    Object.keys(metricsData.requests)
+  );
   return (
     <>
       <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+        xAxis={[
+          {
+            label: capitalize(metricsData.dataFormatType),
+            data: Object.keys(metricsData.requests).map((_, i) => i),
+            scaleType: "point",
+            valueFormatter: (i) => {
+              if (i !== null) {
+                return Object.keys(metricsData.requests)[i];
+              } else {
+                return "";
+              }
+            },
+          },
+        ]}
         series={[
           {
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
+            data: Object.values(metricsData.requests),
           },
         ]}
         height={300}

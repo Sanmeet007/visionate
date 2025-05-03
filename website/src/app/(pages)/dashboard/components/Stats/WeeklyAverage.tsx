@@ -1,7 +1,14 @@
 import { BarChart } from "@mui/x-charts/BarChart";
-import { Box } from "@mui/material";
+import { upperCase } from "lodash";
 
-const WeeklyAverageGraph = () => {
+const WeeklyAverageGraph = ({
+  data,
+}: {
+  data: {
+    keys: string[];
+    values: number[];
+  };
+}) => {
   return (
     <>
       <BarChart
@@ -11,13 +18,13 @@ const WeeklyAverageGraph = () => {
         xAxis={[
           {
             id: "barCategories",
-            data: ["MON", "TUE", "WED", "THR", "FRI", "SAT", "SUN"],
+            data: data.keys.map((x) => upperCase(x.slice(0, 3))),
             scaleType: "band",
           },
         ]}
         series={[
           {
-            data: [2, 5, 3, 2, 2, 5, 6],
+            data: data.values,
           },
         ]}
         height={200}

@@ -51,7 +51,7 @@ const QuotaTile = ({ value, max }: { value: number; max: number }) => {
                 textAlign: "right",
               }}
             >
-              20/100
+              {value}/{max}
             </Typography>
           </Box>
           <Box
@@ -62,7 +62,7 @@ const QuotaTile = ({ value, max }: { value: number; max: number }) => {
               mt: "0.5rem",
             }}
           >
-            <QuotaBar />
+            <QuotaBar max={max} value={value} />
           </Box>
         </Box>
       </Box>

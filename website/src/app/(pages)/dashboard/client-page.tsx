@@ -11,7 +11,7 @@ import QuotaTile from "./components/Stats/QuotaTile";
 import RequestsAnalysis from "./components/Stats/RequestsAnalysis";
 import WeeklyAverage from "./components/Stats/WeeklyAverage";
 import UsageMetrics from "./components/Stats/UsageMetrics";
-import { getSubDetails } from "@/utils/user-sub-details";
+import { formatBytes } from "@/utils/format-bytes";
 
 type Period =
   | "today"
@@ -52,6 +52,8 @@ const DashboardClientPage = () => {
         maxAllowedKeys: data.maxAllowedKeys,
         averageImageSIze: data.avgImageSize,
         requestsRemaining: data.requestsRemaining,
+        requestThisMonth: data.requestThisMonth,
+        maxRequestsPerMonth: data.maxRequestsPerMonth,
         requestsProcessed: {
           success: data.requestsProcessed.success,
           fail: data.requestsProcessed.fail,
@@ -94,7 +96,7 @@ const DashboardClientPage = () => {
           data.data["Thursday"],
           data.data["Friday"],
           data.data["Saturday"],
-        ],
+        ] as Array<number>,
       };
     },
     queryKey: [`weekly-average-data-${user?.id}`],
@@ -112,12 +114,12 @@ const DashboardClientPage = () => {
   } = useQuery({
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_ORIGIN}/api/data/usage-metrics?=${usageMetricsParams.period}`
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/data/usage-metrics?period=${usageMetricsParams.period}`
       );
       const data = await res.json();
       return {
         period: usageMetricsParams.period,
-        ...data
+        ...data,
       };
     },
     queryKey: [`usage-metrics-data-${user?.id}`, usageMetricsParams],
@@ -192,14 +194,19 @@ const DashboardClientPage = () => {
                 <StatsTile
                   icon={KeyIcon}
                   title={"KEYS REMAINING"}
-                  value={"0/10"}
+                  value={`${basicDashStats!.keysLeft}/${
+                    basicDashStats!.maxAllowedKeys
+                  }`}
                 />
                 <StatsTile
                   icon={ImageIcon}
                   title={"AVG IMAGE SIZE"}
-                  value={"20 KB"}
+                  value={formatBytes(basicDashStats!.averageImageSIze)}
                 />
-                <QuotaTile value={19} max={1000} />
+                <QuotaTile
+                  value={basicDashStats!.requestThisMonth}
+                  max={basicDashStats!.maxRequestsPerMonth}
+                />
               </>
             )}
           </Box>
@@ -225,7 +232,7 @@ const DashboardClientPage = () => {
                 p: "1rem",
               }}
             >
-              <UsageMetrics />
+              <UsageMetrics metricsData={metricsData} />
             </Box>
           )}
         </Box>
@@ -258,7 +265,10 @@ const DashboardClientPage = () => {
           )}
           {!isFetchingBaseStats && (
             <Box>
-              <RequestsAnalysis />
+              <RequestsAnalysis
+                success={basicDashStats!.requestsProcessed.success}
+                fail={basicDashStats!.requestsProcessed.fail}
+              />
             </Box>
           )}
 
@@ -277,7 +287,7 @@ const DashboardClientPage = () => {
           )}
           {!isFetchingWeeklyAverage && (
             <Box>
-              <WeeklyAverage />
+              <WeeklyAverage data={weeklyAverage!} />
             </Box>
           )}
         </Box>

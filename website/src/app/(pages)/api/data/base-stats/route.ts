@@ -82,6 +82,8 @@ export const GET = usingAuthMiddleware(
           keyCount: d2Result[0]?.keyCount ?? 0,
           keysLeft: maxAllowedKeys - (d2Result[0]?.keyCount ?? 0),
           maxAllowedKeys,
+          requestThisMonth: (d3Result[0]?.requestThisMonth ?? 0),
+          maxRequestsPerMonth,
           requestsRemaining:
             maxRequestsPerMonth - (d3Result[0]?.requestThisMonth ?? 0),
           requestsProcessed: formattedResult,

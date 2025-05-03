@@ -19,11 +19,17 @@ function CustomLinearProgress(
   );
 }
 
-export default function QuotaBar() {
+export default function QuotaBar({
+  value,
+  max,
+}: {
+  value: number;
+  max: number;
+}) {
   return (
     <Box sx={{ width: "100%" }}>
       <CustomLinearProgress
-        value={10}
+        value={(value / max) * 100}
         sx={{
           height: "20px",
           borderRadius: "20px",
