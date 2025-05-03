@@ -93,7 +93,7 @@
         color: #ffffff !important;
       }
       .paper-clr {
-        background-color: #211A3F !important;
+        background-color: #211a3f !important;
       }
       .text-clr {
         color: #cbcbcb !important;
@@ -103,6 +103,9 @@
       }
       .footer-link-clr {
         color: #949494 !important;
+      }
+      a{
+        color: #b29dff !important;
       }
     </style>
   </head>
@@ -116,13 +119,39 @@
               src="https://res.cloudinary.com/dphuxokhq/image/upload/v1746304341/logo-text_zpbul6.png"
               width="100px"
               height="29px"
-              alt="Inkscribe"
+              alt="<%= __GLOBAL__.APPNAME %>"
             />
           </a>
         </td>
       </tr>
       <tr class="main text-clr">
-        <td class="paper paper-clr"><%- __CONTENT__ %></td>
+        <td class="paper paper-clr">
+          <h4>Hi <%= USERNAME %>,</h4>
+          <p>
+            Thanks for signing up for <%= __GLOBAL__.APPNAME %> ! To complete your account
+            verification, please verify your email address by entering the
+            one-time password (OTP) below:
+          </p>
+
+          <h2 class="center"><%= OTP %></h2>
+          <p>
+            This code is valid for 10 minutes. For security reasons, please do
+            not share this code with anyone.
+          </p>
+          <h4>Having trouble?</h4>
+          <p>
+            If you don't receive the code within a few minutes, or if you
+            encounter any issues during verification, please contact <%= __GLOBAL__.APPNAME %>
+            Support at
+            <a href="mailto:<%= __GLOBAL__.SUPPORT_EMAIL %>"
+              ><%= __GLOBAL__.SUPPORT_EMAIL %></a
+            >.
+          </p>
+          <p class="regards">
+            Regards,<br />
+            Team <%= __GLOBAL__.APPNAME %>
+          </p>
+        </td>
       </tr>
       <tr class="footer footer-text-clr">
         <td class="mt-1">
