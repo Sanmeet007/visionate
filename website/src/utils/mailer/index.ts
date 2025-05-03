@@ -3,9 +3,7 @@ import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import path from "path";
 
-
 const vars = JSON.parse(process.env.MAIL_VARIABLES_JSON!);
-
 
 /**
  * Renders the text content with variables
@@ -28,8 +26,8 @@ export const render = (text: string, params: Data) => {
  *
  * @example
  * renderFile("filename_here", {
- *      [key]: value,
- *      ...
+ * [key]: value,
+ * ...
  * })
  *
  */
@@ -55,10 +53,10 @@ interface MailParams {
  * Sends mail using the rendered content
  * @example
  * sendMail({
- *  content : "Hello world !",
- *  subject :"Test mail",
- *  senderName: "System",
- *  senderEmailAddress: "sender@domain.com",
+ * content : "Hello world !",
+ * subject :"Test mail",
+ * senderName: "System",
+ * senderEmailAddress: "sender@domain.com",
  * })
  */
 export const sendMail = async ({
@@ -96,14 +94,14 @@ export const sendMail = async ({
 };
 
 interface TemplateMailParams {
-  template: "base";
+  template: "base" | "otp";
   receivers: string[];
-  senderEmailAddress: string;
-  subject: string | null;
-  senderName: string;
-  replyTo: string;
-  params: Data;
-  attachments: null | Mail.Attachment[];
+  subject: string;
+  params: any;
+  senderEmailAddress?: string;
+  senderName?: string;
+  replyTo?: string;
+  attachments?: Mail.Attachment[] | null;
 }
 
 /**
@@ -111,25 +109,25 @@ interface TemplateMailParams {
  *
  * @example
  * sendMail({
- *  template: "template_file_name",
- *  subject :"Test mail",
- *  senderName: "System",
- *  senderEmailAddress: "sender@domain.com",
- *  params:  {
- *      [key]: value,
- *      ...
- *  },
- *  attachments: []
+ * template: "template_file_name",
+ * subject :"Test mail",
+ * senderName: "System",
+ * senderEmailAddress: "sender@domain.com",
+ * params:  {
+ * [key]: value,
+ * ...
+ * },
+ * attachments: []
  * })
  */
 export const sendTemplateEmail = async ({
   template,
   receivers,
-  senderEmailAddress = process.env.SMTP_USER!,
-  senderName = "Team Inkscribe",
-  replyTo = `${vars.REPLY_EMAIL}` || "no-reply@domain.com",
-  subject = null,
+  subject,
   params = {},
+  senderEmailAddress = process.env.SMTP_USER!,
+  senderName = "Team Visionate",
+  replyTo = `${vars.REPLY_EMAIL}` || "no-reply@domain.com",
   attachments = null,
 }: TemplateMailParams) => {
   const baseProps = {
@@ -138,8 +136,9 @@ export const sendTemplateEmail = async ({
   };
   let content = "";
   switch (template) {
+    case "otp":
+      break;
     case "base":
-      subject ||= "System message";
       break;
 
     default:

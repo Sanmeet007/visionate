@@ -4,6 +4,7 @@
 import { redisDbClient as redis } from "@/app/redis/dbclient";
 import { usingAuthMiddleware } from "@/middlewares/authenticator";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
+import { sendTemplateEmail } from "@/utils/mailer";
 import randomInteger from "@/utils/rand-int";
 import Joi from "joi";
 import { NextResponse } from "next/server";
@@ -55,16 +56,15 @@ export const GET = usingAuthMiddleware(
             }
           );
 
-          // await sendTemplateEmail({
-          //   template: "otp",
-          //   receivers: [user.email],
-          //   subject: "Verify Your Inkscribe Account (One-Time Password Inside)",
-          //   params: {
-          //     USERNAME: user.name,
-          //     OTP: newOTP,
-          //   },
-          // });
-          console.log("sending email: ", newOTP);
+          await sendTemplateEmail({
+            template: "otp",
+            receivers: [user!.email],
+            subject: "Verify Your Visionate Account (One-Time Password Inside)",
+            params: {
+              USERNAME: user!.name,
+              OTP: newOTP,
+            },
+          });
 
           return NextResponse.json({
             error: false,
@@ -84,16 +84,16 @@ export const GET = usingAuthMiddleware(
               }
             );
 
-            // await sendTemplateEmail({
-            //   template: "otp",
-            //   receivers: [user.email],
-            //   subject:
-            //     "Verify Your Inkscribe Account (One-Time Password Inside)",
-            //   params: {
-            //     USERNAME: user.name,
-            //     OTP: newOTP,
-            //   },
-            // });
+            await sendTemplateEmail({
+              template: "otp",
+              receivers: [user!.email],
+              subject:
+                "Verify Your Inkscribe Account (One-Time Password Inside)",
+              params: {
+                USERNAME: user!.name,
+                OTP: newOTP,
+              },
+            });
 
             console.log("sending email: ", newOTP);
 
