@@ -1,15 +1,99 @@
 "use client";
 
 import { Image as ImageIcon, Key as KeyIcon } from "@mui/icons-material";
-import DataUsageIcon from "@mui/icons-material/DataUsage";
-import { Box, Divider, Typography } from "@mui/material";
-import QuotaBar from "./components/QuotaBar";
-import { BarChart } from "@mui/x-charts/BarChart";
-import { PieChart } from "@mui/x-charts/PieChart";
-import { LineChart } from "@mui/x-charts/LineChart";
-import { PieCenterLabel } from "./components/PieCenterLabel";
+import { Box, Divider, Skeleton, Typography } from "@mui/material";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import wait from "@/utils/wait";
+import { useState } from "react";
+import { useUser } from "@/app/providers/UserProvider";
+import StatsTile from "./components/Stats/StatsTile";
+import QuotaTile from "./components/Stats/QuotaTile";
+import RequestsAnalysis from "./components/Stats/RequestsAnalysis";
+import WeeklyAverage from "./components/Stats/WeeklyAverage";
+import UsageMetrics from "./components/Stats/UsageMetrics";
+
+type Tenure =
+  | "today"
+  | "yesterday"
+  | "this-week"
+  | "past-week"
+  | "this-month"
+  | "past-month"
+  | "past-three-months"
+  | "past-six-months"
+  | "this-year"
+  | "past-year";
+
+interface UsageQueryParams {
+  tenure: Tenure;
+}
 
 const DashboardClientPage = () => {
+  const { user } = useUser();
+  const [usageMetricsParams, setUsageMetricsParams] =
+    useState<UsageQueryParams>({
+      tenure: "today",
+    });
+
+  const {
+    data: basicDashStats,
+    isLoading: isFetchingBaseStats,
+    isError,
+    error,
+  } = useQuery({
+    queryFn: async () => {
+      await wait(1000);
+      return {
+        keysLeft: 0,
+        averageImageSIze: 1024,
+        requestsRemaining: 56,
+      };
+    },
+    queryKey: [`basic-stats-data-${user?.id}`],
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+  });
+
+  const {
+    data: weeklyAverage,
+    isLoading: isFetchingWeeklyAverage,
+    isError: isErorrInWeeklyAverage,
+    error: weeklyAverageError,
+  } = useQuery({
+    queryFn: async () => {
+      await wait(2000);
+      return [10, 20, 20, 20, 20, 20, 20];
+    },
+    queryKey: [`weekly-average-data-${user?.id}`],
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+  });
+
+  const {
+    data: metricsData,
+    isLoading: isFetchingMetrics,
+    isError: isErrorInMetrics,
+    error: metricsError,
+  } = useQuery({
+    queryFn: async () => {
+      await wait(2500);
+      // today , yesterday , this week , past week , this month , past month , past 3 months , past 6 months , this year , past year
+      return {
+        tenure: usageMetricsParams.tenure,
+        // ?
+      };
+    },
+    queryKey: [`usage-metrics-data-${user?.id}`, usageMetricsParams],
+    refetchOnWindowFocus: false,
+    retry: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+  });
+
   return (
     <>
       <Box
@@ -39,174 +123,78 @@ const DashboardClientPage = () => {
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1.5fr",
               gap: "1rem",
-              "& > div": {
-                bgcolor: "rgb(71 60 102 / 33%)",
-                borderRadius: "20px",
-                p: "1rem",
-              },
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                }}
-              >
-                <KeyIcon fontSize="large" />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexGrow: "1",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Typography
+            {isFetchingBaseStats && (
+              <>
+                <Skeleton
+                  variant="rounded"
+                  height={135}
+                  animation="wave"
                   sx={{
-                    maxWidth: "200px",
+                    borderRadius: "20px",
                   }}
-                >
-                  KEYS REMAINING
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  0/10
-                </Typography>
-              </Box>
-            </Box>
+                />
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                }}
-              >
-                <ImageIcon fontSize="large" />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexGrow: "1",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Typography
+                <Skeleton
+                  variant="rounded"
+                  height={135}
+                  animation="wave"
                   sx={{
-                    maxWidth: "200px",
+                    borderRadius: "20px",
                   }}
-                >
-                  AVG IMAGE SIZE
-                </Typography>
-                <Typography
+                />
+                <Skeleton
+                  variant="rounded"
+                  height={135}
+                  animation="wave"
                   sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
+                    borderRadius: "20px",
                   }}
-                >
-                  20 KB
-                </Typography>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                }}
-              >
-                <DataUsageIcon fontSize="large" />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexGrow: "1",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: "1rem",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      maxWidth: "200px",
-                    }}
-                  >
-                    QUOTA REMAINING
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      textAlign: "right",
-                    }}
-                  >
-                    20/100
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: "0.5rem",
-                    flexDirection: "column",
-                    mt: "0.5rem",
-                  }}
-                >
-                  <QuotaBar />
-                </Box>
-              </Box>
-            </Box>
+                />
+              </>
+            )}
+            {!isFetchingBaseStats && (
+              <>
+                <StatsTile
+                  icon={KeyIcon}
+                  title={"KEYS REMAINING"}
+                  value={"0/10"}
+                />
+                <StatsTile
+                  icon={ImageIcon}
+                  title={"AVG IMAGE SIZE"}
+                  value={"20 KB"}
+                />
+                <QuotaTile value={19} max={1000} />
+              </>
+            )}
           </Box>
           <Typography>Usage metrics</Typography>
-
-          <Box
-            sx={{
-              bgcolor: "rgb(71 60 102 / 33%)",
-              minHeight: "200px",
-              borderRadius: "20px",
-              p: "1rem",
-            }}
-          >
-            <LineChart
-              xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-              series={[
-                {
-                  data: [2, 5.5, 2, 8.5, 1.5, 5],
-                },
-              ]}
-              height={300}
-              grid={{ vertical: true, horizontal: true }}
-            />
-          </Box>
+          {isFetchingMetrics && (
+            <>
+              <Skeleton
+                variant="rounded"
+                height={350}
+                animation="wave"
+                sx={{
+                  borderRadius: "20px",
+                }}
+              />
+            </>
+          )}
+          {!isFetchingMetrics && (
+            <Box
+              sx={{
+                bgcolor: "rgb(71 60 102 / 33%)",
+                minHeight: "200px",
+                borderRadius: "20px",
+                p: "1rem",
+              }}
+            >
+              <UsageMetrics />
+            </Box>
+          )}
         </Box>
         <Box
           sx={{
@@ -223,51 +211,42 @@ const DashboardClientPage = () => {
           }}
         >
           <Typography>Request Analysis</Typography>
-          <Box>
-            <PieChart
-              series={[
-                {
-                  faded: { innerRadius: 30, additionalRadius: -30 },
-                  data: [
-                    { id: 0, value: 100, label: "Success" },
-                    { id: 1, value: 15, label: "Fail" },
-                  ],
-                  innerRadius: 70,
-                  outerRadius: 50,
-                  paddingAngle: 2,
-                  cornerRadius: 4,
-                  startAngle: -180,
-                  endAngle: 180,
-                },
-              ]}
-              width={200}
-              height={200}
-            >
-              <PieCenterLabel>GOOD</PieCenterLabel>
-            </PieChart>
-          </Box>
+          {isFetchingBaseStats && (
+            <>
+              <Skeleton
+                variant="rounded"
+                height={200}
+                animation="wave"
+                sx={{
+                  borderRadius: "20px",
+                }}
+              />
+            </>
+          )}
+          {!isFetchingBaseStats && (
+            <Box>
+              <RequestsAnalysis />
+            </Box>
+          )}
 
           <Typography>Weekly Average</Typography>
-          <Box>
-            <BarChart
-              sx={{
-                ml: "0",
-              }}
-              xAxis={[
-                {
-                  id: "barCategories",
-                  data: ["MON", "TUE", "WED", "THR", "FRI", "SAT", "SUN"],
-                  scaleType: "band",
-                },
-              ]}
-              series={[
-                {
-                  data: [2, 5, 3, 2, 2, 5, 6],
-                },
-              ]}
-              height={200}
-            />
-          </Box>
+          {isFetchingWeeklyAverage && (
+            <>
+              <Skeleton
+                variant="rounded"
+                height={250}
+                animation="wave"
+                sx={{
+                  borderRadius: "20px",
+                }}
+              />
+            </>
+          )}
+          {!isFetchingWeeklyAverage && (
+            <Box>
+              <WeeklyAverage />
+            </Box>
+          )}
         </Box>
       </Box>
     </>
