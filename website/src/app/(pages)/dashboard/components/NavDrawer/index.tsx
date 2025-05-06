@@ -47,10 +47,14 @@ const NavDrawer = ({
   const router = useRouter();
   const { user } = useUser();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isDisbaled, setIsDisabled] = useState(false);
   const [apiResponse, setApiResponse] = useState<ApiResponse>(emptyResponse);
 
   const handleLogout = async () => {
     try {
+      setIsProcessing(true);
+      setIsDisabled(true);
+
       const res = await fetch(
         process.env.NEXT_PUBLIC_ORIGIN + "/api/auth/logout",
         {
@@ -63,6 +67,7 @@ const NavDrawer = ({
           showResponse: true,
           message: "Logout successfull",
         });
+        setIsDisabled(true);
         setIsProcessing(false);
         redirect();
       } else throw Error(res.statusText);
@@ -73,6 +78,7 @@ const NavDrawer = ({
         // message: e?.message ?? "Something went wrong",
         message: "Something went wrong",
       });
+      setIsDisabled(false);
       setIsProcessing(false);
     }
   };
@@ -272,7 +278,7 @@ const NavDrawer = ({
             className="vis-logout-btn"
             disableElevation
             loading={isProcessing}
-            disabled={isProcessing}
+            disabled={isDisbaled || isProcessing}
             onClick={handleLogout}
             variant="contained"
             startIcon={!isProcessing ? <LogoutIcon /> : null}
@@ -407,7 +413,7 @@ const NavDrawer = ({
               className="vis-logout-btn"
               disableElevation
               loading={isProcessing}
-              disabled={isProcessing}
+              disabled={isDisbaled || isProcessing}
               onClick={handleLogout}
               variant="outlined"
               color="inherit"
