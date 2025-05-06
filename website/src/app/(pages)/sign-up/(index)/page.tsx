@@ -15,8 +15,10 @@ const getUserData = async () => {
 const SignUpPage = async () => {
   const user = await getUserData();
   if (user) {
-    if (user.emailVerified) {
+    if (user.emailVerified && user.onboardingCompleted) {
       redirect(`/dashboard`);
+    } else if (user.emailVerified && !user.onboardingCompleted) {
+      redirect(`/onboarding`);
     } else {
       redirect(`/sign-up/verify-email`);
     }
