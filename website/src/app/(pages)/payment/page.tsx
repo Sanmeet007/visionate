@@ -11,12 +11,12 @@ declare global {
 
 function Payment() {
   const [name, setName] = useState("");
-  const [amount, setAmount] = useState("0");
+  const [amount, setAmount] = useState("200");
   const [currency] = useState("INR");
 
   const createOrderId = async () => {
     try {
-      const response = await fetch("/api/payments/initiate", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ORIGIN}/api/payments/initiate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,6 +24,7 @@ function Payment() {
         body: JSON.stringify({
           amount: parseFloat(amount) * 100,
         }),
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -41,7 +42,7 @@ function Payment() {
     try {
       const orderId: string = await createOrderId();
       const options = {
-        key: process.env.key_id,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: parseFloat(amount) * 100,
         currency: currency,
         name: "User Name",
@@ -95,15 +96,6 @@ function Payment() {
           className="flex flex-col gap-6 w-full sm:w-80"
           onSubmit={processPayment}
         >
-          <div className="space-y-1">
-            <label>Full name</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
           <div className="space-y-1">
             <label>Amount</label>
             <div className="flex gap-2">

@@ -11,6 +11,7 @@ import ListItemText from "@mui/material/ListItemText";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { CardActionArea, Divider } from "@mui/material";
 import { usersTable } from "@/drizzle/schema";
+import subscriptionPricing from "@/utils/sub-pricing";
 
 interface PricingTierProps {
   planName: string;
@@ -191,7 +192,7 @@ const PricingTiers: React.FC<{
         speed="Slow"
         apiKeyCount={1}
         idealFor="Casual users, basic extension features"
-        price={0}
+        price={subscriptionPricing.free.price}
         ctaText="Get Started"
         onSelect={() => onSelectChange("free")}
       />
@@ -203,7 +204,7 @@ const PricingTiers: React.FC<{
         speed="Standard"
         apiKeyCount={1}
         idealFor="Regular users, lightweight automation"
-        price={199}
+        price={subscriptionPricing.starter.price}
         ctaText="Upgrade to Starter"
         onSelect={() => onSelectChange("starter")}
       />
@@ -215,7 +216,7 @@ const PricingTiers: React.FC<{
         speed="Fast"
         apiKeyCount={3}
         idealFor="Power users, advanced features"
-        price={399}
+        price={subscriptionPricing.pro.price}
         ctaText="Go Pro"
         onSelect={() => onSelectChange("pro")}
         isFeatured={true}
