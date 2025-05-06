@@ -14,7 +14,15 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   if (!user) {
     redirect("/?action=login");
   }
-  
+
+  if (!user.emailVerified) {
+    redirect("/sign-up/verify-email");
+  }
+
+  if (!user.onboardingCompleted) {
+    redirect("/sign-up/onboarding");
+  }
+
   return (
     <>
       <SnackbarProvider>
