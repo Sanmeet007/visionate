@@ -22,7 +22,7 @@ export const lucia = new Lucia(drizzleAdapterInstance, {
   },
 });
 
-export const getCachedUser = cache(
+export const getUnCachedUser = 
   async (): Promise<typeof usersTable.$inferSelect | null> => {
     const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
     if (!sessionId) return null;
@@ -54,9 +54,9 @@ export const getCachedUser = cache(
       return userData ?? null;
     }
   }
-);
 
-export const getUser = async (): Promise<
+
+export const getUser = cache(async (): Promise<
   typeof usersTable.$inferSelect | null
 > => {
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
@@ -89,7 +89,7 @@ export const getUser = async (): Promise<
     return userData ?? null;
   }
 };
-
+)
 // IMPORTANT!
 declare module "lucia" {
   interface Register {

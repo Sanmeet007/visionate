@@ -96,6 +96,7 @@ const VerifyEmailClientPage = () => {
 
       const data = await res.json();
       if (res.ok) {
+        setIsDisabled(true);
         setIsProcessing(false);
         showSnackbar("success", "Account verified succesfully");
         setUser((prev) => {
@@ -108,10 +109,12 @@ const VerifyEmailClientPage = () => {
         router.push("/sign-up/onboarding");
       } else {
         setIsProcessing(false);
+        setIsDisabled(false);
         showSnackbar("error", data.message || "Invalid otp");
       }
     } catch (e) {
       console.log(e);
+      setIsDisabled(false);
       setIsProcessing(false);
       showSnackbar("error", "Something went wrong");
     }
