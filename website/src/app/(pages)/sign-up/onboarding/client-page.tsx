@@ -35,29 +35,32 @@ const OnboardingClientPage = () => {
     try {
       setIsProcessing(true);
 
-      await wait(2000);
-      await fetch(
-        `${process.env.REUQUEST_ORIGIN}/api/users/active/complete-onboarding`
-      );
-
       if (selectedTier === "free") {
       } else {
         // TODO :  process payment and update the subscrpition type user
       }
 
-      setUser((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          subscriptionType:
-            selectedTier as typeof usersTable.$inferSelect.subscriptionType,
-        };
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/users/active/complete-onboarding`
+      );
 
-      setIsProcessing(false);
+      if (res.ok) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            subscriptionType:
+              selectedTier as typeof usersTable.$inferSelect.subscriptionType,
+            onboardingCompleted: new Date(),
+          };
+        });
 
-      setIsDisabled(true);
-      router.push("/dashboard");
+        router.push("/dashboard");
+      } else {
+        setIsProcessing(false);
+        setIsDisabled(false);
+        showSnackbar("error", "Ah! Something went wrong");
+      }
     } catch (e) {
       if (Number(process.env.LOGGING_LEVEL) > 0) {
         console.error(e);
