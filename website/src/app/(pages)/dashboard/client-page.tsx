@@ -22,6 +22,7 @@ import RequestsAnalysis from "./components/Stats/RequestsAnalysis";
 import WeeklyAverage from "./components/Stats/WeeklyAverage";
 import UsageMetrics from "./components/Stats/UsageMetrics";
 import { formatBytes } from "@/utils/format-bytes";
+import CenteredBox from "@/app/components/CenteredBox";
 
 type Period =
   | "today"
@@ -61,8 +62,8 @@ const DashboardClientPage = () => {
   const {
     data: basicDashStats,
     isLoading: isFetchingBaseStats,
-    isError,
-    error,
+    isError: isBaseStatsError,
+    error: baseStatsError,
   } = useQuery({
     queryFn: async () => {
       const res = await fetch(
@@ -215,7 +216,7 @@ const DashboardClientPage = () => {
                 />
               </>
             )}
-            {!isFetchingBaseStats && (
+            {!isFetchingBaseStats && !isBaseStatsError && (
               <>
                 <StatsTile
                   icon={KeyIcon}
@@ -235,6 +236,13 @@ const DashboardClientPage = () => {
                 />
               </>
             )}
+            {!isFetchingBaseStats && isBaseStatsError && (
+              <CenteredBox>
+                <Typography variant="body2" color="error">
+                  Ah snap! Something went wrong while fetching base stats data.
+                </Typography>
+              </CenteredBox>
+            )}
           </Box>
           <Typography>Usage metrics</Typography>
           {isFetchingMetrics && (
@@ -249,7 +257,7 @@ const DashboardClientPage = () => {
               />
             </>
           )}
-          {!isFetchingMetrics && (
+          {!isFetchingMetrics && !isErrorInMetrics && (
             <Box
               sx={{
                 bgcolor: "rgb(71 60 102 / 33%)",
@@ -294,9 +302,17 @@ const DashboardClientPage = () => {
                   </FormControl>
                 </Box>
               </Box>
-            
+
               <UsageMetrics metricsData={metricsData} />
             </Box>
+          )}
+
+          {!isFetchingMetrics && isErrorInMetrics && (
+            <CenteredBox>
+              <Typography variant="body2" color="error">
+                Ah snap! Something went wrong while fetching usage metrics data.
+              </Typography>
+            </CenteredBox>
           )}
         </Box>
         <Box
@@ -326,13 +342,21 @@ const DashboardClientPage = () => {
               />
             </>
           )}
-          {!isFetchingBaseStats && (
+          {!isFetchingBaseStats && !isBaseStatsError && (
             <Box>
               <RequestsAnalysis
                 success={basicDashStats!.requestsProcessed.success}
                 fail={basicDashStats!.requestsProcessed.fail}
               />
             </Box>
+          )}
+          {!isFetchingBaseStats && isBaseStatsError && (
+            <CenteredBox>
+              <Typography variant="body2" color="error">
+                Ah snap! Something went wrong while fetching request analysis
+                data.
+              </Typography>
+            </CenteredBox>
           )}
 
           <Typography>Weekly Average This Month</Typography>
@@ -348,10 +372,19 @@ const DashboardClientPage = () => {
               />
             </>
           )}
-          {!isFetchingWeeklyAverage && (
+          {!isFetchingWeeklyAverage && !isErorrInWeeklyAverage && (
             <Box>
               <WeeklyAverage data={weeklyAverage!} />
             </Box>
+          )}
+          {!isFetchingWeeklyAverage && isErorrInWeeklyAverage && (
+            <>
+              <CenteredBox>
+                <Typography variant="body2" color="error">
+                  Error fetching weekly average data
+                </Typography>
+              </CenteredBox>
+            </>
           )}
         </Box>
       </Box>

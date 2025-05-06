@@ -1,7 +1,7 @@
 import DashboardClientPage from "./client-page";
 
 export const metadata = {
-  title: "Dashboard",
+  title: "Dashboard | Visionate",
 };
 
 const DashboardPage = () => {
