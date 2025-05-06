@@ -166,13 +166,14 @@ const SignupForm = () => {
             disabled={isProcessing || isDisabled}
             required
             size="small"
-            name="email_id"
+            name="username"
             id="email-id"
             type="text"
             label="Name"
             value={formData.name}
             onChange={handleFormDataChange("name")}
             placeholder="Enter your name"
+            autoComplete="username"
             fullWidth
           />
           <TextField
@@ -186,6 +187,7 @@ const SignupForm = () => {
             value={formData.email}
             onChange={handleFormDataChange("email")}
             placeholder="Enter a valid email address"
+            autoComplete="email"
             fullWidth
           />
           <TextField
@@ -208,6 +210,7 @@ const SignupForm = () => {
               ),
             }}
             placeholder="Enter a secure password here"
+            autoComplete="current-password"
             fullWidth
           />
           <LoadingButton

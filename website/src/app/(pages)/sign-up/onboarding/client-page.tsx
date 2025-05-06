@@ -33,34 +33,14 @@ const OnboardingClientPage = () => {
 
   const handleSubmit = async () => {
     try {
-      setIsProcessing(true);
+      // setIsProcessing(true);
 
       if (selectedTier === "free") {
       } else {
         // TODO :  process payment and update the subscrpition type user
       }
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_ORIGIN}/api/users/active/complete-onboarding`
-      );
-
-      if (res.ok) {
-        setUser((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            subscriptionType:
-              selectedTier as typeof usersTable.$inferSelect.subscriptionType,
-            onboardingCompleted: new Date(),
-          };
-        });
-
-        router.push("/dashboard");
-      } else {
-        setIsProcessing(false);
-        setIsDisabled(false);
-        showSnackbar("error", "Ah! Something went wrong");
-      }
+      
     } catch (e) {
       if (Number(process.env.LOGGING_LEVEL) > 0) {
         console.error(e);

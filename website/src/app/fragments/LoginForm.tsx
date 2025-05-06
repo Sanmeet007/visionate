@@ -150,6 +150,7 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
           value={formData.email}
           onChange={handleFormDataChange("email")}
           placeholder="Enter a valid email address"
+          autoComplete="email"
           fullWidth
         />
         <TextField
@@ -171,6 +172,7 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
               </InputAdornment>
             ),
           }}
+          autoComplete="current-password"
           placeholder="Enter a secure password here"
           fullWidth
         />
