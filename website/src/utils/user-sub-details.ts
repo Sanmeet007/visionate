@@ -20,7 +20,7 @@ export const getSubDetails = (
       };
     case "starter":
       return {
-        maxAllowedKeys: 10,
+        maxAllowedKeys: 1,
         maxRequestsPerMonth: 200,
         maxImageProcessingSize: 10 * 1024 * 1024,
         speed: "slow",
