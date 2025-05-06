@@ -13,15 +13,15 @@ const getUserData = async () => {
 };
 
 const OnboardingPage = async () => {
-  // const user = await getUserData();
+  const user = await getUserData();
 
-  // if (user) {
-  //   if (user.emailVerified && user.onboardingCompleted) {
-  //     redirect(`/dashboard`);
-  //   } else if (!user.emailVerified) {
-  //     redirect(`/sign-up/verify-email`);
-  //   }
-  // }
+  if (user) {
+    if (user.emailVerified && user.onboardingCompleted) {
+      redirect(`/dashboard`);
+    } else if (!user.emailVerified) {
+      redirect(`/sign-up/verify-email`);
+    }
+  }
 
   return (
     <>
