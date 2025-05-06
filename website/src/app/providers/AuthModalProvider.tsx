@@ -40,16 +40,20 @@ interface AuthModalState {
   message: string;
   signup: boolean;
 }
-type MessageFunction = (message?: string) => void;
 
-const AuthModalOpener = createContext<MessageFunction | null>(null);
+interface ModalFunctions {
+  openAuthModal: (message?: string) => void;
+  closeAuthModal: () => void;
+}
+
+const AuthModalFns = createContext<ModalFunctions | null>(null);
 
 const AuthModalStateUpdater = createContext<React.Dispatch<
   React.SetStateAction<AuthModalState>
 > | null>(null);
 
-export const useAuthModalOpener = () => {
-  return useContext(AuthModalOpener);
+export const useAuthModalFns = () => {
+  return useContext(AuthModalFns);
 };
 
 export const useAuthModalStateUpdater = () => {
@@ -129,7 +133,9 @@ const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
       </Snackbar>
 
       <AuthModalStateUpdater.Provider value={setState}>
-        <AuthModalOpener.Provider value={openModal}>
+        <AuthModalFns.Provider
+          value={{ openAuthModal: openModal, closeAuthModal: closeModal }}
+        >
           <Dialog
             keepMounted
             open={state.opened}
@@ -184,7 +190,7 @@ const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
             </DialogContent>
           </Dialog>
           {children}
-        </AuthModalOpener.Provider>
+        </AuthModalFns.Provider>
       </AuthModalStateUpdater.Provider>
     </>
   );

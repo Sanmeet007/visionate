@@ -46,13 +46,13 @@ export default async function RootLayout({
             <ProgressProvider>
               <SnackbarProvider>
                 <GloablLoader>
-                  <LogoutFunctionProvider>
+                  <UserProvider initialUserData={user}>
                     <AuthModalProvider>
-                      <UserProvider initialUserData={user}>
+                      <LogoutFunctionProvider>
                         <>{children}</>
-                      </UserProvider>
+                      </LogoutFunctionProvider>
                     </AuthModalProvider>
-                  </LogoutFunctionProvider>
+                  </UserProvider>
                 </GloablLoader>
               </SnackbarProvider>
             </ProgressProvider>

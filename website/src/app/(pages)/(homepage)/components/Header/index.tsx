@@ -11,19 +11,13 @@ import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { useEffect, useState } from "react";
 import Slide from "@mui/material/Slide";
 import lodash from "lodash";
-
-// import { useAuthModalOpener } from "@/app/providers/AuthModal";
 import { useRouter } from "@bprogress/next/app";
-// import { useMobileMenu } from "@/app/providers/MobileMenuProvider";
-import { usePathname } from "next/navigation";
 import { useUser } from "@/app/providers/UserProvider";
-import { useAuthModalOpener } from "@/app/providers/AuthModalProvider";
+import { useAuthModalFns } from "@/app/providers/AuthModalProvider";
 
 const Header = () => {
-  const pathname = usePathname();
-  // const [openMobileMenu] = useMobileMenu();
   const { user } = useUser();
-  const openAuthModal = useAuthModalOpener();
+  const authModalfns = useAuthModalFns();
   const router = useRouter();
 
   const handleLoginMenuOption = (x: string) => () => {
@@ -32,7 +26,7 @@ const Header = () => {
         router.push("/sign-up?next=" + window.location.pathname);
       }
     } else if (x === "sign-in") {
-      if (openAuthModal) openAuthModal();
+      if (authModalfns) authModalfns.openAuthModal();
     }
   };
 

@@ -19,11 +19,13 @@ import { LoadingButton } from "@mui/lab";
 import { useUser } from "@/app/providers/UserProvider";
 import Link from "next/link";
 import TextDivider from "../components/TextDivider";
+import { useAuthModalFns } from "../providers/AuthModalProvider";
 
 type ShowSnackbarFn = (severity: AlertColor, message: string) => void;
 
 const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
   const { setUser } = useUser();
+  const authModalFns = useAuthModalFns();
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -61,8 +63,9 @@ const LoginForm = ({ showSnackbar }: { showSnackbar: ShowSnackbarFn }) => {
       );
       const data = await res.json();
       if (res.ok) {
+        authModalFns?.closeAuthModal();
         showSnackbar("success", "Login success");
-        setUser(data.user);
+        if (setUser) setUser(data.user);
       } else {
         showSnackbar("error", data?.message || "Something went wrong");
         setIsDisabled(false);
