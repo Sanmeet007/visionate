@@ -23,6 +23,9 @@ export const POST = usingAuthMiddleware(
             amount: amount,
             currency: currency,
             receipt: "rcp1",
+            notes: {
+              subscriptionType,
+            },
           };
 
           const order = await razorpay.orders.create(options);

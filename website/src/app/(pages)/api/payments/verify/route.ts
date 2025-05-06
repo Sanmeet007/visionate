@@ -5,6 +5,9 @@ import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import Joi from "joi";
 import { razorpay } from "@/razorpay";
+import { usersTable } from "@/drizzle/schema";
+import { db } from "@/drizzle";
+import { eq } from "drizzle-orm";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -30,6 +33,8 @@ interface PostRequestBody {
   razorpayOrderId: string;
 }
 
+type userSubscriptionType = typeof usersTable.$inferSelect.subscriptionType;
+
 export const POST = usingAuthMiddleware(
   usingEmailVerificationMiddleware(
     usingJoiValidatorMiddleware<PostRequestBody>(
@@ -49,8 +54,18 @@ export const POST = usingAuthMiddleware(
         }
 
         const payment = await razorpay.payments.fetch(razorpayPaymentId);
-        
+
         if (payment.status === "captured") {
+          const userSubscriptionType = payment.notes
+            .subscriptionType as userSubscriptionType;
+
+          await db
+            .update(usersTable)
+            .set({
+              subscriptionType: userSubscriptionType,
+            })
+            .where(eq(usersTable.id, user!.id));
+
           return NextResponse.json(
             { message: "Payment processed successfully", isOk: true },
             { status: 200 }

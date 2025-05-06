@@ -16,6 +16,12 @@ import { usersTable } from "@/drizzle/schema";
 import subscriptionPricing from "@/utils/sub-pricing";
 import Script from "next/script";
 
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
 const OnboardingClientPage = () => {
   const showSnackbar = useSnackbar();
   const { user, setUser } = useUser();
