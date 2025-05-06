@@ -2,11 +2,6 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { capitalize } from "lodash";
 
 const UsageMetricsGraph = ({ metricsData }) => {
-  console.log(
-    Object.values(metricsData.requests),
-
-    Object.keys(metricsData.requests)
-  );
   return (
     <>
       <LineChart

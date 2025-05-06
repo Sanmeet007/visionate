@@ -4,6 +4,7 @@ import { usingAuthMiddleware } from "@/middlewares/authenticator";
 import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import Joi from "joi";
+import { razorpay } from "@/razorpay";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -33,11 +34,8 @@ export const POST = usingAuthMiddleware(
   usingEmailVerificationMiddleware(
     usingJoiValidatorMiddleware<PostRequestBody>(
       async (_, validationResult, user) => {
-        const {
-          orderCreationId,
-          razorpayPaymentId,
-          razorpaySignature,
-        } = validationResult.bodyData!;
+        const { orderCreationId, razorpayPaymentId, razorpaySignature } =
+          validationResult.bodyData!;
 
         const signature = generatedSignature(
           orderCreationId,
@@ -49,10 +47,25 @@ export const POST = usingAuthMiddleware(
             { status: 400 }
           );
         }
-        return NextResponse.json(
-          { message: "payment verified successfully", isOk: true },
-          { status: 200 }
-        );
+
+        const payment = await razorpay.payments.fetch(razorpayPaymentId);
+        
+        if (payment.status === "captured") {
+          return NextResponse.json(
+            { message: "Payment processed successfully", isOk: true },
+            { status: 200 }
+          );
+        } else if (payment.status === "failed") {
+          return NextResponse.json(
+            { message: "Payment failed", isOk: false },
+            { status: 402 }
+          );
+        } else {
+          return NextResponse.json(
+            { message: "Ah! Snap something went wrong", isOk: false },
+            { status: 500 }
+          );
+        }
       },
       {
         getDataFrom: "BODY",
