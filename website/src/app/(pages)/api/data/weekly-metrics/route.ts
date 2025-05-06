@@ -38,13 +38,15 @@ export const GET = usingAuthMiddleware(
 
         if (numberOfWeeksWithData === 0) {
           return NextResponse.json({
-            Sunday: 0,
-            Monday: 0,
-            Tuesday: 0,
-            Wednesday: 0,
-            Thursday: 0,
-            Friday: 0,
-            Saturday: 0,
+            data: {
+              Sunday: 0,
+              Monday: 0,
+              Tuesday: 0,
+              Wednesday: 0,
+              Thursday: 0,
+              Friday: 0,
+              Saturday: 0,
+            },
           });
         }
 
