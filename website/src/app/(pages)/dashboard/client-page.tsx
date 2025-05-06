@@ -232,7 +232,10 @@ const DashboardClientPage = () => {
                 />
                 <QuotaTile
                   value={basicDashStats!.requestThisMonth}
-                  max={basicDashStats!.maxRequestsPerMonth}
+                  max={
+                    basicDashStats!.maxRequestsPerMonth *
+                    basicDashStats!.maxAllowedKeys
+                  }
                 />
               </>
             )}
