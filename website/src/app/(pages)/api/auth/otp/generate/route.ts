@@ -88,7 +88,7 @@ export const GET = usingAuthMiddleware(
               template: "otp",
               receivers: [user!.email],
               subject:
-                "Verify Your Inkscribe Account (One-Time Password Inside)",
+                "Verify Your Visionate Account (One-Time Password Inside)",
               params: {
                 USERNAME: user!.name,
                 OTP: newOTP,

@@ -34,7 +34,7 @@ export const render = (text: string, params: Data) => {
 export const renderFile = async (filename: string, params: Data) => {
   const pathToFile = path.resolve(
     process.cwd(),
-    process.env.MAIL_TEMPLATES_DIR ?? "utils/mailer/templates",
+    process.env.MAIL_TEMPLATES_DIR ?? "src/utils/mailer/templates",
     filename
   );
   return await ejs.renderFile(pathToFile, params);
