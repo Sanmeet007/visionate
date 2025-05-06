@@ -47,6 +47,10 @@ export const usersTable = mysqlTable("users", {
     mode: "date",
     fsp: 3,
   }),
+  onboardingCompleted: timestamp("onboarding_completed", {
+    mode: "date",
+    fsp: 3,
+  }),
   profileImage: varchar("profile_image", { length: 255 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
