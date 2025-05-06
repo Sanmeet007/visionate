@@ -32,27 +32,41 @@ const OnboardingClientPage = () => {
   };
 
   const handleSubmit = async () => {
-    setIsProcessing(true);
-    if (selectedTier === "free") {
+    try {
+      setIsProcessing(true);
+
       await wait(2000);
-    } else {
-      // TODO :  process payment and update the subscrpition type user
-      // await fetch(`${process.env.REUQUEST_ORIGIN}/api/`)
+      await fetch(
+        `${process.env.REUQUEST_ORIGIN}/api/users/active/complete-onboarding`
+      );
+
+      if (selectedTier === "free") {
+      } else {
+        // TODO :  process payment and update the subscrpition type user
+      }
+
+      setUser((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          subscriptionType:
+            selectedTier as typeof usersTable.$inferSelect.subscriptionType,
+        };
+      });
+
+      setIsProcessing(false);
+
+      setIsDisabled(true);
+      router.push("/dashboard");
+    } catch (e) {
+      if (Number(process.env.LOGGING_LEVEL) > 0) {
+        console.error(e);
+      }
+
+      setIsProcessing(false);
+      setIsDisabled(false);
+      showSnackbar("error", "Something went wrong");
     }
-
-    setUser((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        subscriptionType:
-          selectedTier as typeof usersTable.$inferSelect.subscriptionType,
-      };
-    });
-
-    setIsProcessing(false);
-
-    setIsDisabled(true);
-    router.push("/dashboard");
   };
 
   return (
