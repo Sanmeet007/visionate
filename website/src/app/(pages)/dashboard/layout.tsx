@@ -1,10 +1,10 @@
 import SnackbarProvider from "@/app/providers/SnackbarProvider";
 import DashboardLayout from "./base-layout";
-import { getUser } from "@/auth";
+import { getUnCachedUser } from "@/auth";
 import { redirect } from "next/navigation";
 
 const getUserData = async () => {
-  const user = await getUser();
+  const user = await getUnCachedUser();
   return user;
 };
 
