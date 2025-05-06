@@ -13,11 +13,11 @@ const getUserData = async () => {
 };
 
 const VerifyEmailPage = async () => {
-  const user = await getUserData();
+  // const user = await getUserData();
 
-  if (user && user.emailVerified) {
-    return redirect(`/dashboard`);
-  }
+  // if (user && user.emailVerified) {
+  //   return redirect(`/dashboard`);
+  // }
 
   return (
     <>

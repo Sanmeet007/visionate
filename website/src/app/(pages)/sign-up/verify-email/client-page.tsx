@@ -24,7 +24,11 @@ const VerifyEmailClientPage = () => {
   const [phase, setPhase] = useState(0);
 
   const handleOtpInputChange = (newValue: string) => {
-    setOtp(newValue);
+    const MAX_OTP_LENGTH = 5; 
+    const numericValue = newValue.replace(/\D/g, ""); 
+    const truncatedValue = numericValue.substring(0, MAX_OTP_LENGTH); 
+
+    setOtp(truncatedValue);
   };
 
   const resendOTP = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -101,7 +105,7 @@ const VerifyEmailClientPage = () => {
             emailVerified: new Date(),
           };
         });
-        router.push("/dashboard");
+        router.push("/sign-up/onboarding");
       } else {
         setIsProcessing(false);
         showSnackbar("error", data.message || "Invalid otp");
@@ -221,9 +225,11 @@ const VerifyEmailClientPage = () => {
                   </Typography>
                   <MuiOtpInput
                     TextFieldsProps={{
-                      type: "number",
+                      type: "text",
+                      sx: {
+                        textAlign: "center",
+                      },
                       disabled: isProcessing || isDisabled || isResending,
-                      size: "small",
                     }}
                     length={5}
                     value={otp}
