@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/drizzle";
 import { apiKeysTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
