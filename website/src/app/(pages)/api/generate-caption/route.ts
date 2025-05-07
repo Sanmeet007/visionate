@@ -135,7 +135,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
       message: "Captions generated successfully!",
       caption: resBody.description,
     });
-  } catch (e: unknown) {
+  } catch (e: any) {
     if (
       generatedImageMeta != null &&
       processedUserId != null &&
@@ -159,14 +159,14 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
       });
     }
 
-    if (Number(process.env.LOGGING_LEVEL) > 0) {
+    if (Number(process.env.LOGGING_LEVEL) >= 1) {
       console.error(e);
     }
 
     return NextResponse.json(
       {
         error: true,
-        message: "",
+        message: e?.message || "Something went wrong",
       },
       { status: 500 }
     );
