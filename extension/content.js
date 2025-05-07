@@ -14,14 +14,37 @@ async function getApiKey() {
 
 const getImagesWithoutAlt = () => {
   let imagesWithoutAlt = [];
+  const supportedFormats = ['.png', '.jpeg', '.jpg', '.webp'];
 
   try {
-    imagesWithoutAlt = Array.from(document.querySelectorAll("img:not([alt])"));
+    const allImages = Array.from(document.querySelectorAll("img:not([alt])"));
+    imagesWithoutAlt = allImages.filter(img => {
+      if (img.src.startsWith('data:')) {
+        const dataUrlParts = img.src.split(';');
+        if (dataUrlParts.length > 0 && dataUrlParts[0].startsWith('data:image/')) {
+          const format = dataUrlParts[0].substring('data:image/'.length);
+          return !supportedFormats.some(suffix => format.toLowerCase().includes(suffix.substring(1)));
+        }
+        return true;
+      }
+      return !supportedFormats.some(suffix => img.src.toLowerCase().endsWith(suffix));
+    });
   } catch (e) {
-    const images = document.querySelectorAll("img");
-    imagesWithoutAlt = Array.from(images).filter(
-      (img) => !img.hasAttribute("alt")
-    );
+    const allImages = document.querySelectorAll("img");
+    imagesWithoutAlt = Array.from(allImages).filter(img => {
+      if (!img.hasAttribute("alt")) {
+        if (img.src.startsWith('data:')) {
+          const dataUrlParts = img.src.split(';');
+          if (dataUrlParts.length > 0 && dataUrlParts[0].startsWith('data:image/')) {
+            const format = dataUrlParts[0].substring('data:image/'.length);
+            return !supportedFormats.some(suffix => format.toLowerCase().includes(suffix.substring(1)));
+          }
+          return true; // Consider data URLs without clear image format
+        }
+        return !supportedFormats.some(suffix => img.src.toLowerCase().endsWith(suffix));
+      }
+      return false;
+    });
   }
 
   return imagesWithoutAlt;
