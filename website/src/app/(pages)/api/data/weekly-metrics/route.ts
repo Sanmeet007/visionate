@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { db } from "@/drizzle";
 import { apiRequestsTable } from "@/drizzle/schema";
 import { usingAuthMiddleware } from "@/middlewares/authenticator";

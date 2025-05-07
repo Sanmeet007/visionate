@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { usingAuthMiddleware } from "@/middlewares/authenticator";
 import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
