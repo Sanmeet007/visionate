@@ -1,4 +1,4 @@
-const kReleaseMode = false;
+const kReleaseMode = true; // Set to false for debugging
 
 async function getApiKey() {
   return new Promise((resolve, reject) => {
@@ -47,7 +47,7 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
       return "<CAPTIONS-NOT-AVAILABLE>";
     }
   } catch (E) {
-    if(!kReleaseMode){
+    if (!kReleaseMode) {
       console.log(E);
     }
     return "<CAPTIONS-NOT-AVAILABLE>";
@@ -130,26 +130,35 @@ function hideLoader(message = "Done", delay = 1000) {
 }
 
 const _main = async () => {
-  const images = getImagesWithoutAlt();
+  try {
+    const images = getImagesWithoutAlt();
 
-  showLoader("Generating Captions");
+    if (images.length === 0) return;
 
-  const apiKey = await getApiKey();
-  if (!apiKey) return;
+    showLoader("Generating Captions");
 
-  images.forEach(async (imgEl) => {
-    try {
-      const captionData = await getAltTextFromImageSrc(apiKey, imgEl);
-      imgEl.alt = captionData;
-    } catch (e) {
-      if (!kReleaseMode) {
-        console.log(e);
-        console.error("Unable to get caption for : ", imgEl);
+    const apiKey = await getApiKey();
+    if (!apiKey) return;
+
+    for (const imgEl of images) {
+      try {
+        const captionData = await getAltTextFromImageSrc(apiKey, imgEl);
+        imgEl.alt = captionData;
+      } catch (e) {
+        if (!kReleaseMode) {
+          console.log(e);
+          console.error("Unable to get caption for : ", imgEl);
+        }
       }
     }
-  });
 
-  setTimeout(() => hideLoader("Captioning complete!", 1000), 3000);
+    setTimeout(() => hideLoader("Captioning complete!", 1000), 3000);
+  } catch (e) {
+    if (!kReleaseMode) {
+      console.log(e);
+    }
+    hideLoader("Error occurred", 1000);
+  }
 };
 
 _buildContentHTML();
