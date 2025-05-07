@@ -163,12 +163,18 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
       console.error(e);
     }
 
+    let statusCode = 500;
+
+    if (e?.message?.toLowerCase().includes("forbidden")) {
+      statusCode = 403;
+    }
+    
     return NextResponse.json(
       {
         error: true,
         message: e?.message || "Something went wrong",
       },
-      { status: 500 }
+      { status: statusCode }
     );
   }
 });
