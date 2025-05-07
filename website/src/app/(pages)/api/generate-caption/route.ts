@@ -89,7 +89,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
           error: true,
           message: "Image exceeds the maximum allowed size.",
         },
-        { status: 403 }
+        { status: 413 }
       );
     }
 
@@ -167,6 +167,10 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
 
     if (e?.message?.toLowerCase().includes("forbidden")) {
       statusCode = 403;
+    }
+
+    if (e?.message?.toLowerCase().includes("invalid or unknown image format")) {
+      statusCode = 400;
     }
     
     return NextResponse.json(
