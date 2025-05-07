@@ -3,6 +3,15 @@ import ClientHomePage from "./client-page";
 
 export const metadata: Metadata = {
   title: "Visionate - See the unseen",
+  description:
+    "Experience a more accessible web with our extension that converts images to descriptive text for blind & visually impaired users.",
+  keywords: [
+    "web accessibility",
+    "blind",
+    "visually impaired",
+    "image to text",
+    "extension",
+  ],
   icons: {
     icon: [
       {
