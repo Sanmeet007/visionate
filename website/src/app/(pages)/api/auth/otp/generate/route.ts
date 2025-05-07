@@ -1,5 +1,6 @@
 // Only logined user can generate otp ! OTP IS 5 DIGIT
 // ? Currently only supports email verification using otp
+export const dynamic = "force-dynamic";
 
 import { redisDbClient as redis } from "@/app/redis/dbclient";
 import { usingAuthMiddleware } from "@/middlewares/authenticator";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import "@/app/css/global.css";
 
 import { getUser } from "@/auth";
