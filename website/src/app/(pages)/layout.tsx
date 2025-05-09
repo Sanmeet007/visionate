@@ -1,18 +1,10 @@
 export const dynamic = "force-dynamic";
 
 import "@/app/css/global.css";
-
-import { getUser } from "@/auth";
 import { Inter } from "next/font/google";
-import AppThemeProvider from "@/app/providers/AppThemeProvider";
-import SnackbarProvider from "@/app/providers/SnackbarProvider";
-import UserProvider from "@/app/providers/UserProvider";
-import LogoutFunctionProvider from "@/app/providers/LogoutFnProvider";
-import GloablLoader from "@/app/providers/GlobalLoader";
-import ProgressProvider from "@/app/providers/ProgressProvider";
-import AuthModalProvider from "@/app/providers/AuthModalProvider";
-import QueryProvider from "@/app/providers/QueryProvider";
+import Providers from "./providers";
 import { Metadata } from "next";
+import FrontLayout from "./front-layout";
 
 export const metadata: Metadata = {
   icons: {
@@ -38,28 +30,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryProvider>
-          <AppThemeProvider>
-            <ProgressProvider>
-              <SnackbarProvider>
-                <GloablLoader>
-                  <UserProvider initialUserData={user}>
-                    <AuthModalProvider>
-                      <LogoutFunctionProvider>
-                        <>{children}</>
-                      </LogoutFunctionProvider>
-                    </AuthModalProvider>
-                  </UserProvider>
-                </GloablLoader>
-              </SnackbarProvider>
-            </ProgressProvider>
-          </AppThemeProvider>
-        </QueryProvider>
+        <Providers>
+          <FrontLayout>
+            <>{children}</>
+          </FrontLayout>
+        </Providers>
       </body>
     </html>
   );
