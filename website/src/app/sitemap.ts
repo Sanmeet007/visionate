@@ -19,7 +19,7 @@ export default function sitemap() {
       priority: 1,
     },
     {
-      url: `${process.env.NEXT_PUBLIC_ORIGIN}/about-us`,
+      url: `${process.env.NEXT_PUBLIC_ORIGIN}/about`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 1,

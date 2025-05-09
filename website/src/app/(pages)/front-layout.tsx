@@ -129,9 +129,9 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
                     <Typography
                       variant="caption"
                       component={Link}
-                      href="/about-us"
+                      href="/about"
                     >
-                      About Us
+                      About
                     </Typography>
                   </Box>
                   <Box
