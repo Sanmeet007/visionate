@@ -3,14 +3,17 @@
 import Link from "next/link";
 
 import { GitHub, LinkedIn, Favorite } from "@mui/icons-material";
-import { Divider , Box, Typography, Link as MuiLink, IconButton } from "@mui/material";
+import {
+  Divider,
+  Box,
+  Typography,
+  Link as MuiLink,
+  IconButton,
+} from "@mui/material";
 
-import { useAuthModalFns } from "@/app/providers/AuthModalProvider";
-import { useUser } from "@/app/providers/UserProvider";
 import { useMobileMenu } from "../providers/MobileMenuProvider";
 import { usePathname } from "next/navigation";
-import { useRouter } from "@bprogress/next/app";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSnackbar } from "../providers/SnackbarProvider";
 import Header from "../fragments/Header";
 
@@ -21,10 +24,7 @@ interface UserMenuState {
 const FrontLayout = ({ children }: { children: React.ReactNode }) => {
   const showSnackbar = useSnackbar();
   const { openSiteMenu } = useMobileMenu();
-  const authFns = useAuthModalFns();
-  const router = useRouter();
   const pathname = usePathname();
-  const { user } = useUser();
 
   const [shouldRenderBaseLayout, setShouldRenderBaseLayout] = useState(false);
 
@@ -35,79 +35,6 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
       setShouldRenderBaseLayout(true);
     }
   }, [pathname]);
-
-  const [shouldDisable, setShouldDisable] = useState(false);
-  const [userMenuState, setUserMenuState] = useState<UserMenuState>({
-    anchorEl: null,
-  });
-
-  const openDashboard = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setUserMenuState({ anchorEl: null });
-    router.push("/dashboard");
-  };
-
-  const openMyAccount = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    setUserMenuState({ anchorEl: null });
-    router.push("/dashboard/my-account");
-  };
-
-  const closeUserMenu = () => {
-    setUserMenuState({ anchorEl: null });
-  };
-
-  const openUserMenu = (e: React.MouseEvent<HTMLElement>) => {
-    setUserMenuState({ anchorEl: e.currentTarget });
-  };
-
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const [snackbarState, setSnackbarState] = useState({
-    open: false,
-    severity: "error",
-    message: "",
-  });
-
-  const handleLogout = async () => {
-    try {
-      setIsProcessing(true);
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_ORIGIN + "/api/auth/logout",
-        {
-          credentials: "include",
-        }
-      );
-      if (res.ok) {
-        showSnackbar("success", "Logout successfull");
-        setIsProcessing(false);
-        if (typeof window !== "undefined") {
-          window.location.reload();
-        }
-      } else {
-        const data = await res.json();
-        setIsProcessing(false);
-        showSnackbar("error", data.message);
-      }
-    } catch (e) {
-      showSnackbar("error", "Something went wrong");
-      setIsProcessing(false);
-    }
-  };
-  const logoutFn = async () => {
-    setUserMenuState({ anchorEl: null });
-    await handleLogout();
-  };
-
-  const handleLoginMenuOption = (x: string) => () => {
-    if (x === "sign-up") {
-      if (typeof window !== "undefined") {
-        router.push("/sign-up?next=" + window.location.pathname);
-      }
-    } else if (x === "sign-in") {
-      if (authFns) authFns.openAuthModal();
-    }
-  };
 
   if (!shouldRenderBaseLayout) {
     <>{children}</>;
