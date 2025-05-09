@@ -17,7 +17,6 @@ import {
 import Flexbox from "@/app/components/Flexbox";
 import {
   AppRegistration,
-  AutoStories,
   Close,
   ContactSupport,
   Diversity1,
@@ -26,8 +25,10 @@ import {
   Search,
   AccountCircle,
   Dashboard,
-  PowerOff,
   LogoutOutlined,
+  Category as CategoryIcon,
+  CurrencyRupee as CurrencyRupeeIcon,
+  DataObject as DataObjectIcon,
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useAuthModalFns } from "@/app/providers/AuthModalProvider";
@@ -122,14 +123,14 @@ const MobileMenu = ({
         <Divider />
         <List>
           {[
-            { label: "Search", icon: Search, href: "/search" },
             { label: "Home", icon: Home, href: "/" },
-            { label: "Our story", icon: Diversity1, href: "/our-story" },
-            { label: "Stories", icon: AutoStories, href: "/articles" },
+            { label: "Features", icon: CategoryIcon, href: "/#features" },
+            { label: "Pricing", icon: CurrencyRupeeIcon, href: "/#pricing" },
+            { label: "API Docs", icon: DataObjectIcon, href: "/api-docs" },
             {
-              label: "Contact us",
+              label: "Support",
               icon: ContactSupport,
-              href: "/contact-us",
+              href: "/support",
             },
           ].map((item, index) => (
             <ListItem key={"site-menu-item-" + index} disablePadding>

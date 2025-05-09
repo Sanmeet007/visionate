@@ -14,8 +14,10 @@ import lodash from "lodash";
 import { useRouter } from "@bprogress/next/app";
 import { useUser } from "@/app/providers/UserProvider";
 import { useAuthModalFns } from "@/app/providers/AuthModalProvider";
+import { useMobileMenu } from "@/app/providers/MobileMenuProvider";
 
 const Header = () => {
+  const { openSiteMenu } = useMobileMenu();
   const { user } = useUser();
   const authModalfns = useAuthModalFns();
   const router = useRouter();
@@ -138,10 +140,10 @@ const Header = () => {
                 }}
               >
                 <li>
-                  <Link href="#features">Features</Link>
+                  <Link href="/#features">Features</Link>
                 </li>
                 <li>
-                  <Link href="#pricing">Pricing</Link>
+                  <Link href="/#pricing">Pricing</Link>
                 </li>
                 <li>
                   <Link href="/api-docs">API Docs</Link>
@@ -177,32 +179,7 @@ const Header = () => {
                   </Button>
                 </>
               )}
-
-              {/* {(!user || user.role === "subscriber") && (
-                <>
-                  {pathname !== "/search" && (
-                    <>
-                      <Tooltip
-                        title="Search"
-                        sx={{
-                          "@media screen and  (min-width:701px)": {
-                            display: "none",
-                          },
-                        }}
-                      >
-                        <IconButton
-                          LinkComponent={Link}
-                          href="/search"
-                          size="small"
-                        >
-                          <Search />
-                        </IconButton>
-                      </Tooltip>
-                    </>
-                  )}
-                </>
-              )} */}
-
+              
               <Tooltip
                 title="Menu"
                 arrow
@@ -216,7 +193,7 @@ const Header = () => {
                 <IconButton
                   aria-label="Site Menu"
                   size="small"
-                  // onClick={openMobileMenu}
+                  onClick={openSiteMenu}
                 >
                   <Menu />
                 </IconButton>
