@@ -5,6 +5,7 @@ import { Box, Button, Typography } from "@mui/material";
 import BlurCircleGraphic from "./BlurCircleGraphic";
 import LinesGraphic from "./LinesGraphic";
 import DecorationImage from "./DecorationImage";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -75,6 +76,9 @@ const HeroSection = () => {
               sx={{
                 px: "2rem",
               }}
+              LinkComponent={Link}
+              href="/dist/v1/visionate-chrome-extension.zip"
+              download
             >
               Download Extension
             </Button>
