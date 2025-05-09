@@ -72,7 +72,7 @@ const Header = () => {
               px: "1rem",
             },
             bgcolor: colorTrigger
-              ? (theme) => "rgba(149, 127 , 255 , 0.1)"
+              ? (theme) => "rgb(35 31 57 / 41%)"
               : "transparent",
             position: "fixed",
             top: 0,
