@@ -122,23 +122,16 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
                     <Typography
                       variant="caption"
                       component={Link}
-                      href="/contact-us"
+                      href="/support"
                     >
-                      Contact Us
+                      Support
                     </Typography>
                     <Typography
                       variant="caption"
                       component={Link}
-                      href="/our-story"
+                      href="/about-us"
                     >
-                      Our Story
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      component={Link}
-                      href="/articles"
-                    >
-                      Articles
+                      About Us
                     </Typography>
                   </Box>
                   <Box

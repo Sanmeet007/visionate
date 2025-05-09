@@ -3,7 +3,7 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/api/",
+      disallow: ["/api/", "/dashboard/"],
     },
     sitemap: `${process.env.NEXT_PUBLIC_ORIGIN}/sitemap.xml`,
   };
