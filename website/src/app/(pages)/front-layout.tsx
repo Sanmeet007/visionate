@@ -11,19 +11,12 @@ import {
   IconButton,
 } from "@mui/material";
 
-import { useMobileMenu } from "../providers/MobileMenuProvider";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSnackbar } from "../providers/SnackbarProvider";
 import Header from "../fragments/Header";
 
-interface UserMenuState {
-  anchorEl: HTMLElement | null;
-}
 
 const FrontLayout = ({ children }: { children: React.ReactNode }) => {
-  const showSnackbar = useSnackbar();
-  const { openSiteMenu } = useMobileMenu();
   const pathname = usePathname();
 
   const [shouldRenderBaseLayout, setShouldRenderBaseLayout] = useState(false);
@@ -35,9 +28,9 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
       setShouldRenderBaseLayout(true);
     }
   }, [pathname]);
-
+  
   if (!shouldRenderBaseLayout) {
-    <>{children}</>;
+    return <>{children}</>;
   } else {
     return (
       <>
