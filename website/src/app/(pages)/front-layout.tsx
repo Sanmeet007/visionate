@@ -44,7 +44,6 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
             <Box
               component={"main"}
               sx={{
-                px: "2rem",
                 minHeight: "calc(100vh - 80px - 160px) ",
               }}
             >

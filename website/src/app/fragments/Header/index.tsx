@@ -56,7 +56,6 @@ const Header = () => {
   useEffect(() => {
     if (typeof window !== undefined) {
       setCurrentTarget(document.querySelector("#scrollable-element"));
-      console.log(document.querySelector("#scrollable-element"));
     }
   }, []);
 
