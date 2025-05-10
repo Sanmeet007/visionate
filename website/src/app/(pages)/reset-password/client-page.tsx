@@ -162,11 +162,6 @@ const ResetPasswordClientPage = ({
                 color="primary"
                 type="submit"
                 variant="contained"
-                sx={{
-                  borderRadius: "100px",
-                  fontSize: "1rem",
-                  textTransform: "none",
-                }}
               >
                 Submit
               </LoadingButton>
