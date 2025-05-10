@@ -8,6 +8,7 @@ import {
   DeleteForever as DeleteForeverIcon,
   Restore as RestoreIcon,
 } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
@@ -169,6 +170,38 @@ const MyAccountClientPage = () => {
       setIsUpdating(false);
       hideLoader();
       showSnackbar("error", "Profile update failed");
+    }
+  };
+
+  const [isSendingResetPasswordLink, setIsSendingResetPasswordLink] =
+    useState(false);
+
+  const handleSendResetPasswordLink = async () => {
+    try {
+      setIsSendingResetPasswordLink(true);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/auth/token/generate?type=password&email=${user?.email}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!res.ok) {
+        const data = await res.json();
+        setIsSendingResetPasswordLink(false);
+        showSnackbar(
+          "error",
+          data.message || "Unable to send reset password link"
+        );
+        return;
+      }
+
+      setIsSendingResetPasswordLink(false);
+      showSnackbar("success", "Reset password link sent successfully");
+    } catch (error) {
+      setIsSendingResetPasswordLink(false);
+      showSnackbar("error", "Unable to send reset password link");
     }
   };
 
@@ -351,9 +384,15 @@ const MyAccountClientPage = () => {
               mt: "1rem",
             }}
           >
-            <Button variant="contained" color="secondary">
+            <LoadingButton
+              loading={isSendingResetPasswordLink}
+              disabled={isSendingResetPasswordLink}
+              variant="contained"
+              color="secondary"
+              onClick={handleSendResetPasswordLink}
+            >
               Reset Password
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
 
