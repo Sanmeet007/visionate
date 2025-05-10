@@ -1,4 +1,5 @@
 import ManageApiKeysClientPage from "./client-page";
+import ProvidersWrapper from "./providers";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 const ManageApiKeysPage = () => {
   return (
     <>
-      <ManageApiKeysClientPage />
+      <ProvidersWrapper>
+        <ManageApiKeysClientPage />
+      </ProvidersWrapper>
     </>
   );
 };

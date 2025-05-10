@@ -30,6 +30,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { useUser } from "@/app/providers/UserProvider";
 import { LoadingButton } from "@mui/lab";
+import { useConfirm } from "material-ui-confirm";
 
 interface ApiKey {
   id: string;
@@ -38,10 +39,6 @@ interface ApiKey {
   createdAt: string;
   isActive: boolean;
 }
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-}));
 
 const fetchApiKeys = async (): Promise<{ keys: ApiKey[] }> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ORIGIN}/api/keys`);
@@ -86,6 +83,7 @@ interface ModalState {
 }
 
 const ApiKeyManagement = () => {
+  const confirmDeletion = useConfirm();
   const [modalState, setModalState] = useState<ModalState>({
     opened: false,
   });
@@ -156,12 +154,14 @@ const ApiKeyManagement = () => {
     generateKeyMutation(newKeyName);
   };
 
-  const handleRevokeApiKey = (keyId: string) => {
-    if (
-      window.confirm(
-        "Are you sure you want to revoke this API key? This action cannot be undone."
-      )
-    ) {
+  const handleRevokeApiKey = async (keyId: string) => {
+    const { confirmed } = await confirmDeletion({
+      title: "Confirm API Key Revocation",
+      description:
+        "Are you sure you want to revoke this API key? This action cannot be undone.",
+    });
+
+    if (confirmed) {
       revokeKeyMutation(keyId);
     }
   };
