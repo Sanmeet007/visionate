@@ -240,7 +240,8 @@ const MyAccountClientPage = () => {
         showSnackbar("error", "Unable to delete account");
         return;
       }
-
+      
+      hideLoader();
       window.location.reload();
     } catch (error) {
       setAreButtonsDisabled(false);
