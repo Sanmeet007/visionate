@@ -84,6 +84,7 @@ const Header = () => {
           <Box
             className="container"
             sx={{
+              overflow: "hidden",
               display: "flex",
               height: "calc(70px + 1rem)",
               pt: !colorTrigger ? "1rem" : "0rem",
