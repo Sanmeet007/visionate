@@ -7,7 +7,6 @@ import ProgressProvider from "@/app/providers/ProgressProvider";
 import AuthModalProvider from "@/app/providers/AuthModalProvider";
 import QueryProvider from "@/app/providers/QueryProvider";
 import MobileMenuProvider from "@/app/providers/MobileMenuProvider";
-import { ConfirmProvider } from "material-ui-confirm";
 
 import { getUser } from "@/auth";
 
