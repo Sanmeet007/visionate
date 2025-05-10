@@ -5,9 +5,9 @@ import { usingEmailVerificationMiddleware } from "@/middlewares/email-verifier";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import Joi from "joi";
 import { razorpay } from "@/razorpay";
-import { usersTable } from "@/drizzle/schema";
+import { apiRequestsTable, usersTable } from "@/drizzle/schema";
 import { db } from "@/drizzle";
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -65,6 +65,16 @@ export const POST = usingAuthMiddleware(
               subscriptionType: userSubscriptionType,
             })
             .where(eq(usersTable.id, user!.id));
+
+          // Delete all the api requests of the user for the current month for fresh start as the user has upgraded to a new plan
+          await db
+            .delete(apiRequestsTable)
+            .where(
+              and(
+                eq(apiRequestsTable.userId, user!.id),
+                sql`month(timestamp) = month(current_date()) and year(timestamp) = year(current_date())`
+              )
+            );
 
           return NextResponse.json(
             { message: "Payment processed successfully", isOk: true },
