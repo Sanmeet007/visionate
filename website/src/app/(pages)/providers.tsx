@@ -6,9 +6,8 @@ import GloablLoader from "@/app/providers/GlobalLoader";
 import ProgressProvider from "@/app/providers/ProgressProvider";
 import AuthModalProvider from "@/app/providers/AuthModalProvider";
 import QueryProvider from "@/app/providers/QueryProvider";
-import MobileMenu from "../fragments/MobileMenu";
-import MobileMenuProvider from "../providers/MobileMenuProvider";
-import FrontLayout from "./front-layout";
+import MobileMenuProvider from "@/app/providers/MobileMenuProvider";
+import { ConfirmProvider } from "material-ui-confirm";
 
 import { getUser } from "@/auth";
 

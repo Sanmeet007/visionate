@@ -12,17 +12,26 @@ import { LoadingButton } from "@mui/lab";
 
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
+import { useConfirm } from "material-ui-confirm";
+import PricingDialog from "./components/PricingDialog";
+import Script from "next/script";
+import { usersTable } from "@/drizzle/schema";
+import subscriptionPricing from "@/utils/sub-pricing";
 
 interface FormData {
   name: string;
 }
 
+type PricingTier = typeof usersTable.$inferSelect.subscriptionType;
+
 const MyAccountClientPage = () => {
   const { showLoader, hideLoader } = useLoader();
   const showSnackbar = useSnackbar();
+  const confirmDeletion = useConfirm();
 
   const { user, setUser } = useUser();
   const profileImageRef = useRef<HTMLInputElement>(null);
+  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [profileImageURL, setProfileImageURL] = useState(
     user?.profileImage ?? null
@@ -205,8 +214,208 @@ const MyAccountClientPage = () => {
     }
   };
 
+  const handleAccountDelete = async () => {
+    try {
+      const { confirmed } = await confirmDeletion({
+        title: "Are you sure?",
+        description:
+          "Please be aware that deleting your account is permanent and irreversible. All active subscriptions will be immediately canceled and all associated data will be permanently removed.",
+        confirmationText: "Delete",
+      });
+
+      if (!confirmed) return;
+
+      setAreButtonsDisabled(true);
+      showLoader();
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/users/active`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) {
+        hideLoader();
+        showSnackbar("error", "Unable to delete account");
+        return;
+      }
+
+      window.location.reload();
+    } catch (error) {
+      setAreButtonsDisabled(false);
+      hideLoader();
+      showSnackbar("error", "Unable to delete account");
+    }
+  };
+
+  const [showPlans, setShowPlans] = useState(false);
+
+  const handleViewPlan = () => {
+    setShowPlans(true);
+  };
+
+  const handleClosePlansDialog = () => {
+    setShowPlans(false);
+  };
+
+  const createOrderId = async (
+    subscriptionType: string,
+    currency: string = "INR"
+  ) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ORIGIN}/api/payments/initiate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            subscriptionType,
+            currency,
+          }),
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      return data.orderId;
+    } catch (error) {
+      console.error("There was a problem with your fetch operation:", error);
+    }
+  };
+
+  const handleUpgrade = async (selectedTier: PricingTier) => {
+    try {
+      let shouldAskPayment = true;
+      handleClosePlansDialog();
+      showLoader();
+
+      if (selectedTier === "free") {
+        shouldAskPayment = false;
+      }
+
+      if (shouldAskPayment) {
+        const amount = subscriptionPricing[selectedTier].price * 100; // in paise
+        const orderId: string = await createOrderId(selectedTier);
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: amount,
+          currency: "INR",
+          name: user!.name,
+          readonly: { email: true },
+          prefill: { email: user!.email },
+          description: "description",
+          order_id: orderId,
+          modal: {
+            ondismiss: function () {
+              hideLoader();
+            },
+          },
+          handler: async function (response: {
+            razorpay_payment_id: string;
+            razorpay_order_id: string;
+            razorpay_signature: string;
+          }) {
+            const data = {
+              orderCreationId: orderId,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+            };
+
+            const paymentResponse = await fetch(
+              `${process.env.NEXT_PUBLIC_ORIGIN}/api/payments/verify`,
+              {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" },
+              }
+            );
+            const paymentResponseData = await paymentResponse.json();
+
+            if (paymentResponseData.isOk) {
+              hideLoader();
+              setUser((prev) => {
+                if (!prev) return prev;
+                return {
+                  ...prev,
+                  subscriptionType:
+                    selectedTier as typeof usersTable.$inferSelect.subscriptionType,
+                  onboardingCompleted: new Date(),
+                };
+              });
+              showSnackbar("success", "Woohoo! Payment successful");
+            } else {
+              hideLoader();
+              showSnackbar(
+                "error",
+                paymentResponseData?.message || "Ah! Error processing payment"
+              );
+            }
+          },
+        };
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.on("payment.failed", function (response: any) {
+          hideLoader();
+          showSnackbar(
+            "error",
+            response?.error?.description || "Ah! Error processing payment"
+          );
+        });
+
+        paymentObject.open();
+      } else {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_ORIGIN}/api/users/active/complete-onboarding`
+        );
+
+        if (res.ok) {
+          setUser((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              subscriptionType:
+                selectedTier as typeof usersTable.$inferSelect.subscriptionType,
+              onboardingCompleted: new Date(),
+            };
+          });
+        } else {
+          hideLoader();
+          showSnackbar("error", "Ah! Something went wrong");
+        }
+      }
+    } catch (e) {
+      if (Number(process.env.LOGGING_LEVEL) > 0) {
+        console.error(e);
+      }
+
+      hideLoader();
+      showSnackbar("error", "Something went wrong");
+    }
+  };
+
   return (
     <>
+      <Script
+        id="razorpay-checkout-update-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
+      {showPlans && (
+        <>
+          <PricingDialog
+            open={showPlans}
+            closeDialog={handleClosePlansDialog}
+            currentTier={user?.subscriptionType ?? "free"}
+            handleUpgrade={handleUpgrade}
+          />
+        </>
+      )}
       <Box sx={{ p: "1rem" }}>
         <Box>
           <Typography variant="h6" component={"h1"}>
@@ -360,7 +569,7 @@ const MyAccountClientPage = () => {
               gap: "1rem",
             }}
           >
-            <Button variant="outlined" color="primary">
+            <Button variant="outlined" color="primary" onClick={handleViewPlan}>
               View Plans
             </Button>
           </Box>
@@ -415,7 +624,12 @@ const MyAccountClientPage = () => {
               mt: "1rem",
             }}
           >
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              disabled={areButtonsDisabled}
+              onClick={handleAccountDelete}
+            >
               Delete
             </Button>
           </Box>

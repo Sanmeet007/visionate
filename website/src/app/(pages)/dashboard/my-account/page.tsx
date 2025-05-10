@@ -1,5 +1,6 @@
 import MyAccountClientPage from "./client-page";
 import { Metadata } from "next";
+import ProvidersWrapper from "./providers";
 
 export const metadata: Metadata = {
   title: "My Account | Visionate",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 const MyAccountPage = () => {
   return (
     <>
-      <MyAccountClientPage />
+      <ProvidersWrapper>
+        <MyAccountClientPage />
+      </ProvidersWrapper>
     </>
   );
 };
