@@ -56,6 +56,18 @@ export const usersTable = mysqlTable("users", {
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });
 
+export const passwordChangeHistory = mysqlTable("password_change_history", {
+  id: varchar("id", {
+    length: 255,
+  }).primaryKey(),
+  userId: varchar("user_id", {
+    length: 255,
+  })
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  lastPasswordChangedAt: timestamp("last_password_changed_at").notNull(),
+});
+
 export const sessionTable = mysqlTable("sessions", {
   id: varchar("id", {
     length: 255,
