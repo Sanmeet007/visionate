@@ -107,8 +107,13 @@ export const POST = usingLoginMiddleware(
       getDataFrom: "BODY",
       validationSchema: {
         body: Joi.object({
-          email: Joi.string().required(),
-          password: Joi.string().required().min(8),
+          email: Joi.string().email().required(),
+          password: Joi.string()
+            .required()
+            .min(8)
+            .max(128)
+            .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+            .required(),
           name: Joi.string().required(),
         }),
       },

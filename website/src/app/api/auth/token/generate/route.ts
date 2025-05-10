@@ -64,14 +64,23 @@ export const GET = usingJoiValidatorMiddleware<GetRquestParams>(
         );
       }
 
+      const resetRequest = await redis.get(`password-reset-request:${user.id}`);
+
+      if (resetRequest) {
+        return NextResponse.json(
+          {
+            error: true,
+            message: "Password reset request already sent.",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+
       const token = crypto.randomBytes(32).toString("hex");
       await redis.set(`password-reset-request:${user.id}`, token, {
-        EX: 60 * 60 * 1,
-      });
-
-      await db.insert(passwordChangeHistoryTable).values({
-        userId: user.id,
-        lastPasswordChangedAt: new Date(),
+        EX: 60 * 60 * 24,
       });
 
       await sendTemplateEmail({
@@ -79,6 +88,7 @@ export const GET = usingJoiValidatorMiddleware<GetRquestParams>(
         receivers: [user.email],
         subject: "Attention Required: Password Reset Requested",
         params: {
+          EMAIL: user.email,
           USERNAME: user.name,
           TOKEN: token,
         },

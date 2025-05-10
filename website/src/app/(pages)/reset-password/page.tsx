@@ -1,10 +1,23 @@
 import React from "react";
-import BareLayout from "../base-layout";
+import { Metadata } from "next";
+import ResetPasswordClientPage from "./client-page";
 
-const  ResetPasswordPage = ({ children }: { children: React.ReactNode }) => {
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Reset Password | Visionate",
+};
+
+const ResetPasswordPage = ({ searchParams }: { searchParams: any }) => {
+  const token = searchParams.token;
+  const email = searchParams.m;
+
+  if (!token || !email) {
+    return <>400 | BAD REQUEST</>;
+  }
   return (
     <>
-      <BareLayout>{children}</BareLayout>
+      <ResetPasswordClientPage token={token} email={email} />
     </>
   );
 };

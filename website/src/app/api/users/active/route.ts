@@ -8,6 +8,9 @@ import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import { eq } from "drizzle-orm";
 import Joi from "joi";
 import { NextResponse } from "next/server";
+import { lucia } from "@/auth";
+import { cookies as requestCookies } from "next/headers";
+import { error } from "console";
 
 export const GET = usingAuthMiddleware((_, user) => {
   return NextResponse.json({ ...user, hashedPassword: null });
@@ -36,7 +39,7 @@ export const PUT = usingAuthMiddleware(
           if (Number(process.env.LOGGING_LEVEL) >= 1) {
             console.error("Error updating user details:", error);
           }
-          
+
           return NextResponse.json(
             {
               message: "Failed to update user details",
@@ -55,4 +58,40 @@ export const PUT = usingAuthMiddleware(
       }
     )
   )
+);
+
+export const DELETE = usingAuthMiddleware(
+  usingEmailVerificationMiddleware(async (_, user) => {
+    try {
+      const cookies = await requestCookies();
+      await db.delete(usersTable).where(eq(usersTable.id, user!.id));
+
+      const sessionId = cookies.get(lucia.sessionCookieName)!.value;
+      await lucia.invalidateSession(sessionId);
+
+      const sessionCookie = lucia.createBlankSessionCookie();
+      cookies.set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+
+      return NextResponse.json({
+        error: false,
+        message: "User account deleted successfully",
+      });
+    } catch (error) {
+      if (Number(process.env.LOGGING_LEVEL) >= 1) {
+        console.error("Error deleting user account:", error);
+      }
+
+      return NextResponse.json(
+        {
+          error: true,
+          message: "Failed to delete user account",
+        },
+        { status: 500 }
+      );
+    }
+  })
 );
