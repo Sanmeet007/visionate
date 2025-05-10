@@ -15,20 +15,28 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Header from "../fragments/Header";
 
-
 const FrontLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   const [shouldRenderBaseLayout, setShouldRenderBaseLayout] = useState(false);
 
   useEffect(() => {
-    if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+    if (
+      pathname === "/dashboard" ||
+      pathname.startsWith("/dashboard/") ||
+      pathname === "/sign-up" ||
+      pathname.startsWith("/sign-up/") ||
+      pathname === "/sign-up/verify-email" ||
+      pathname.startsWith("/sign-up/verify-email/") ||
+      pathname === "/sign-up/onboarding" ||
+      pathname.startsWith("/sign-up/onboarding/")
+    ) {
       setShouldRenderBaseLayout(false);
     } else {
       setShouldRenderBaseLayout(true);
     }
   }, [pathname]);
-  
+
   if (!shouldRenderBaseLayout) {
     return <>{children}</>;
   } else {

@@ -1,7 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import BgGraphic from "./components/BackgroundGraphic";
+import BgGraphic from "./sign-up/components/BackgroundGraphic";
 
 const SvgImage = () => {
   return (
