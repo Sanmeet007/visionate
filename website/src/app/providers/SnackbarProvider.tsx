@@ -39,10 +39,10 @@ export const useSnackbar = () => {
  */
 const SnackbarProvider = ({ children }: { children: React.ReactNode }) => {
   const [snackbarState, setSnackbarState] = useState<SnackbarProps>({
-    opened: true,
+    opened: false,
     severity: "error",
     message:
-      "HELLOE OWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLD",
+      "",
   });
 
   const closeSnackbar = () => {
