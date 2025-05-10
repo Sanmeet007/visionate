@@ -39,9 +39,10 @@ export const useSnackbar = () => {
  */
 const SnackbarProvider = ({ children }: { children: React.ReactNode }) => {
   const [snackbarState, setSnackbarState] = useState<SnackbarProps>({
-    opened: false,
+    opened: true,
     severity: "error",
-    message: "",
+    message:
+      "HELLOE OWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLDOWRLD",
   });
 
   const closeSnackbar = () => {
@@ -60,7 +61,14 @@ const SnackbarProvider = ({ children }: { children: React.ReactNode }) => {
         onClose={closeSnackbar}
         autoHideDuration={2000}
       >
-        <Alert onClose={closeSnackbar} severity={snackbarState.severity}>
+        <Alert
+          onClose={closeSnackbar}
+          severity={snackbarState.severity}
+          sx={{
+            maxWidth: "400px",
+            overflowWrap: "break-word",
+          }}
+        >
           {snackbarState.message}
         </Alert>
       </Snackbar>
