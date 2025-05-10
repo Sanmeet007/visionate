@@ -198,61 +198,61 @@ const NavDrawer = ({
             <LogoImage width={100} height={60} />
           </Link>
         </Box>
-        {/* {pathname !== "/dashboard/my-account" && ( */}
-        <>
-          <ProfileImage
-            src={user?.profileImage ?? ""}
-            altText={user?.name ?? ""}
-          ></ProfileImage>
+        {pathname !== "/dashboard/my-account" && (
+          <>
+            <ProfileImage
+              src={user?.profileImage ?? ""}
+              altText={user?.name ?? ""}
+            ></ProfileImage>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              marginBlock: "1rem",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            className={"vis-nav-list-wrapper"}
-          >
             <Box
               sx={{
                 display: "flex",
-                gap: "0.2rem",
+                flexDirection: "column",
+                marginBlock: "1rem",
+                justifyContent: "center",
                 alignItems: "center",
-                textAlign: "center",
               }}
-              className={"vis-user-detail-box"}
+              className={"vis-nav-list-wrapper"}
             >
-              <Typography fontSize={"1.1em"} className="vis-username">
-                {Boolean(user?.emailVerified) && (
-                  <Tooltip title="Verified">
-                    <Image
-                      style={{
-                        transform: "translate(-19% , 16%)",
-                      }}
-                      src="https://res.cloudinary.com/dphuxokhq/image/upload/v1711801384/verified_kzp1ap.png"
-                      width={20}
-                      height={20}
-                      alt={"verified"}
-                    ></Image>
-                  </Tooltip>
-                )}
-                {`${user?.name}`}
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "0.2rem",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+                className={"vis-user-detail-box"}
+              >
+                <Typography fontSize={"1.1em"} className="vis-username">
+                  {Boolean(user?.emailVerified) && (
+                    <Tooltip title="Verified">
+                      <Image
+                        style={{
+                          transform: "translate(-19% , 16%)",
+                        }}
+                        src="https://res.cloudinary.com/dphuxokhq/image/upload/v1711801384/verified_kzp1ap.png"
+                        width={20}
+                        height={20}
+                        alt={"verified"}
+                      ></Image>
+                    </Tooltip>
+                  )}
+                  {`${user?.name}`}
+                </Typography>
+              </Box>
+              <Typography
+                className="vis-role-text"
+                variant="subtitle2"
+                // sx={{
+                //   color: theme.customProps.subtitleColor,
+                // }}
+              >
+                {lodash.startCase(user?.subscriptionType)}
               </Typography>
             </Box>
-            <Typography
-              className="vis-role-text"
-              variant="subtitle2"
-              // sx={{
-              //   color: theme.customProps.subtitleColor,
-              // }}
-            >
-              {lodash.startCase(user?.subscriptionType)}
-            </Typography>
-          </Box>
-        </>
-        {/* )} */}
+          </>
+        )}
         <Box
           sx={{
             marginBottom: "1rem",
