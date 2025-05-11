@@ -55,7 +55,7 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
     const formData = new FormData();
     formData.append("imageUrl", imgEl.src);
 
-    const res = await fetch("http://localhost:3000/api/generate-caption", {
+    const res = await fetch("https://visionate.loca.lt/api/generate-caption", {
       method: "POST",
       headers: {
         "X-API-KEY": apiKey,
