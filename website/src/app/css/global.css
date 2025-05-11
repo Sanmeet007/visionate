@@ -4,7 +4,8 @@ input:-webkit-autofill {
 }
 
 html{
-  color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-padding: 3rem;
 }
 
 @keyframes floatFade {
@@ -27,7 +28,3 @@ html{
 }
 
 
-html{
-  scroll-behavior: smooth;
-  scroll-padding: 150px;
-}

@@ -4,9 +4,7 @@ import GraphicHeading from "../GraphicHeading";
 const FeaturesSection = () => {
   return (
     <>
-      <Box component={"section"} sx={{
-        height:"100vh"
-      }}>
+      <Box component={"section"}>
         <GraphicHeading text="Visionate in action" />
       </Box>
     </>

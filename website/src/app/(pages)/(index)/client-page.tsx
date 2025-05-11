@@ -3,6 +3,8 @@ import Header from "../../fragments/Header";
 import HeroSection from "./components/HeroSection";
 import FeaturesSection from "./components/FeaturesSection";
 import Footer from "@/app/fragments/Footer";
+import FaqSection from "./components/FaqSection";
+import HeroPricingTiers from "./components/PricingTiers";
 
 const ClientHomePage = () => {
   return (
@@ -15,7 +17,9 @@ const ClientHomePage = () => {
       >
         <Header />
         <HeroSection />
-        <FeaturesSection />
+        {/* <FeaturesSection /> */}
+        <HeroPricingTiers />
+        <FaqSection />
         <Footer />
       </Box>
     </>
