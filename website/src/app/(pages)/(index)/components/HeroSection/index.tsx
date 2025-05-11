@@ -91,6 +91,8 @@ const HeroSection = () => {
               color="secondary"
               variant="outlined"
               endIcon={<ArrowRight />}
+              LinkComponent={Link}
+              href="/api-docs"
             >
               Developer API
             </Button>
