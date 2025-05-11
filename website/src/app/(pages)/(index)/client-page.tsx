@@ -17,7 +17,7 @@ const ClientHomePage = () => {
       >
         <Header />
         <HeroSection />
-        {/* <FeaturesSection /> */}
+        <FeaturesSection />
         <HeroPricingTiers />
         <FaqSection />
         <Footer />

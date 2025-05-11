@@ -41,7 +41,10 @@ export default function FaqSection() {
   return (
     <>
       <GraphicHeading text="Frequently Asked Questions" />
-      <Box component={"section"} sx={{ px: "2rem" }}>
+      <Box
+        component={"section"}
+        sx={{ px: "2rem", maxWidth: "1100px", mx: "auto" }}
+      >
         {faqs.map((faq, index) => (
           <Accordion key={index}>
             <AccordionSummary
