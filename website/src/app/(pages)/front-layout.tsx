@@ -32,6 +32,8 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
       pathname.startsWith("/reset-password/") ||
       pathname === "/forgot-password" ||
       pathname.startsWith("/forgot-password/") ||
+      pathname === "/support" ||
+      pathname.startsWith("/support/") ||
       pathname === "/sign-up/onboarding" ||
       pathname.startsWith("/sign-up/onboarding/")
     ) {

@@ -95,7 +95,12 @@ export const sendMail = async ({
 };
 
 interface TemplateMailParams {
-  template: "base" | "otp" | "password-reset-request";
+  template:
+    | "base"
+    | "otp"
+    | "password-reset-request"
+    | "support"
+    | "incoming-support";
   receivers: string[];
   subject: string;
   params: any;
@@ -142,6 +147,10 @@ export const sendTemplateEmail = async ({
     case "base":
       break;
     case "password-reset-request":
+      break;
+    case "support":
+      break;
+    case "incoming-support":
       break;
 
     default:
