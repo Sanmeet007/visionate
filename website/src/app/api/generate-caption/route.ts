@@ -59,10 +59,23 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
     }
 
     const imageSource = imageFile ?? imageUrl;
+    const getMetaFrom = imageFile ? "file" : "url";
+    let imageMeta = {} as ImageMetadata;
 
-    const imageMeta = imageFile
-      ? await getImageMetadataFromFile(imageFile)
-      : await getImageMetadataFromUrl(imageUrl as string);
+    if (getMetaFrom === "file") {
+      if (!(imageFile instanceof File)) {
+        return NextResponse.json(
+          {
+            error: true,
+            message: "Invalid image file",
+          },
+          { status: 400 }
+        );
+      }
+      imageMeta = await getImageMetadataFromFile(imageFile);
+    } else if (getMetaFrom === "url") {
+      imageMeta = await getImageMetadataFromUrl(imageUrl as string);
+    }
 
     generatedImageMeta = imageMeta;
 
@@ -172,7 +185,7 @@ export const POST = usingHasValidApiKeyMiddleware(async (request, apikey) => {
     if (e?.message?.toLowerCase().includes("invalid or unknown image format")) {
       statusCode = 400;
     }
-    
+
     return NextResponse.json(
       {
         error: true,

@@ -216,7 +216,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`curl -X POST 'http://localhost:3000/api/generate-caption' -H 'X-API-KEY: <YOUR-API-KEY>' -F 'imageUrl=<IMAGE-URL>'`}
+                  {`curl -X POST '${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption' -H 'X-API-KEY: <YOUR-API-KEY>' -F 'imageUrl=<IMAGE-URL>'`}
                 </SyntaxHighlighter>
               </Box>
               <Box id="imageurl-example-request-2" sx={{ mt: "1rem" }}>
@@ -231,7 +231,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`const imageUrl = "<IMAGE-URL>";\nconst apiKey = "<YOUR-API-KEY>";\nconst apiUrl = "http://localhost:3000/api/generate-caption";\nconst formData = new FormData();\n\nformData.append("imageUrl", imageUrl);\n\nfetch(apiUrl, {\n  method: "POST",\n  headers: {\n    "X-API-KEY": apiKey,\n  },\n  body: formData,\n})\n  .then(response => response.json())\n  .then(data => {\n    console.log("Caption generated:", data);\n    // Handle the generated caption here\n  })\n  .catch(error => {\n    console.error("Error generating caption:", error);\n    // Handle errors here\n  });`}
+                  {`const imageUrl = "<IMAGE-URL>";\nconst apiKey = "<YOUR-API-KEY>";\nconst apiUrl = "${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption";\nconst formData = new FormData();\n\nformData.append("imageUrl", imageUrl);\n\nfetch(apiUrl, {\n  method: "POST",\n  headers: {\n    "X-API-KEY": apiKey,\n  },\n  body: formData,\n})\n  .then(response => response.json())\n  .then(data => {\n    console.log("Caption generated:", data);\n    // Handle the generated caption here\n  })\n  .catch(error => {\n    console.error("Error generating caption:", error);\n    // Handle errors here\n  });`}
                 </SyntaxHighlighter>
               </Box>
             </Box>
@@ -251,7 +251,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`curl -X POST 'http://localhost:5000/generate-caption' -H 'X-API-KEY: YOUR_API_KEY' --form 'image=@./example/image.png'`}
+                  {`curl -X POST '${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption' -H 'X-API-KEY: YOUR_API_KEY' --form 'image=@./example/image.png'`}
                 </SyntaxHighlighter>
               </Box>
               <Box id="imagefile-example-request-2" sx={{ mt: "1rem" }}>
@@ -266,7 +266,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`const apiUrl = "http://localhost:5000/generate-caption";\nconst apiKey = "YOUR_API_KEY";\nconst imageFile = /* Your File object for image.png */;\nconst formData = new FormData();\nformData.append("image", imageFile, "image.png");\nfetch(apiUrl, {\n\tmethod: "POST",\n\theaders: {\n\t\t"X-API-KEY": apiKey,\n\t},\n\tbody: formData,\n})\n.then(response => response.json())\n.then(data => {\n\tconsole.log("Caption generated:", data);\n\t// Handle the generated caption here\n})\n.catch(error => {\n\tconsole.error("Error generating caption:", error);\n\t// Handle errors here\n});\n`}
+                  {`const apiUrl = "${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption";\nconst apiKey = "YOUR_API_KEY";\nconst imageFile = /* Your File object for image.png */;\nconst formData = new FormData();\nformData.append("image", imageFile, "image.png");\nfetch(apiUrl, {\n\tmethod: "POST",\n\theaders: {\n\t\t"X-API-KEY": apiKey,\n\t},\n\tbody: formData,\n})\n.then(response => response.json())\n.then(data => {\n\tconsole.log("Caption generated:", data);\n\t// Handle the generated caption here\n})\n.catch(error => {\n\tconsole.error("Error generating caption:", error);\n\t// Handle errors here\n});\n`}
                 </SyntaxHighlighter>
               </Box>
             </Box>
