@@ -251,7 +251,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`curl -X POST '${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption' -H 'X-API-KEY: YOUR_API_KEY' --form 'image=@./example/image.png'`}
+                  {`curl -X POST '${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption' -H 'X-API-KEY: YOUR_API_KEY' --form 'image=@<IMAGE-FILE-PATH>'`}
                 </SyntaxHighlighter>
               </Box>
               <Box id="imagefile-example-request-2" sx={{ mt: "1rem" }}>
