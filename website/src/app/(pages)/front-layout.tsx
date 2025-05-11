@@ -20,28 +20,24 @@ const FrontLayout = ({ children }: { children: React.ReactNode }) => {
 
   const [shouldRenderBaseLayout, setShouldRenderBaseLayout] = useState(false);
 
-  useEffect(() => {
-    if (
-      pathname === "/dashboard" ||
-      pathname.startsWith("/dashboard/") ||
-      pathname === "/sign-up" ||
-      pathname.startsWith("/sign-up/") ||
-      pathname === "/sign-up/verify-email" ||
-      pathname.startsWith("/sign-up/verify-email/") ||
-      pathname === "/reset-password" ||
-      pathname.startsWith("/reset-password/") ||
-      pathname === "/forgot-password" ||
-      pathname.startsWith("/forgot-password/") ||
-      pathname === "/support" ||
-      pathname.startsWith("/support/") ||
-      pathname === "/sign-up/onboarding" ||
-      pathname.startsWith("/sign-up/onboarding/")
-    ) {
-      setShouldRenderBaseLayout(false);
-    } else {
-      setShouldRenderBaseLayout(true);
-    }
-  }, [pathname]);
+ useEffect(() => {
+  const baseRoutes = [
+    "/dashboard",
+    "/sign-up",
+    "/sign-up/verify-email",
+    "/sign-up/onboarding",
+    "/reset-password",
+    "/forgot-password",
+    "/support",
+  ];
+
+  const shouldUseFrontLayout = !baseRoutes.some(
+    (base) => pathname === base || pathname.startsWith(`${base}/`)
+  );
+
+  setShouldRenderBaseLayout(shouldUseFrontLayout);
+}, [pathname]);
+
 
   if (!shouldRenderBaseLayout) {
     return <>{children}</>;
