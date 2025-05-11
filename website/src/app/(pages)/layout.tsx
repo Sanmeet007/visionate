@@ -4,7 +4,6 @@ import "@/app/css/global.css";
 import { Inter } from "next/font/google";
 import Providers from "./providers";
 import { Metadata } from "next";
-import FrontLayout from "./front-layout";
 
 export const metadata: Metadata = {
   icons: {
@@ -34,9 +33,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <FrontLayout>
             <>{children}</>
-          </FrontLayout>
         </Providers>
       </body>
     </html>

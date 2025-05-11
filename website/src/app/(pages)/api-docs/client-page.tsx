@@ -65,7 +65,7 @@ const ApiDocsClientPage = () => {
   const scrollingUp = useScrollDirectionTrigger();
 
   return (
-    <Box sx={{ px: "2rem", mt: "1rem" }}>
+    <Box>
       <Box sx={{ display: "flex", gap: 4 }}>
         {/* Sidebar */}
         <Box
@@ -121,13 +121,16 @@ const ApiDocsClientPage = () => {
                 borderRadius: "20px",
               }}
             >
-              <ListItemButton href={"/sign-up"}>
+              <ListItemButton href={"/sign-up"} LinkComponent={Link}>
                 <ListItemText
                   primary="Create an Account / Log In"
                   secondary="New users, please sign up for a Visionate account on our registration page. Existing users, please log in to your account."
                 />
               </ListItemButton>
-              <ListItemButton href={"/dashboard/manage-api-keys"}>
+              <ListItemButton
+                href={"/dashboard/manage-api-keys"}
+                LinkComponent={Link}
+              >
                 <ListItemText
                   primary="Obtain Your API Key"
                   secondary='After logging in, proceed to the "API Keys" section in your dashboard to generate the unique key required for authenticating your API requests.'

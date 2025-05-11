@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import Header from "../../fragments/Header";
 import HeroSection from "./components/HeroSection";
 import FeaturesSection from "./components/FeaturesSection";
-
+import Footer from "@/app/fragments/Footer";
 
 const ClientHomePage = () => {
   return (
@@ -16,6 +16,7 @@ const ClientHomePage = () => {
         <Header />
         <HeroSection />
         <FeaturesSection />
+        <Footer />
       </Box>
     </>
   );
