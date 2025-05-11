@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { generatePasswordHash } from "@/utils/auth-helpers";
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";

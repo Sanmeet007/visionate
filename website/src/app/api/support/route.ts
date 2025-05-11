@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { usingJoiValidatorMiddleware } from "@/middlewares/validator";
 import { sendTemplateEmail } from "@/utils/mailer";
 import Joi from "joi";
