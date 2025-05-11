@@ -256,7 +256,7 @@ const ApiDocsClientPage = () => {
               </Box>
               <Box id="imagefile-example-request-2" sx={{ mt: "1rem" }}>
                 <Typography variant="subtitle2" sx={{ mt: 2 }}>
-                  Javascript
+                  Node.js ( version 22+ )
                 </Typography>
                 <SyntaxHighlighter
                   language="javascript"
@@ -266,7 +266,7 @@ const ApiDocsClientPage = () => {
                     style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
                   }}
                 >
-                  {`const apiUrl = "${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption";\nconst apiKey = "YOUR_API_KEY";\nconst imageFile = /* Your File object for image.png */;\nconst formData = new FormData();\nformData.append("image", imageFile, "image.png");\nfetch(apiUrl, {\n\tmethod: "POST",\n\theaders: {\n\t\t"X-API-KEY": apiKey,\n\t},\n\tbody: formData,\n})\n.then(response => response.json())\n.then(data => {\n\tconsole.log("Caption generated:", data);\n\t// Handle the generated caption here\n})\n.catch(error => {\n\tconsole.error("Error generating caption:", error);\n\t// Handle errors here\n});\n`}
+                  {`const fs = require("fs");\nconst buffer = fs.readFileSync("<IMAGE-FILE-PATH>");\nconst file = new File([buffer], "image.png", { type: "image/png" });\nconst apiUrl = "${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-caption";\nconst apiKey = "<YOUR-API-KEY>";\nconst formData = new FormData();\nformData.append("image", file, "image.png");\nfetch(apiUrl, {\n  method: "POST",\n  headers: {\n    "X-API-KEY": apiKey\n  },\n  body: formData\n})\n.then(res => res.json())\n.then(data => {\n  console.log("Caption generated:", data);\n})\n.catch(err => {\n  console.error("Error generating caption:", err);\n});`}
                 </SyntaxHighlighter>
               </Box>
             </Box>
