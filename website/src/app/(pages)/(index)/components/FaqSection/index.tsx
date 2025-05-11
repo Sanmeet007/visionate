@@ -31,9 +31,9 @@ const faqs = [
       "Absolutely. Visionate only uses your image to generate a caption and does not store or share any personal data. All image processing is secure and temporary.",
   },
   {
-    question: "Can I use Visionate without an internet connection?",
+    question: "Why do some images fail to generate captions in Visionate?",
     answer:
-      "Currently, Visionate requires an active internet connection to communicate with the backend server for AI processing. Offline support may be introduced in future versions.",
+      "Caption generation may fail for images from restricted sources—such as content behind login walls, browser-protected blobs, or sites that block external access. Visionate only works with images that are publicly accessible or directly uploaded by the user, ensuring your system's privacy and security.",
   },
 ];
 
