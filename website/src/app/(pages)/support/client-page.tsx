@@ -4,7 +4,7 @@ import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { useUser } from "@/app/providers/UserProvider";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 interface SupportRequestFormData {
@@ -16,6 +16,7 @@ interface SupportRequestFormData {
 
 const SupportClientPage = () => {
   const { user } = useUser();
+  const recaptcha = useRef();
 
   const showSnackbar = useSnackbar();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -39,6 +40,12 @@ const SupportClientPage = () => {
 
   const submitSupportRequest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const captchaValue = recaptcha.current.getValue();
+    
+    if (!captchaValue) {
+      showSnackbar("warning", "Please verify the reCAPTCHA!");
+      return;
+    }
 
     try {
       const name = user ? user.name! : submitSupportFormData.name;
@@ -186,6 +193,7 @@ const SupportClientPage = () => {
           }}
         >
           <ReCAPTCHA
+            ref={recaptcha}
             theme="dark"
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
           />
