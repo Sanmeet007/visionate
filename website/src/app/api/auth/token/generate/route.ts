@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import crypto from "node:crypto";
 import { db } from "@/drizzle";
 import { passwordChangeHistoryTable } from "@/drizzle/schema";
