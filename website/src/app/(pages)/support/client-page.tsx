@@ -5,6 +5,7 @@ import { useUser } from "@/app/providers/UserProvider";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface SupportRequestFormData {
   name: string;
@@ -174,6 +175,21 @@ const SupportClientPage = () => {
           value={submitSupportFormData.message}
           onChange={handleInputChange("message")}
         />
+        <Box
+          sx={{
+            "& iframe": {
+              borderRadius: "4px",
+              width: "301px",
+              height: "74px",
+              border: "1px solid rgb(57, 56, 62)",
+            },
+          }}
+        >
+          <ReCAPTCHA
+            theme="dark"
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+          />
+        </Box>
         <Box>
           <LoadingButton
             type="submit"
