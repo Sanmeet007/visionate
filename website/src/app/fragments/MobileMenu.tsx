@@ -124,6 +124,7 @@ const MobileMenu = ({
         <List>
           {[
             { label: "Home", icon: Home, href: "/" },
+            { label: "About", icon: Home, href: "/about" },
             { label: "Features", icon: CategoryIcon, href: "/#features" },
             { label: "Pricing", icon: CurrencyRupeeIcon, href: "/#pricing" },
             { label: "API Docs", icon: DataObjectIcon, href: "/api-docs" },
