@@ -82,7 +82,7 @@ const HeroSection = () => {
                 px: "2rem",
               }}
               LinkComponent={Link}
-              href="/dist/v1/visionate-chrome-extension.zip"
+              href={process.env.NEXT_PUBLIC_DIST_URL!}
               download
             >
               Download Extension
