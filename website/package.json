@@ -11,7 +11,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "proxy": "node proxy-server.mjs"
+    "proxy": "node proxy-server.mjs",
+    "model": "cd ../caption-model/.venv/Scripts/ & activate & cd ../.. & python app.py"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",
