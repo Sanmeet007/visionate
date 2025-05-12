@@ -34,10 +34,6 @@ Visionate is a Chrome extension that automatically generates captions for images
 
 ---
 
-Certainly! Here's a clean and consistent rewrite of your **"Getting Started (For Developers)"** section:
-
----
-
 ## Getting Started (For Developers)
 
 1. **Clone the repository**
