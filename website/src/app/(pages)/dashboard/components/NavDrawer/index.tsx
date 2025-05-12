@@ -188,9 +188,6 @@ const NavDrawer = ({
               },
             },
           },
-          "@media screen and (max-width:600px)": {
-            display: "none",
-          },
         }}
       >
         <Box marginBlock={"0.5rem"} className={"vis-logo-img"}>

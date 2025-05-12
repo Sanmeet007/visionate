@@ -32,7 +32,7 @@ const NavListItem = ({
       sx={{ borderRadius: "4px" }}
       LinkComponent={Link}
       href={href}
-      className="ink-nav-list-item"
+      className="vis-nav-list-item"
     >
       <Box
         component={"div"}
@@ -62,12 +62,12 @@ const NavListItem = ({
 
       <ListItemIcon
         sx={{ minWidth: "1.875rem" }}
-        className="ink-list-item-icon"
+        className="vis-list-item-icon"
       >
         {icon}
       </ListItemIcon>
       <Typography
-        className="ink-list-item-text"
+        className="vis-list-item-text"
         sx={{
           ml:"0.5rem"
         }}

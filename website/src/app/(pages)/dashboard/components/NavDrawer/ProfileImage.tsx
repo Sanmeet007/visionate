@@ -21,7 +21,7 @@ const ProfileImage = ({
           alignItems: "center",
           justifyContent: "center",
         }}
-        className="ink-profile-image"
+        className="vis-profile-image"
       >
         <Avatar
           src={src ?? undefined}
@@ -35,7 +35,7 @@ const ProfileImage = ({
             zIndex: 1,
             gridArea: "Profile",
           }}
-          className="ink-profile-avatar"
+          className="vis-profile-avatar"
         >
           {altText?.slice(0, 1).toUpperCase()}
         </Avatar>

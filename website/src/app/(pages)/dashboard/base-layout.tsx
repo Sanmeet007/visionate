@@ -77,8 +77,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             "@media screen and (max-width: 1000px)  and (min-width: 601px)": {
               gridTemplateColumns: "6rem 1fr",
             },
+
             "@media screen and (max-width: 600px)": {
-              gridTemplateColumns: "1fr",
+              gridTemplateColumns: "6rem 1fr",
             },
 
             display: "grid",
@@ -101,9 +102,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             sx={{
               height: "100vh",
               overflow: "auto",
-              "@media screen and (min-width:600px)": {
-                gridArea: "Content",
-              },
+              gridArea: "Content",
             }}
             id="scrollable-element"
           >
