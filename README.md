@@ -159,7 +159,7 @@ NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_3="https://linkedin.com/in/sanmeet007"
    ```bash
    cd website
    mkdir .requests_data
-   touch db.sqlite
+   touch .requests_data/db.sqlite
    yarn run build      # Build the frontend
    yarn run start      # Start the frontend server
    yarn run model      # Launch the captioning model server
