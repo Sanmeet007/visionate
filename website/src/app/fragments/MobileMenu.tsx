@@ -45,7 +45,7 @@ const MobileMenu = ({
   mainMenuState: { open: boolean };
 }) => {
   const authFns = useAuthModalFns();
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -209,7 +209,7 @@ const MobileMenu = ({
                 </ListItemButton>
               </ListItem>
             ))}
-          <Divider />
+          {user && <Divider />}
           {user && (
             <ListItem disablePadding>
               <ListItemButton
