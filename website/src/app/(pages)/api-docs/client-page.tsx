@@ -168,7 +168,9 @@ const ApiDocsClientPage = () => {
               2. Request Body
             </Typography>
             <Typography>
-              The request body should contain the image file or URL.
+              The request body must include an image file or a URL, with
+              supported formats: <strong>JPG</strong>, <strong>JPEG</strong>,{" "}
+              <strong>PNG</strong>, and <strong>WEBP</strong>.
             </Typography>
 
             <Typography variant="subtitle2" sx={{ my: "1rem" }}>
