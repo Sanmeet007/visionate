@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "proxy": "node proxy-server.mjs"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",
