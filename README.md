@@ -36,6 +36,101 @@ Visionate is a Chrome extension that automatically generates captions for images
 
 ## Getting Started (For Developers)
 
+### Prerequisites
+- **Python 3.8+** – For the backend captioning model.
+- **Node.js 22+** – For the frontend and proxy server.
+- **Yarn** – For managing frontend dependencies.
+
+### Environment Variables Setup
+
+To ensure proper functionality, make sure the following environment variables are configured. You can either set them directly in your environment or store them in a `.env` file in the respective directories.
+
+
+#### For captioning model
+To be placed in the **caption-model** directory.
+
+```bash
+TF_ENABLE_ONEDNN_OPTS="0"
+PORT="8000"
+DEBUG="false"
+```
+
+#### For website
+To be placed in the **website** directory.
+
+```bash
+# DB SETTINGS
+DB_HOSTNAME="<DB_HOSTNAME>"
+DB_PORT="<DB_PORT>"
+DB_USERNAME="<DB_USERNAME>"
+DB_PASSWORD="<DB_PASSWORD>"
+DB_NAME="<DB_NAME>"
+
+# MAIL SETTINGS
+SMTP_USER="<SMTP_USER>"
+SMTP_PASSWORD="<SMTP_PASSWORD>"
+MAIL_VARIABLES_JSON="{"APPNAME":"Visionate","OFFICE_ADDRESS":"<OFFICE_ADDRESS>","WEBSITE_URL":"http://localhost","SOCIAL_LINKS":{"GITHUB":"<GITHUB_URL>","YOUTUBE":"<YOUTUBE_URL>","LINKEDIN":"<LINKEDIN_URL>","FACEBOOK":"<FACEBOOK_URL>"},"ABOUT_US":"http://localhost/about","CONTACT_US":"http://localhost/support","SUPPORT_EMAIL":"<SUPPORT_EMAIL>"}"
+MAIL_TEMPLATES_DIR="src/utils/mailer/templates"
+
+# RAZORPAY SETTINGS
+RAZORPAY_KEY_SECRET="<RAZORPAY_KEY_SECRET>"
+NEXT_PUBLIC_RAZORPAY_KEY_ID="<RAZORPAY_KEY_ID>"
+
+# MODEL SETTINGS
+CAPTION_API_ENDPOINT="http://localhost:8000/generate-caption"
+
+# APP SETTINGS
+LOGGING_LEVEL="0"
+ENABLE_CSRF="false"
+SECURITY_STRING="<SECURITY_STRING_RANDOM_STRING>"
+
+# GOOGLE OAUTH SETTINGS
+GOOGLE_OAUTH_CLIENT_ID="<GOOGLE_OAUTH_CLIENT_ID>"
+GOOGLE_OAUTH_CLIENT_SECRET="<GOOGLE_OAUTH_CLIENT_SECRET>"
+
+# CLOUDINARY CONFIGURATION
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="<NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME>"
+CLOUDINARY_API="<CLOUDINARY_API>"
+CLOUDINARY_API_SECRET="<CLOUDINARY_API_SECRET>"
+
+# RECAPTCHA SETTINGS
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY="<RECAPTCHA_SITE_KEY>"
+RECAPTCHA_SECRET_KEY="<RECAPTCHA_SECRET_KEY>"
+
+# REACT QUERY SETTINGS
+NEXT_PUBLIC_DISABLE_REACT_QUERY_DEV_TOOLS="true"
+
+
+# PROXY SETTINGS 
+TARGET_PORT="3000"
+
+# IP API KEY
+APIIP_API_KEY="<APIIP_API_KEY>"
+
+# REDIS SETTINGS
+REDIS_URL="<YOUR_REDIS_URL>"
+
+# PUBLIC VARS
+NEXT_PUBLIC_DIST_URL="http://localhost/dist/local/visionate-chrome-extension.crx"
+NEXT_PUBLIC_ORIGIN="http://localhost"
+NEXT_PUBLIC_WEB_DEV_URL="http://sanmeet007.github.io"
+NEXT_PUBLIC_WEB_DEV_NAME="Team Ozymandias"
+NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_1="/"
+NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_2="https://github.com/Sanmeet007/project-f"
+NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_3="https://linkedin.com/in/sanmeet007"
+```
+
+
+> **Note:** The CAPTION_API_ENDPOINT variable should point to the captioning model server. If you are running the model locally, use http://localhost:8000/generate-caption. If you are using a cloud service, replace it with the appropriate URL.
+
+> **Note:** The TARGET_PORT variable should point to the port where the website is running. If you are running the website locally, use 3000. If you are using a cloud service, replace it with the appropriate port.
+
+> **Note:** The APIIP_API_KEY variable is required for the IP geolocation service. You can get a free API key from [apiip.net](https://apiip.net/).
+
+>**Note:** Redis database is required for the website to run. You can use any Redis database service or run it locally.
+
+
+### System setup
 1. **Clone the repository**
 
    ```bash
