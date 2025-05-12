@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Link as MuiLink,
 } from "@mui/material";
 import { Metadata } from "next";
 import React, { useEffect, useState } from "react";
@@ -98,19 +99,29 @@ const ApiDocsClientPage = () => {
           </Typography>
           <ul style={{ listStyle: "none", padding: 0 }}>
             <li>
-              <Link href="#endpoint-details">Endpoint Details</Link>
+              <MuiLink component={Link} href="#endpoint-details">
+                Endpoint Details
+              </MuiLink>
             </li>
             <li>
-              <Link href="#request-body">Request Body</Link>
+              <MuiLink component={Link} href="#request-body">
+                Request Body
+              </MuiLink>
             </li>
             <li>
-              <Link href="#example-requests">Request Examples</Link>
+              <MuiLink component={Link} href="#example-requests">
+                Request Examples
+              </MuiLink>
             </li>
             <li>
-              <Link href="#response-body">Response Body</Link>
+              <MuiLink component={Link} href="#response-body">
+                Response Body
+              </MuiLink>
             </li>
             <li>
-              <Link href="#response-codes">Response Codes</Link>
+              <MuiLink component={Link} href="#response-codes">
+                Response Codes
+              </MuiLink>
             </li>
           </ul>
         </Box>
