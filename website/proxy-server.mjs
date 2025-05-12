@@ -12,7 +12,7 @@ import _ from "lodash";
 
 async function main() {
   dotenv.config({
-    path: ".env.local",
+    path: ".env",
   });
   const { createProxyServer } = httpProxy;
 
