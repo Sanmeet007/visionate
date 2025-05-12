@@ -21,11 +21,14 @@ import {
   DialogContentText,
   DialogActions,
   Skeleton,
+  useTheme,
+  useMediaQuery,
+  Tooltip,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { styled } from "@mui/material/styles";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "@/app/providers/SnackbarProvider";
 import { useUser } from "@/app/providers/UserProvider";
@@ -84,9 +87,15 @@ interface ModalState {
 
 const ApiKeyManagement = () => {
   const confirmDeletion = useConfirm();
+  const theme = useTheme();
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [modalState, setModalState] = useState<ModalState>({
     opened: false,
   });
+
+  const [apiKeyModal, setApiKeyModal] = useState(false);
+  const [displayKey, setDisplayKey] = useState("");
 
   const { user } = useUser();
   const showSnackbar = useSnackbar();
@@ -171,16 +180,6 @@ const ApiKeyManagement = () => {
     showSnackbar("success", "API key copied to clipboard!");
   };
 
-  if (isError) {
-    return (
-      <>
-        <Typography color="error">
-          Error fetching API keys: {error?.message}
-        </Typography>
-      </>
-    );
-  }
-
   const closeModal = () => {
     setModalState({
       opened: false,
@@ -193,8 +192,64 @@ const ApiKeyManagement = () => {
     setModalState({ opened: true });
   };
 
+  const closeApiKeyModal = () => {
+    setApiKeyModal(false);
+  };
+
+  const showApiKey = (keyValue: string) => {
+    setDisplayKey(keyValue);
+    setApiKeyModal(true);
+  };
+
+  if (isError) {
+    return (
+      <>
+        <Typography color="error">
+          Error fetching API keys: {error?.message}
+        </Typography>
+      </>
+    );
+  }
+
   return (
     <>
+      {apiKeyModal && (
+        <Dialog open={apiKeyModal} onClose={closeApiKeyModal}>
+          <DialogTitle>API Key</DialogTitle>
+          <DialogContent>
+            <DialogContentText
+              sx={{
+                bgcolor: "rgba(255, 255, 255, 0.05)",
+                p: "1rem",
+                borderRadius: "10px",
+                fontStyle: "italic",
+              }}
+            >
+              {displayKey}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleCopyApiKey(displayKey);
+                closeApiKeyModal();
+              }}
+              color="primary"
+            >
+              Copy
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={closeApiKeyModal}
+              color="primary"
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
       <Dialog open={modalState.opened} onClose={closeModal}>
         <DialogTitle>Generate new key</DialogTitle>
         <DialogContent>
@@ -298,9 +353,15 @@ const ApiKeyManagement = () => {
                         <Typography
                           variant="body2"
                           component="span"
-                          sx={{ wordBreak: "break-all", flexGrow: 1 }}
+                          sx={{
+                            wordBreak: "break-all",
+                            flexGrow: 1,
+                            minWidth: "2rem",
+                          }}
                         >
-                          {key.apiKey}
+                          {isSmallDevice && typeof key.apiKey === "string"
+                            ? "*****"
+                            : "************"}
                         </Typography>
                         <IconButton
                           onClick={() => handleCopyApiKey(key.apiKey)}
@@ -314,18 +375,28 @@ const ApiKeyManagement = () => {
                       {new Date(key.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
-                      <IconButton
-                        onClick={() => handleRevokeApiKey(key.apiKey)}
-                        aria-label="delete"
-                        color="error"
-                        disabled={isRevoking}
-                      >
-                        {isRevoking ? (
-                          <CircularProgress size={20} color="inherit" />
-                        ) : (
-                          <DeleteIcon fontSize="small" />
-                        )}
-                      </IconButton>
+                      <Tooltip title="delete key">
+                        <IconButton
+                          onClick={() => handleRevokeApiKey(key.apiKey)}
+                          aria-label="delete"
+                          color="error"
+                          disabled={isRevoking}
+                        >
+                          {isRevoking ? (
+                            <CircularProgress size={20} color="inherit" />
+                          ) : (
+                            <DeleteIcon fontSize="small" />
+                          )}
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="show key">
+                        <IconButton
+                          onClick={() => showApiKey(key.apiKey)}
+                          aria-label="show"
+                        >
+                          <VisibilityIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
