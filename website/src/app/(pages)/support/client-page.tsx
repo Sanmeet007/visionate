@@ -40,12 +40,12 @@ const SupportClientPage = () => {
 
   const submitSupportRequest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const captchaValue = recaptcha.current.getValue();
-    
-    if (!captchaValue) {
-      showSnackbar("warning", "Please verify the reCAPTCHA!");
-      return;
-    }
+    // const captchaValue = recaptcha.current.getValue();
+
+    // if (!captchaValue) {
+    //   showSnackbar("warning", "Please verify the reCAPTCHA!");
+    //   return;
+    // }
 
     try {
       const name = user ? user.name! : submitSupportFormData.name;
@@ -192,11 +192,11 @@ const SupportClientPage = () => {
             },
           }}
         >
-          <ReCAPTCHA
+          {/* <ReCAPTCHA
             ref={recaptcha}
             theme="dark"
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-          />
+          /> */}
         </Box>
         <Box>
           <LoadingButton
