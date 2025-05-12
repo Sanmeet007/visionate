@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+
 load_dotenv(".env")
 
 import os
@@ -11,7 +12,9 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 
 # Initialize BLIP processor and model
 processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+model = BlipForConditionalGeneration.from_pretrained(
+    "Salesforce/blip-image-captioning-base"
+)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
@@ -19,8 +22,10 @@ model = model.to(device)
 app = Flask(__name__)
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def generate_caption(image: Image.Image) -> str:
     image = image.convert("RGB")
@@ -28,6 +33,7 @@ def generate_caption(image: Image.Image) -> str:
     with torch.no_grad():
         outputs = model.generate(**inputs, max_new_tokens=30)
     return processor.decode(outputs[0], skip_special_tokens=True)
+
 
 @app.route("/generate-caption", methods=["POST"])
 def generate_caption_route_handler():
@@ -60,5 +66,9 @@ def generate_caption_route_handler():
 
     return jsonify({"error": "No image provided."}), 400
 
+
 if __name__ == "__main__":
-    app.run(debug=True, port=int(os.environ.get("PORT", 8000)))
+    app.run(
+        debug=(os.environ.get("DEBUG") == "true" , False),
+        port=int(os.environ.get("PORT", 8000)),
+    )
