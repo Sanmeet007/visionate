@@ -66,6 +66,9 @@ Certainly! Here's a clean and consistent rewrite of your **"Getting Started (For
    From the project root, run the following commands:
 
    ```bash
+   cd website
+   mkdir .requests_data
+   touch db.sqlite
    yarn run build      # Build the frontend
    yarn run start      # Start the frontend server
    yarn run model      # Launch the captioning model server
