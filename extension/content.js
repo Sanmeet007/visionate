@@ -1,5 +1,5 @@
 const visionateOrigin = "http://localhost";
-const kReleaseMode = false; // Set to false for debugging
+const kReleaseMode = true; // Set to false for debugging
 
 async function getApiKey() {
   return new Promise((resolve, reject) => {
