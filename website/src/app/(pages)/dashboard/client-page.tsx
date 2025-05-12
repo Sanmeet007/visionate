@@ -167,6 +167,10 @@ const DashboardClientPage = () => {
           "& > div": {
             minHeight: "200px",
           },
+
+          "@media screen and (max-width: 1000px)": {
+            gridTemplateColumns: "1fr",
+          },
         }}
       >
         <Box
@@ -185,6 +189,12 @@ const DashboardClientPage = () => {
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1.5fr",
               gap: "1rem",
+              "@media screen and (max-width: 800px)": {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              "@media screen and (max-width: 550px)": {
+                gridTemplateColumns: "1fr",
+              },
             }}
           >
             {isFetchingBaseStats && (

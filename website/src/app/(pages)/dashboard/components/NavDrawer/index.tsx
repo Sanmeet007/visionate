@@ -145,6 +145,7 @@ const NavDrawer = ({
               "& .vis-profile-avatar": {
                 width: "3.1rem",
                 height: "3.1rem",
+                fontSize: "1.2rem",
               },
               "& svg": {
                 width: "3.3rem",
