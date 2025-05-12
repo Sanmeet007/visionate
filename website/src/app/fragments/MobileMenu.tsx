@@ -14,6 +14,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 import Flexbox from "@/app/components/Flexbox";
 import {
   AppRegistration,
@@ -124,7 +125,7 @@ const MobileMenu = ({
         <List>
           {[
             { label: "Home", icon: Home, href: "/" },
-            { label: "About", icon: Home, href: "/about" },
+            { label: "About", icon: InfoIcon, href: "/about" },
             { label: "Pricing", icon: CurrencyRupeeIcon, href: "/#pricing" },
             { label: "API Docs", icon: DataObjectIcon, href: "/api-docs" },
             {
