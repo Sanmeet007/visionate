@@ -45,6 +45,7 @@ const HeroSection = () => {
               fontSize: (theme) => theme.typography.h3.fontSize,
               position: "relative",
               lineHeight: "1.1",
+              textAlign: "center",
             }}
           >
             SEE THE UNSEEN.
@@ -67,6 +68,10 @@ const HeroSection = () => {
               display: "flex",
               gap: "1rem",
               justifyContent: "center",
+              alignItems: "center",
+              "@media screen and (max-width: 600px)": {
+                flexDirection: "column",
+              },
             }}
           >
             <Button

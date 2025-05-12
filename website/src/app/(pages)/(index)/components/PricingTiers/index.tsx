@@ -188,6 +188,12 @@ const HeroPricingTiers = () => {
             maxWidth: "1100px",
             mx: "auto",
             my: "2rem",
+            "@media screen and (max-width: 900px)": {
+              gridTemplateColumns: "repeat(2 , 1fr)",
+            },
+            "@media screen and (max-width: 600px)": {
+              gridTemplateColumns: "repeat(1 , 1fr)",
+            },
           }}
         >
           <PricingTier

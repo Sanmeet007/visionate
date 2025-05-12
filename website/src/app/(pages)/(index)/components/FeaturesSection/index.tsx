@@ -29,6 +29,12 @@ const FeaturesSection = () => {
               gridTemplateColumns: "repeat(3 , 1fr)",
               gap: "1rem",
               p: "1rem",
+              "@media screen and (max-width: 900px)": {
+                gridTemplateColumns: "repeat(2 , 1fr)",
+              },
+              "@media screen and (max-width: 600px)": {
+                gridTemplateColumns: "repeat(1 , 1fr)",
+              },
             }}
           >
             {[
@@ -77,6 +83,9 @@ const FeaturesSection = () => {
                     display: "grid",
                     placeContent: "center",
                     color: item.color,
+                    "@media screen and (max-width: 600px)": {
+                      aspectRatio: "auto",
+                    },
                   }}
                 >
                   <CardContent
@@ -86,7 +95,9 @@ const FeaturesSection = () => {
                       flexDirection: "column",
                     }}
                   >
-                    <Typography variant="h5" component={"h3"}>0{index + 1}</Typography>
+                    <Typography variant="h5" component={"h3"}>
+                      0{index + 1}
+                    </Typography>
                     <Typography variant="h5">{item.title}</Typography>
                     <Typography variant="body2">{item.description}</Typography>
                   </CardContent>

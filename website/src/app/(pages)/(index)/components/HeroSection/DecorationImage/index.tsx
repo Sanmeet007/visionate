@@ -14,6 +14,10 @@ const DecorationImage = () => {
           backgroundRepeat: "no-repeat",
           width: "300px",
           height: "300px",
+          "@media screen and (max-width: 600px)": {
+            opacity: "0.2",
+          },
+          transition: "opacity 0.3s ease-in-out",
         }}
       ></Box>
     </>

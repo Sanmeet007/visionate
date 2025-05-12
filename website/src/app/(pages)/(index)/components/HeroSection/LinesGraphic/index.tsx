@@ -16,6 +16,9 @@ const LinesGraphic = () => {
           backgroundRepeat: "no-repeat",
           width: "700px",
           height: "100vh",
+          "@media screen and (max-width: 700px)": {
+            width: "100%",
+          },
         }}
       ></Box>
     </>

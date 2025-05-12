@@ -13,6 +13,10 @@ const ClientHomePage = () => {
         sx={{
           position: "relative",
           isolation: "isolate",
+
+          "& section": {
+            px: "2rem",
+          },
         }}
       >
         <Header />
