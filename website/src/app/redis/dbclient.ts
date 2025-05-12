@@ -1,4 +1,4 @@
-import { createClient } from "redis";
+import { createClient  , RedisClientType} from "redis";
 
 declare global {
   var redisDbClient: any;
@@ -6,12 +6,12 @@ declare global {
 
 const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
-async function getRedisClient() {
+async function getRedisClient() : Promise<RedisClientType> {
   if (!global.redisDbClient) {
     global.redisDbClient = createClient({
       url: redisUrl,
     });
-    await client.connect();
+    await global.redisDbClient.connect();
   }
   return global.redisDbClient;
 }
