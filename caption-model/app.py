@@ -68,7 +68,11 @@ def generate_caption_route_handler():
 
 
 if __name__ == "__main__":
-    app.run(
-        debug=(os.environ.get("DEBUG") == "true" , False),
-        port=int(os.environ.get("PORT", 8000)),
-    )
+
+    try:
+        app.run(
+            debug=os.environ.get("DEBUG", "false") == "true",
+            port=int(os.environ.get("PORT", 8000)),
+        )
+    except KeyboardInterrupt:
+        pass
