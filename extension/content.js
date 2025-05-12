@@ -1,3 +1,4 @@
+const visionateOrigin = "http://localhost";
 const kReleaseMode = false; // Set to false for debugging
 
 async function getApiKey() {
@@ -72,7 +73,7 @@ const getAltTextFromImageSrc = async (apiKey, imgEl) => {
     const formData = new FormData();
     formData.append("imageUrl", imgEl.src);
 
-    const res = await fetch("https://visionate.loca.lt/api/generate-caption", {
+    const res = await fetch(`${visionateOrigin}/api/generate-caption`, {
       method: "POST",
       headers: {
         "X-API-KEY": apiKey,
