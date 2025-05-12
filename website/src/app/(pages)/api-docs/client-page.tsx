@@ -66,7 +66,19 @@ const ApiDocsClientPage = () => {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", gap: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 4,
+
+          "@media screen and (max-width: 600px)": {
+            flexDirection: "column",
+            "& aside": {
+              display: "none",
+            },
+          },
+        }}
+      >
         {/* Sidebar */}
         <Box
           component="aside"
