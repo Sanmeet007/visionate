@@ -2112,7 +2112,7 @@ braces@^3.0.3:
   dependencies:
     fill-range "^7.1.1"
 
-"brevent@file:.":
+"visionate@file:.":
   version "0.1.0"
   dependencies:
     "@bprogress/next" "^3.2.12"
@@ -2132,7 +2132,7 @@ braces@^3.0.3:
     "@types/otp-generator" "^4.0.2"
     "@types/react-google-recaptcha" "^2.1.9"
     "@types/react-syntax-highlighter" "^15.5.13"
-    brevent "file:../../.yarn-cache/v6/npm-brevent-0.1.0-eb709b82-b6f8-41ba-8251-6563656b5465-1747028414770/node_modules/brevent"
+    visionate "file:../../.yarn-cache/v6/npm-visionate-0.1.0-eb709b82-b6f8-41ba-8251-6563656b5465-1747028414770/node_modules/visionate"
     cloudinary "^2.6.1"
     cookie-parser "^1.4.7"
     crypto-js "^4.2.0"
