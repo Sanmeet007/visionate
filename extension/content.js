@@ -14,58 +14,11 @@ async function getApiKey() {
 }
 
 const getImagesWithoutAlt = () => {
-  let imagesToReturn = [];
-  const supportedFormats = [".png", ".jpeg", ".jpg", ".webp"];
-  const supportedMimeSubtypes = supportedFormats.map((format) =>
-    format.substring(1).toLowerCase()
+  const allImagesMissingAlt = Array.from(
+    document.querySelectorAll("img:not([alt])")
   );
 
-  try {
-    const allImagesMissingAlt = Array.from(
-      document.querySelectorAll("img:not([alt])")
-    );
-
-    imagesToReturn = allImagesMissingAlt.filter((img) => {
-      const imgSrc = (img.src || "").toLowerCase();
-
-      if (!imgSrc) {
-        return false;
-      }
-      if (imgSrc.startsWith("data:image/")) {
-        const mimeTypePart = imgSrc.split(";")[0];
-        const format = mimeTypePart.substring("data:image/".length);
-
-        return supportedMimeSubtypes.includes(format);
-      }
-      return supportedFormats.some((suffix) => imgSrc.endsWith(suffix));
-    });
-  } catch (e) {
-    console.error(
-      "Error processing images in getImagesWithoutAltAndWithSupportedFormat (try block):",
-      e
-    );
-    const allImgs = Array.from(document.querySelectorAll("img"));
-    imagesToReturn = allImgs.filter((img) => {
-      if (img.hasAttribute("alt")) {
-        return false;
-      }
-
-      const imgSrc = (img.src || "").toLowerCase();
-
-      if (!imgSrc) {
-        return false;
-      }
-
-      if (imgSrc.startsWith("data:image/")) {
-        const mimeTypePart = imgSrc.split(";")[0];
-        const format = mimeTypePart.substring("data:image/".length);
-        return supportedMimeSubtypes.includes(format);
-      }
-      return supportedFormats.some((suffix) => imgSrc.endsWith(suffix));
-    });
-  }
-
-  return imagesToReturn;
+  return allImagesMissingAlt;
 };
 
 const getAltTextFromImageSrc = async (apiKey, imgEl) => {
