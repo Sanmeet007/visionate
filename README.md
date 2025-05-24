@@ -160,7 +160,16 @@ NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_3="https://linkedin.com/in/sanmeet007"
   yarn install
   ```
 
-3. **Run the system** *(Windows only for now)*
+3. **Database Setup** 
+  From the project root, run the following commands: 
+  > _Ensure that your database has been created and is currently empty before proceeding._
+   ```bash
+   cd website
+   yarn run db:push
+   ```
+   
+
+4. **Run the system** *(Windows only for now)*
    From the project root, run the following commands:
 
    ```bash
@@ -173,7 +182,7 @@ NEXT_PUBLIC_WEBSITE_SOCIAL_LINK_3="https://linkedin.com/in/sanmeet007"
    yarn run proxy      # Start the proxy server
    ```
 
-4. **Load the Chrome extension**
+5. **Load the Chrome extension**
 
 * Open `chrome://extensions/`
 * Enable **Developer Mode**
