@@ -8,15 +8,31 @@ import requests
 from io import BytesIO
 from PIL import Image
 from flask import Flask, request, jsonify
-from transformers import BlipProcessor, BlipForConditionalGeneration
-
-# Initialize BLIP processor and model
-processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-model = BlipForConditionalGeneration.from_pretrained(
-    "Salesforce/blip-image-captioning-base"
+from transformers import (
+    BlipProcessor,
+    BlipForConditionalGeneration,
+    AutoProcessor,
+    AutoModelForVision2Seq,
 )
+
+USEBLIP = bool(os.environ.get("USEBLIP", 1) == 1)
+model = None
+
+if USEBLIP == 1:
+    model_name = "Salesforce/blip-image-captioning-large"
+    processor = BlipProcessor.from_pretrained(model_name)
+    model = BlipForConditionalGeneration.from_pretrained(
+        model_name,
+    )
+else:
+    model_name = "HuggingFaceM4/idefics2-8b"
+    processor = AutoProcessor.from_pretrained(model_name)
+    model = AutoModelForVision2Seq.from_pretrained(
+        model_name, torch_dtype=torch.float16
+    )
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = model.to(device)
+model = model.to(device)  # type: ignore
 
 # Flask setup
 app = Flask(__name__)
@@ -29,9 +45,9 @@ def allowed_file(filename):
 
 def generate_caption(image: Image.Image) -> str:
     image = image.convert("RGB")
-    inputs = processor(images=image, return_tensors="pt").to(device)
+    inputs = processor(images=image, return_tensors="pt").to(device)  # type: ignore
     with torch.no_grad():
-        outputs = model.generate(**inputs, max_new_tokens=30)
+        outputs = model.generate(**inputs, max_new_tokens=30)  # type: ignore
     return processor.decode(outputs[0], skip_special_tokens=True)
 
 
