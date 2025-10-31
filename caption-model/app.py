@@ -15,7 +15,7 @@ from transformers import (
     AutoModelForVision2Seq,
 )
 
-USEBLIP = bool(os.environ.get("USEBLIP", 1) == 1)
+USEBLIP = int(os.environ.get("USEBLIP", 1))
 model = None
 
 if USEBLIP == 1:
