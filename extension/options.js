@@ -73,7 +73,7 @@ form.addEventListener("submit", async (e) => {
 
     const key = form.apikey.value;
     const res = await fetch(
-      `http://localhost:3000/api/validate-key`,
+      `https://visionate.onrender.com/api/validate-key`,
 
       {
         headers: {
