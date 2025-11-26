@@ -4,4 +4,4 @@ requests
 pillow
 flask
 transformers
-uvicorn
+gunicorn

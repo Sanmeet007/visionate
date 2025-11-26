@@ -52,6 +52,9 @@ def generate_caption(image: Image.Image) -> str:
         outputs = model.generate(**inputs, max_new_tokens=30)  # type: ignore
     return processor.decode(outputs[0], skip_special_tokens=True) # type: ignore
 
+@app.route("/", methods=["GET"])
+def home(): 
+    return "Flask is working correctly!"
 
 @app.route("/generate-caption", methods=["POST"])
 def generate_caption_route_handler():
@@ -89,6 +92,7 @@ if __name__ == "__main__":
 
     try:
         app.run(
+            host="0.0.0.0",   # <-- Important!
             debug=os.environ.get("DEBUG", "false") == "true",
             port=int(os.environ.get("PORT", 8000)),
         )

@@ -1,4 +1,4 @@
-const visionateOrigin = "http://localhost";
+const visionateOrigin = "https://visionate.onrender.com";
 const kReleaseMode = true; // Set to false for debugging
 
 async function getApiKey() {
