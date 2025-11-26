@@ -15,7 +15,7 @@ async function getApiKey() {
 
 const getImagesWithoutAlt = () => {
   const allImagesMissingAlt = Array.from(
-    document.querySelectorAll("img:not([alt])")
+    document.querySelectorAll('img:not([alt]), img[alt=""], img[alt=" "]')
   );
 
   return allImagesMissingAlt;

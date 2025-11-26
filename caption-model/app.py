@@ -17,9 +17,11 @@ from transformers import (
 
 USEBLIP = int(os.environ.get("USEBLIP", 1))
 model = None
+processor = None
+device = None
 
 if USEBLIP == 1:
-    model_name = "Salesforce/blip-image-captioning-large"
+    model_name = "Salesforce/blip-image-captioning-base"
     processor = BlipProcessor.from_pretrained(model_name)
     model = BlipForConditionalGeneration.from_pretrained(
         model_name,
@@ -48,7 +50,7 @@ def generate_caption(image: Image.Image) -> str:
     inputs = processor(images=image, return_tensors="pt").to(device)  # type: ignore
     with torch.no_grad():
         outputs = model.generate(**inputs, max_new_tokens=30)  # type: ignore
-    return processor.decode(outputs[0], skip_special_tokens=True)
+    return processor.decode(outputs[0], skip_special_tokens=True) # type: ignore
 
 
 @app.route("/generate-caption", methods=["POST"])

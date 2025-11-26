@@ -1,22 +1,27 @@
-import { createClient  , RedisClientType} from "redis";
+import { createClient, RedisClientType } from "redis";
 
 declare global {
   var redisDbClient: any;
 }
 
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
-
-async function getRedisClient() : Promise<RedisClientType> {
+async function getRedisClient(): Promise<RedisClientType> {
   if (!global.redisDbClient) {
     global.redisDbClient = createClient({
-      url: redisUrl,
+      username: process.env.REDIS_USER,
+      password: process.env.REDIS_PASSWORD,
+      socket: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+      },
     });
+
     await global.redisDbClient.connect();
   }
   return global.redisDbClient;
 }
 
 const client = await getRedisClient();
+
 client.on("error", (err: any) => console.log("Redis Client Error", err));
 
 export { client as redisDbClient };
